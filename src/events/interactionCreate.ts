@@ -10,7 +10,7 @@ module.exports = {
         if (!command) return;
 
         try {
-            await command.execute(interaction);
+            await command.execute(interaction, client);
         } catch (e) {
             console.error(e);
             await interaction.reply({
