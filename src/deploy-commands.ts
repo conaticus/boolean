@@ -1,7 +1,7 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import { commandFiles } from "./files";
-import { BotCommand } from "./types";
+import { IBotCommand } from "./types";
 
 const commands: object[] = [];
 
@@ -9,7 +9,7 @@ for (const file of commandFiles) {
     const command = require(`./commands/${file.substring(
         0,
         file.length - 3
-    )}`) as BotCommand;
+    )}`) as IBotCommand;
     commands.push(command.data.toJSON());
 }
 

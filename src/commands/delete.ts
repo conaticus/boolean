@@ -26,7 +26,8 @@ module.exports = {
         }
 
         const deleted = await (interaction.channel as any).bulkDelete(
-            interaction.options.get("amount")?.value
+            interaction.options.get("amount")?.value,
+            true
         );
 
         const successEmbed = new MessageEmbed()

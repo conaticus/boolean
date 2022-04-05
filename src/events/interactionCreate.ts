@@ -1,9 +1,8 @@
-import { BotClient } from "../types";
+import { IBotClient } from "../types";
 
 module.exports = {
     name: "interactionCreate",
-    once: true,
-    async execute(interaction: any, client: BotClient) {
+    async execute(interaction: any, client: IBotClient) {
         if (!interaction.isCommand()) return;
 
         const command = client.commands.get(interaction.commandName);

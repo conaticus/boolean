@@ -2,7 +2,7 @@ import "dotenv/config";
 import "./deploy-commands";
 
 import { Client, Collection, Intents } from "discord.js";
-import { BotClient, BotCommand } from "./types";
+import { IBotClient, IBotCommand } from "./types";
 import { commandFiles, eventFiles } from "./files";
 
 const client = new Client({
@@ -10,13 +10,14 @@ const client = new Client({
         Intents.FLAGS.GUILDS,
         Intents.FLAGS.GUILD_MESSAGES,
         Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+        Intents.FLAGS.GUILD_MEMBERS,
     ],
     partials: ["MESSAGE", "CHANNEL", "REACTION"],
-}) as BotClient;
+}) as IBotClient;
 client.commands = new Collection();
 
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`) as BotCommand;
+    const command = require(`./commands/${file}`) as IBotCommand;
     client.commands.set(command.data.name, command);
 }
 

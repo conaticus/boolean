@@ -1,7 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {
     Client,
-    Collection,
     CommandInteraction,
     GuildMember,
     Message,
@@ -52,7 +51,6 @@ module.exports = {
             });
 
             collector?.on("collect", (msg) => {
-                console.log("MESSAGE");
                 resolve(msg);
             });
 

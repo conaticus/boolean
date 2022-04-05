@@ -24,11 +24,6 @@ module.exports = {
                 .setRequired(true)
         ),
     async execute(interaction: CommandInteraction, client: Client) {
-        /**
-         * Send embed in suggestions channel (id in config)
-         * React with checkmark and cross
-         */
-
         const suggestionsChannel = client.channels.cache.get(
             config.suggestionsChannelId
         ) as TextChannel;
