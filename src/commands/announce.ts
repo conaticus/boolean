@@ -50,13 +50,8 @@ module.exports = {
                 time: 120_000,
             });
 
-            collector?.on("collect", (msg) => {
-                resolve(msg);
-            });
-
-            collector?.on("end", () => {
-                resolve(null);
-            });
+            collector?.on("collect", (msg) => resolve(msg));
+            collector?.on("end", () => resolve(null));
         });
 
         if (message === null) {

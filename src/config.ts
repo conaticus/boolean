@@ -16,6 +16,7 @@ interface IConfig {
     guildId: string;
     rolesChannelId: string;
     reactionMessages: IReactionMessage[];
+    memberRoleId: string;
 }
 
 const config: IConfig = {
@@ -85,6 +86,7 @@ const config: IConfig = {
             },
         },
     ],
+    memberRoleId: "949569759308025856",
 };
 
 export default config;

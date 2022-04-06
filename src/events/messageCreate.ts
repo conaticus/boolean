@@ -9,10 +9,11 @@ module.exports = {
             if (message.content.includes(phrase)) message.delete();
         });
 
-        if (message.mentions.users.size > 5) {
-            if (!message.member?.permissions.has("MENTION_EVERYONE")) {
-                message.delete();
-            }
+        if (
+            message.mentions.users.size > 5 &&
+            !message.member?.permissions.has("MENTION_EVERYONE")
+        ) {
+            message.delete();
         }
     },
 };

@@ -5,6 +5,8 @@ import { IBotClient } from "../types";
 module.exports = {
     name: "guildMemberAdd",
     async execute(member: GuildMember, client: IBotClient) {
+        member.roles.add(config.memberRoleId);
+
         const welcomeMessageEmbed = new MessageEmbed()
             .setColor("ORANGE")
             .setTitle("New Member")
