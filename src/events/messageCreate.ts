@@ -5,9 +5,8 @@ const forbiddenPhrases: string[] = ["discord.gg"];
 module.exports = {
     name: "messageCreate",
     execute(message: Message) {
-        forbiddenPhrases.forEach((phrase) => {
-            if (message.content.includes(phrase)) message.delete();
-        });
+        const foundPhrase = forbiddenPhrases.find((phrase) => message.content.includes(phrase));
+        if(foundPhrase) message.delete();
 
         if (
             message.mentions.users.size > 5 &&
