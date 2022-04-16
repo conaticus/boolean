@@ -23,7 +23,7 @@ const config: IConfig = {
     suggestionsChannelId: "949572444656648262",
     announcementsChannelId: "949567953211387945",
     announcementsRoleId: "960144630857465866",
-    welcomeChannelId: "949566381068795936",
+    welcomeChannelId: "964876565437644820",
     guildId: "949566380523548672",
     rolesChannelId: "949572424079376414",
     reactionMessages: [
