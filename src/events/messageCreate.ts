@@ -6,7 +6,7 @@ module.exports = {
     name: "messageCreate",
     execute(message: Message) {
         const foundPhrase = forbiddenPhrases.find((phrase) => message.content.includes(phrase));
-        if(foundPhrase) message.delete();
+        if(foundPhrase) return message.delete();
 
         if (
             message.mentions.users.size > 5 &&
