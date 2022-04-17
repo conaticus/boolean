@@ -34,8 +34,8 @@ In order to run the bot, you must run `npm run dev` to run the TypeScript develo
 ### Other Information
 
 #### Embed Colours
-General: `"ORANGE"`
-Success: `"GREEN"`
+General: `"ORANGE"` \
+Success: `"GREEN"` \
 Error: `"RED"`
 
 #### Configuration
