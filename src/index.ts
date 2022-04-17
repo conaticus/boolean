@@ -17,12 +17,12 @@ const client = new Client({
 client.commands = new Collection();
 
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`) as IBotCommand;
+    const command = require(file) as IBotCommand;
     client.commands.set(command.data.name, command);
 }
 
 for (const file of eventFiles) {
-    const event = require(`./events/${file.substring(0, file.length - 3)}`);
+    const event = require(file);
 
     if (event.once) {
         client.once(event.name, (...args) => event.execute(...args, client));

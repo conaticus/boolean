@@ -6,10 +6,7 @@ import { IBotCommand } from "./types";
 const commands: object[] = [];
 
 for (const file of commandFiles) {
-    const command = require(`./commands/${file.substring(
-        0,
-        file.length - 3
-    )}`) as IBotCommand;
+    const command = require(file) as IBotCommand;
     commands.push(command.data.toJSON());
 }
 
