@@ -2,6 +2,7 @@ import { Client, MessageReaction, User } from "discord.js";
 import config from "../config";
 import { IDataObject } from "../types";
 import fs from "fs/promises";
+import path from "path";
 
 module.exports = {
     name: "messageReactionRemove",
@@ -9,7 +10,7 @@ module.exports = {
         const guild = client.guilds.cache.get(config.guildId);
         const member = guild?.members.cache.get(user.id);
 
-        const dataRaw: any = await fs.readFile("./data.json");
+        const dataRaw: any = await fs.readFile(path.join(process.cwd(),"data.json"));
         const data: IDataObject = JSON.parse(dataRaw) as any;
 
         for (const rmKey in data.reactionMessages) {
