@@ -25,11 +25,18 @@ TOKEN="your bot token"
 
 This will automatically be ignored from the `.gitignore`. so do not worry about this data being public.
 
+#### 
+
 #### Running the bot
 
 In order to run the bot, you must run `npm run dev` to run the TypeScript developer environment. Do not worry about the other `package.json` scripts, they are for production.
 
 ### Other Information
+
+#### Embed Colours
+General: `"ORANGE"`
+Success: `"GREEN"`
+Error: `"RED"`
 
 #### Configuration
 
