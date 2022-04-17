@@ -21,13 +21,10 @@ module.exports = {
         
         
         await interaction.reply("Overriding systems..");
-        interaction.channel.send("Mwuhahahaha.");
+        interaction.channel?.send("Mwuhahahaha.");
         await timeout(0.5);
-        interaction.channel.send("Silly human.");
+        interaction.channel?.send("Silly human.");
         await timeout(1);
-        interaction.channel.send("Think you can control me?");
-        
-        
-        // Mwuhahahaha.
+        interaction.channel?.send("Think you can control me?");
     },
 };
