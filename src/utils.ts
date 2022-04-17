@@ -1,7 +1,14 @@
 import { CommandInteraction, MessageEmbed } from "discord.js";
+import { IDataObject } from "./types";
+import fs from "fs/promises";
+
+export const getData = async (): Promise<IDataObject> =>
+    JSON.parse(await fs.readFile("./data.json", "utf8"));
+
+export const writeData = (data: IDataObject) =>
+    fs.writeFile("./data.json", JSON.stringify(data));
 
 interface QuestionOptions {
-    noErr: boolean;
     ephemeral: boolean;
 }
 
@@ -18,7 +25,7 @@ function askQuestion(
 async function askQuestion(
     interaction: CommandInteraction<"cached">,
     question: string,
-    { noErr, ephemeral }: QuestionOptions = { noErr: false, ephemeral: false }
+    { ephemeral }: QuestionOptions = { ephemeral: false }
 ) {
     const embed = new MessageEmbed()
         .setColor("ORANGE")
@@ -43,11 +50,9 @@ async function askQuestion(
         const msg = messages?.first();
 
         if (msg?.content) return msg.content;
-        if (noErr) return null;
-        throw "Timed out.";
+        return null;
     } catch (err) {
-        if (noErr) return null;
-        throw "Timed out.";
+        return null;
     }
 }
 export { askQuestion };

@@ -1,15 +1,14 @@
 import { Client, MessageEmbed, TextChannel } from "discord.js";
 import config from "../config";
-import fs from "fs/promises";
-import { IDataObject } from "../types";
+import { getData, writeData } from "../utils";
 
 module.exports = {
     name: "ready",
     once: true,
     async execute(client: Client) {
         console.log(`Logged in as ${client.user?.tag}.`);
-        const dataRaw = await fs.readFile("./data.json", "utf8");
-        const data: IDataObject = JSON.parse(dataRaw) as any;
+
+        const data = await getData();
 
         const rolesChannel = client.channels.cache.get(
             config.rolesChannelId
@@ -40,7 +39,7 @@ module.exports = {
             });
 
             data.reactionMessages[reactionMessage.title] = rolesMessage.id;
-            await fs.writeFile("./data.json", JSON.stringify(data));
+            await writeData(data);
         });
     },
 };

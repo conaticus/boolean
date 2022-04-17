@@ -2,8 +2,6 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import {
     Client,
     CommandInteraction,
-    GuildMember,
-    Message,
     MessageEmbed,
     TextChannel,
 } from "discord.js";
