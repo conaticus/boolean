@@ -1,8 +1,13 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Client, Collection } from "discord.js";
+import {
+    Client,
+    Collection,
+    PermissionResolvable,
+} from "discord.js";
 
 export interface IBotCommand {
     data: SlashCommandBuilder;
+    required_perms?: PermissionResolvable;
     execute: Function;
 }
 
