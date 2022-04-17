@@ -3,6 +3,7 @@ import config from "../config";
 import { IDataObject } from "../types";
 import fs from "fs/promises";
 import path from "path";
+import { getData } from "../utils";
 
 module.exports = {
     name: "messageReactionRemove",
@@ -10,16 +11,15 @@ module.exports = {
         const member = reaction.message.guild?.members.cache.get(user.id);
         if (!member) return;
 
+        const data = await getData();
+
         config.reactionMessages.forEach((rm) => {
-            if (rm.id !== reaction.message.id) return;
-            const emojiStr = `<:${reaction.emoji.name}:${reaction.emoji.id}>`;
+            const id = data.reactionMessages[rm.title];
+            if (id !== reaction.message.id) return;
 
             Object.values(rm.reactions).forEach((msgReaction) => {
-                if (
-                    emojiStr === msgReaction.emoji ||
-                    reaction.emoji.name === msgReaction.emoji
-                )
-                    member?.roles.remove(msgReaction.roleId);
+                if (msgReaction.emoji.includes(reaction.emoji.id!))
+                    member.roles.remove(msgReaction.roleId);
             });
         });
     },
