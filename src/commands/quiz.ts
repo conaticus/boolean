@@ -2,7 +2,6 @@ import { SlashCommandBuilder, userMention } from "@discordjs/builders";
 import {
     Client,
     CommandInteraction,
-    GuildMember,
     Message,
     MessageEmbed,
     MessageReaction,
@@ -185,23 +184,8 @@ module.exports = {
                 .setDescription("Channel to host the quiz.")
                 .setRequired(true)
         ),
+    requiredPerms: ["ADMINISTRATOR"],
     async execute(interaction: CommandInteraction, client: Client) {
-        const member = interaction.member as GuildMember;
-        if (!member.permissions.has("ADMINISTRATOR")) {
-            const invalidPermissionsEmbed = new MessageEmbed()
-                .setColor("RED")
-                .setTitle("Command Failed")
-                .setDescription(
-                    "You do not have the correct permissions to use this command."
-                );
-            interaction.reply({
-                embeds: [invalidPermissionsEmbed],
-                ephemeral: true,
-            });
-
-            return;
-        }
-
         const quizChannel: TextChannel = interaction.options.get(
             "channel"
         ) as any;

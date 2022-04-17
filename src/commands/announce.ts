@@ -18,22 +18,9 @@ module.exports = {
                 .setDescription("Set the title of the announcement")
                 .setRequired(true)
         ),
+    requiredPerms: ["ADMINISTRATOR"],
     async execute(interaction: CommandInteraction, client: Client) {
         const member = interaction.member as GuildMember;
-        if (!member.permissions.has("ADMINISTRATOR")) {
-            const invalidPermissionsEmbed = new MessageEmbed()
-                .setColor("RED")
-                .setTitle("Command Failed")
-                .setDescription(
-                    "You do not have the correct permissions to use this command."
-                );
-            interaction.reply({
-                embeds: [invalidPermissionsEmbed],
-                ephemeral: true,
-            });
-
-            return;
-        }
 
         const typeAnnouncementEmbed = new MessageEmbed()
             .setColor("ORANGE")

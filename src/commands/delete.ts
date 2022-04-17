@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -11,20 +11,8 @@ module.exports = {
                 .setDescription("Amount of messages to delete")
                 .setRequired(true)
         ),
+    requiredPerms: ["MANAGE_MESSAGES"],
     async execute(interaction: CommandInteraction) {
-        const member = interaction.member as GuildMember;
-        if (!member.permissions.has("MANAGE_MESSAGES")) {
-            const errEmbed = new MessageEmbed()
-                .setTitle("Command Failed")
-                .setDescription(
-                    "You have insufficient permissions to use this command"
-                )
-                .setColor("RED");
-
-            interaction.reply({ embeds: [errEmbed], ephemeral: true });
-            return;
-        }
-
         const deleted = await (interaction.channel as any).bulkDelete(
             interaction.options.get("amount")?.value,
             true

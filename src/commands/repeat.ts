@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("repeat")
@@ -10,18 +10,8 @@ module.exports = {
                 .setDescription("Message to repeat.")
                 .setRequired(true)
         ),
+    requiredPerms: ["ADMINISTRATOR"],
     async execute(interaction: CommandInteraction) {
-        const member = interaction.member as GuildMember;
-        if (!member.permissions.has("ADMINISTRATOR")) {
-            const errEmbed = new MessageEmbed()
-                .setColor("RED")
-                .setTitle("Command Failed")
-                .setDescription("Insufficient permissions to run this command");
-
-            interaction.reply({ embeds: [errEmbed], ephemeral: true });
-            return;
-        }
-
         interaction.channel?.send(
             interaction.options.get("message")?.value as string
         );
