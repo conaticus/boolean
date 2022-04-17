@@ -8,6 +8,8 @@ import {
     TextChannel,
 } from "discord.js";
 import config from "../config";
+import { askQuestion } from "../utils";
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("announce")
@@ -19,41 +21,25 @@ module.exports = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction: CommandInteraction, client: Client) {
-        const member = interaction.member as GuildMember;
+    async execute(interaction: CommandInteraction<"cached">, client: Client) {
+        const announcement = await askQuestion(
+            interaction,
+            "Please now send the announcement message.",
+            { noErr: true, ephemeral: true }
+        );
 
-        const typeAnnouncementEmbed = new MessageEmbed()
-            .setColor("ORANGE")
-            .setDescription("Please now send the announcement message.");
-        interaction.reply({ embeds: [typeAnnouncementEmbed], ephemeral: true });
-
-        const message: Message | null = await new Promise((resolve) => {
-            const filter = (m: Message) =>
-                m.author.id === interaction.member?.user.id;
-
-            const collector = interaction.channel?.createMessageCollector({
-                filter,
-                max: 1,
-                time: 120_000,
-            });
-
-            collector?.on("collect", (msg) => resolve(msg));
-            collector?.on("end", () => resolve(null));
-        });
-
-        if (message === null) {
-            const errorEmbed = new MessageEmbed().setDescription(
-                "Announcement cancelled."
-            );
+        if (!announcement) {
+            const errorEmbed = new MessageEmbed()
+                .setColor("RED")
+                .setDescription("Announcement cancelled.");
             interaction.channel?.send({ embeds: [errorEmbed] });
-
             return;
         }
 
         const announcementEmbed = new MessageEmbed()
             .setColor("ORANGE")
-            .setTitle(interaction.options.getString("title") as string)
-            .setDescription(message.content);
+            .setTitle(interaction.options.getString("title", true))
+            .setDescription(announcement);
 
         const announcementsChannel = client.channels.cache.get(
             config.announcementsChannelId

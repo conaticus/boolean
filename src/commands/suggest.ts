@@ -23,7 +23,7 @@ module.exports = {
                 .setDescription("Set suggestion's description.")
                 .setRequired(true)
         ),
-    async execute(interaction: CommandInteraction, client: Client) {
+    async execute(interaction: CommandInteraction<"cached">, client: Client) {
         const suggestionsChannel = client.channels.cache.get(
             config.suggestionsChannelId
         ) as TextChannel;
@@ -35,9 +35,7 @@ module.exports = {
                     interaction.member?.user.username
                 }#${interaction.member?.user.discriminator}`
             )
-            .setDescription(
-                interaction.options.getString("description") as string
-            );
+            .setDescription(interaction.options.getString("description", true));
 
         const message = await suggestionsChannel.send({
             embeds: [suggestionEmbed],

@@ -10,12 +10,12 @@ for (const file of commandFiles) {
     commands.push(command.data.toJSON());
 }
 
-const rest = new REST({ version: "9" }).setToken(process.env.TOKEN as string);
+const rest = new REST({ version: "9" }).setToken(process.env.TOKEN!);
 
 rest.put(
     Routes.applicationGuildCommands(
-        process.env.CLIENT_ID as string,
-        process.env.GUILD_ID as string
+        process.env.CLIENT_ID!,
+        process.env.GUILD_ID!
     ),
     { body: commands }
 );

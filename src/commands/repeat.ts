@@ -11,9 +11,9 @@ module.exports = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction: CommandInteraction<"cached">) {
         interaction.channel?.send(
-            interaction.options.get("message")?.value as string
+            interaction.options.getString("message", true)
         );
 
         const successEmbed = new MessageEmbed()

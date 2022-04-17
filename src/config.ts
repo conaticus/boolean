@@ -1,5 +1,6 @@
 interface IReactionMessage {
     title: string;
+    id: string;
     reactions: {
         [key: string]: {
             emoji: string;
@@ -29,6 +30,7 @@ const config: IConfig = {
     reactionMessages: [
         {
             title: "Languages",
+            id: "960896318736334868",
             reactions: {
                 JavaScript: {
                     emoji: "<:js:960813493135757352>",
@@ -74,6 +76,7 @@ const config: IConfig = {
         },
         {
             title: "Pings",
+            id: "960896319910719528",
             reactions: {
                 Announcements: {
                     emoji: "📢",
