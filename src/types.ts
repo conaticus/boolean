@@ -7,7 +7,7 @@ import {
 
 export interface IBotCommand {
     data: SlashCommandBuilder;
-    required_perms?: PermissionResolvable;
+    requiredPerms?: PermissionResolvable;
     execute: Function;
 }
 

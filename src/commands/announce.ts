@@ -18,7 +18,7 @@ module.exports = {
                 .setDescription("Set the title of the announcement")
                 .setRequired(true)
         ),
-    required_perms: ["ADMINISTRATOR"],
+    requiredPerms: ["ADMINISTRATOR"],
     async execute(interaction: CommandInteraction, client: Client) {
         const member = interaction.member as GuildMember;
 

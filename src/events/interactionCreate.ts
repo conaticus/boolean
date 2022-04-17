@@ -14,7 +14,7 @@ module.exports = {
 
         const member = interaction.member as GuildMember;
 
-        if (command.required_perms && !member.permissions.has(command.required_perms)) {
+        if (command.requiredPerms && !member.permissions.has(command.requiredPerms)) {
             const invalidPermissionsEmbed = new MessageEmbed()
                 .setColor("RED")
                 .setTitle("Command Failed")

@@ -10,7 +10,7 @@ module.exports = {
                 .setDescription("Message to repeat.")
                 .setRequired(true)
         ),
-    required_perms: ["ADMINISTRATOR"],
+    requiredPerms: ["ADMINISTRATOR"],
     async execute(interaction: CommandInteraction) {
         interaction.channel?.send(
             interaction.options.get("message")?.value as string

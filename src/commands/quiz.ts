@@ -184,6 +184,7 @@ module.exports = {
                 .setDescription("Channel to host the quiz.")
                 .setRequired(true)
         ),
+    requiredPerms: ["ADMINISTRATOR"],
     async execute(interaction: CommandInteraction, client: Client) {
         const quizChannel: TextChannel = interaction.options.get(
             "channel"

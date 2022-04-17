@@ -11,7 +11,7 @@ module.exports = {
                 .setDescription("Amount of messages to delete")
                 .setRequired(true)
         ),
-    required_perms: ["MANAGE_MESSAGES"],
+    requiredPerms: ["MANAGE_MESSAGES"],
     async execute(interaction: CommandInteraction) {
         const deleted = await (interaction.channel as any).bulkDelete(
             interaction.options.get("amount")?.value,
