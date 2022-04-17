@@ -14,8 +14,6 @@ module.exports = {
     async execute(interaction: CommandInteraction<"cached">) {
         // This is purely for my own amusement - conaticus
         // infact i can control you
-        await interaction.reply("Pong!");
-        return;
-        
+        return await interaction.reply("Pong!");
     },
 };
