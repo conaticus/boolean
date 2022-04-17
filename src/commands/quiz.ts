@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, userMention } from "@discordjs/builders";
+import { SlashCommandBuilder } from "@discordjs/builders";
 import {
     Client,
     CommandInteraction,
@@ -7,7 +7,6 @@ import {
     MessageReaction,
     TextChannel,
     User,
-    UserContextMenuInteraction,
 } from "discord.js";
 
 interface IQuestion {
@@ -75,7 +74,7 @@ const querySeconds = async (
         return null;
     }
 
-    const questionTime = parseInt(secondsMsg as any) * 1000;
+    const questionTime = parseInt(secondsMsg.content) * 1000;
     if (questionTime / 1000 <= 5) {
         const errEmbed = new MessageEmbed()
             .setColor("RED")
@@ -185,10 +184,10 @@ module.exports = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction: CommandInteraction, client: Client) {
-        const quizChannel: TextChannel = interaction.options.get(
+    async execute(interaction: CommandInteraction<"cached">, client: Client) {
+        const quizChannel = interaction.options.getChannel(
             "channel"
-        ) as any;
+        ) as TextChannel;
 
         const replyEmbed = new MessageEmbed()
             .setColor("ORANGE")
@@ -256,13 +255,13 @@ module.exports = {
                 const questionMsg = await quizChannel.send(questionMsgContent);
 
                 for (let i = 0; i < question.options.length; i++) {
-                    questionMsg?.react(numberEmojis[i] as string);
+                    questionMsg?.react(numberEmojis[i]);
                 }
 
-                const collector = await questionMsg?.createReactionCollector({
+                const collector = questionMsg?.createReactionCollector({
                     filter: (reaction: MessageReaction, user: User) =>
                         Object.values(numberEmojis).indexOf(
-                            reaction.emoji.name as any
+                            reaction.emoji.name!
                         ) !== -1 &&
                         // user.id !== interaction.user.id &&
                         user.id !== client.user?.id,
@@ -270,9 +269,9 @@ module.exports = {
                 });
 
                 await new Promise((res) => {
-                    collector?.on("collect", (reaction, user) => {
+                    collector.on("collect", (reaction, user) => {
                         const choiceIdx = Object.values(numberEmojis).indexOf(
-                            reaction.emoji.name as string
+                            reaction.emoji.name!
                         );
                         questionChoices[questionChoices.length - 1].push({
                             userId: user.id,
@@ -280,7 +279,7 @@ module.exports = {
                         });
                     });
 
-                    collector?.on("end", () => {
+                    collector.on("end", () => {
                         res(undefined);
                     });
                 });
@@ -292,7 +291,7 @@ module.exports = {
             loopQuestion();
         });
 
-        const userCorrectCount: any = {};
+        const userCorrectCount: Record<string, number> = {};
 
         questionChoices.forEach((question) => {
             question.forEach((answer) => {
@@ -306,7 +305,7 @@ module.exports = {
             });
         });
 
-        const sortable = [];
+        const sortable: [string, number][] = [];
         for (const user in userCorrectCount) {
             sortable.push([user, userCorrectCount[user]]);
         }

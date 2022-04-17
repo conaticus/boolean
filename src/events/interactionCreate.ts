@@ -1,20 +1,21 @@
 import { IBotClient } from "../types";
-import {
-    GuildMember,
-    MessageEmbed,
-} from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 
 module.exports = {
     name: "interactionCreate",
-    async execute(interaction: any, client: IBotClient) {
-        if (!interaction.isCommand()) return;
+    async execute(
+        interaction: CommandInteraction<"cached">,
+        client: IBotClient
+    ) {
+        if (!interaction.isCommand() || !interaction.inCachedGuild()) return;
 
         const command = client.commands.get(interaction.commandName);
         if (!command) return;
 
-        const member = interaction.member as GuildMember;
-
-        if (command.requiredPerms && !member.permissions.has(command.requiredPerms)) {
+        if (
+            command.requiredPerms &&
+            !interaction.member.permissions.has(command.requiredPerms)
+        ) {
             const invalidPermissionsEmbed = new MessageEmbed()
                 .setColor("RED")
                 .setTitle("Command Failed")
