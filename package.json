@@ -17,7 +17,8 @@
         "@discordjs/rest": "^0.3.0",
         "discord-api-types": "^0.29.0",
         "discord.js": "^13.6.0",
-        "filehound": "^1.17.5"
+        "filehound": "^1.17.5",
+        "mathjs": "^10.4.3"
     },
     "devDependencies": {
         "dotenv": "^16.0.0",
