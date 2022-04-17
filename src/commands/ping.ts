@@ -3,8 +3,7 @@ import { CommandInteraction } from "discord.js";
 
 const timeout = (seconds: number): Promise<void> => {
     return new Promise(resolve => {
-        setTimeout(() => {}, seconds * 1000);
-        resolve(undefined);
+        setTimeout(() => { resolve(undefined) }, seconds * 1000);
     });
 }
 
