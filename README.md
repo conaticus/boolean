@@ -1,7 +1,9 @@
 # Boolean
 
 ## About
-A bot for the Conaticus Discord server. A document of the development process has been made here: https://www.youtube.com/watch?v=xq2jR3_msmk. 
+A bot for the Conaticus' [Discord server](https://discord.com/invite/aDAsjZVzaH). A document of the development process has been made here: https://www.youtube.com/watch?v=xq2jR3_msmk. 
+
+Also, remember to subscribe at https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ. 
 
 ## Documentation
 
@@ -15,21 +17,21 @@ A bot for the Conaticus Discord server. A document of the development process ha
 #### Setting up the .env
 
 In order to setup the bot, you must create a `.env` in the parent directory.
-In this file you must declare the bot's `CLIENT_ID` and `TOKEN` - this is the client and token from the Discord Developer Portal.
+In this file you must declare the bot's `CLIENT_ID` and `TOKEN` - this is the client and token from the [Discord Developer Portal](https://discord.com/developers/applications).
 
 Syntax:
 ```env
-CLIENT_ID="your bot client id"
-TOKEN="your bot token"
+CLIENT_ID="your bot's Application ID AKA Client ID"
+TOKEN="your bot's TOKEN"
 ```
 
-This will automatically be ignored from the `.gitignore`. so do not worry about this data being public.
+This will automatically be ignored from the `.gitignore`. So do not worry about this data being public.
 
 #### 
 
 #### Running the bot
 
-In order to run the bot, you must run `npm run dev` to run the TypeScript developer environment. Do not worry about the other `package.json` scripts, they are for production.
+In order to run the bot, you must run `npm run dev` to run the TypeScript developer environment. Don't worry about the other `package.json` scripts, they are for production.
 
 ### Other Information
 
@@ -45,3 +47,7 @@ The configuration file is used for constant variables that will be reused in the
 #### Data
 
 Data is currently stored in the `data.json` file. Only reaction messages are stored here, which is why a database is not present. If you are adding more data handling to the bot, please switch to sqlite.
+
+## Contributing
+
+Look at ```CONTRIBUTING.md``` to find out how you can help contribute to the development of this bot.
