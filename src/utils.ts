@@ -3,10 +3,10 @@ import { IDataObject } from "./types";
 import fs from "fs/promises";
 
 export const getData = async (): Promise<IDataObject> =>
-    JSON.parse(await fs.readFile("./data.json", "utf8"));
+    JSON.parse(await fs.readFile("../data.json", "utf8"));
 
 export const writeData = (data: IDataObject) =>
-    fs.writeFile("./data.json", JSON.stringify(data));
+    fs.writeFile("../data.json", JSON.stringify(data));
 
 interface QuestionOptions {
     ephemeral: boolean;

@@ -14,7 +14,7 @@ interface IConfig {
     announcementsChannelId: string;
     announcementsRoleId: string;
     guildId: string;
-    logChannelId:string;
+    logChannelId: string;
     rolesChannelId: string;
     reactionMessages: IReactionMessage[];
     memberRoleId: string;
