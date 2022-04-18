@@ -7,16 +7,16 @@ import {
     TextChannel,
     User,
 } from "discord.js";
-import { IBotClient } from "../types";
+import { bot } from "..";
+import config from "../config";
+import { Bot } from "../structures/Bot";
 
 export default class Logger {
-    logchannel!: TextChannel;
-
-    constructor(logchannel: string, client: IBotClient) {
-        this.logchannel = client.channels.cache.get(logchannel) as TextChannel;
+    get logchannel() {
+        return bot.channels.cache.get(config.logChannelId) as TextChannel;
     }
 
-    messageDeleteEvent(message: Message, client: IBotClient) {
+    messageDeleteEvent(message: Message, client: Bot) {
         // Helper function to concatenate and format the attachment urls
         function formatAttachmentsURL(
             attachments: Collection<String, MessageAttachment>
@@ -67,7 +67,7 @@ export default class Logger {
         this.logchannel.send({ embeds: [embed] });
     }
 
-    messageCreateEvent(message: Message, client: IBotClient) {
+    messageCreateEvent(message: Message, client: Bot) {
         // Helper function to concatenate and format the attachment urls
         function formatAttachmentsURL(
             attachments: Collection<String, MessageAttachment>
@@ -116,11 +116,7 @@ export default class Logger {
         this.logchannel.send({ embeds: [embed] });
     }
 
-    messageUpdateEvent(
-        oldMessage: Message,
-        newMessage: Message,
-        client: IBotClient
-    ) {
+    messageUpdateEvent(oldMessage: Message, newMessage: Message, client: Bot) {
         // Helper function to concatenate and format the attachment urls
         function formatAttachmentsURL(
             attachments: Collection<String, MessageAttachment>
@@ -192,12 +188,7 @@ export default class Logger {
         this.logchannel.send({ embeds: [embed] });
     }
 
-    memberRoleAddEvent(
-        target: User,
-        executor: User,
-        role: any,
-        client: IBotClient
-    ) {
+    memberRoleAddEvent(target: User, executor: User, role: any, client: Bot) {
         const embed = new MessageEmbed();
         embed.setTitle(`• Role added to ${target.tag}`);
         embed.setDescription(
@@ -217,7 +208,7 @@ export default class Logger {
         target: User,
         executor: User,
         role: any,
-        client: IBotClient
+        client: Bot
     ) {
         const embed = new MessageEmbed();
         embed.setTitle(`• Role removed from ${target.tag}`);
@@ -238,7 +229,7 @@ export default class Logger {
         member: GuildMember,
         oldMemberNickname: string,
         newMemberNickname: string,
-        client: IBotClient
+        client: Bot
     ) {
         const embed = new MessageEmbed();
         embed.setAuthor({
@@ -263,7 +254,7 @@ export default class Logger {
         this.logchannel.send({ embeds: [embed] });
     }
 
-    memberRemoveEvent(member: GuildMember, client: IBotClient) {
+    memberRemoveEvent(member: GuildMember, client: Bot) {
         const monthName: string[] = [
             "Jan",
             "Feb",

@@ -1,13 +1,14 @@
 import { Message } from "discord.js";
-import { IBotClient } from "../types";
 import Logger from "../logger/Logger";
+import { Bot } from "../structures/Bot";
+import { IBotEvent } from "../types";
 
-module.exports = {
+export const event: IBotEvent = {
     name: "messageUpdate",
     execute(
         oldMessage: Message,
         newMessage: Message,
-        client: IBotClient,
+        client: Bot,
         logger: Logger
     ) {
         // Check if the old message is present in the cache

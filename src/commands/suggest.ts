@@ -1,10 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import {
-    Client,
-    CommandInteraction,
-    MessageEmbed,
-    TextChannel,
-} from "discord.js";
+import { MessageEmbed, TextChannel } from "discord.js";
 import config from "../config";
 import { IBotCommand } from "../types";
 

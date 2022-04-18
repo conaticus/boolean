@@ -1,10 +1,11 @@
 import { Message } from "discord.js";
-import { IBotClient } from "../types";
 import Logger from "../logger/Logger";
+import { Bot } from "../structures/Bot";
+import { IBotEvent } from "../types";
 
-module.exports = {
+export const event: IBotEvent = {
     name: "messageDelete",
-    execute(message: Message, client: IBotClient, logger: Logger) {
+    execute(message: Message, client: Bot, logger: Logger) {
         // Check if the deleted message is present in the cache
         if (message.author == null) return;
 
