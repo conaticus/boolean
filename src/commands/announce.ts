@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed, TextChannel } from "discord.js";
 import config from "../config";
 import { IBotCommand } from "../types";
-import { askQuestion } from "../utils";
+import utils from "../utils";
 
 export const command: IBotCommand = {
     data: new SlashCommandBuilder()
@@ -16,7 +16,7 @@ export const command: IBotCommand = {
         ),
     requiredPerms: ["ADMINISTRATOR"],
     async execute(interaction, client) {
-        const announcement = await askQuestion(
+        const announcement = await utils.askQuestion(
             interaction,
             "Please now send the announcement message.",
             { noErr: true, ephemeral: true }
