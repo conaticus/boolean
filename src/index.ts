@@ -7,7 +7,7 @@ import { IBotClient, IBotCommand } from "./types";
 import { commandFiles, eventFiles } from "./files";
 import Logger from "./logger/Logger";
 
-async () => {
+(async () => {
     const client = new Client({
         intents: [
             Intents.FLAGS.GUILDS,
@@ -53,4 +53,4 @@ async () => {
     }
 
     client.login(process.env.TOKEN);
-};
+})();
