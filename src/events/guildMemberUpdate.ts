@@ -1,13 +1,14 @@
-import { AuditLogChange, GuildMember, User } from "discord.js";
-import { IBotClient } from "../types";
+import { GuildMember, User } from "discord.js";
 import Logger from "../logger/Logger";
+import { Bot } from "../structures/Bot";
+import { IBotEvent } from "../types";
 
-module.exports = {
+export const event: IBotEvent = {
     name: "guildMemberUpdate",
     async execute(
         oldMember: GuildMember,
         newMember: GuildMember,
-        client: IBotClient,
+        client: Bot,
         logger: Logger
     ) {
         // Fetch the latest audit log

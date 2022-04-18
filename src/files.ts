@@ -11,11 +11,11 @@ function generator() {
 const commandFiles = generator()
     .path(path.join(__dirname, "commands"))
     .findSync()
-    .map((file: string) => file.slice(0, file.lastIndexOf(".")));
+    .map((file: string) => file.slice(0, file.lastIndexOf("."))) as string[];
 
 const eventFiles = generator()
     .path(path.join(__dirname, "events"))
     .findSync()
-    .map((file: string) => file.slice(0, file.lastIndexOf(".")));
+    .map((file: string) => file.slice(0, file.lastIndexOf("."))) as string[];
 
 export { commandFiles, eventFiles };

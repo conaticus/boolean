@@ -1,11 +1,13 @@
-import { Client, MessageEmbed, TextChannel } from "discord.js";
+import { MessageEmbed, TextChannel } from "discord.js";
 import config from "../config";
+import { Bot } from "../structures/Bot";
+import { IBotEvent } from "../types";
 import { getData, writeData } from "../utils";
 
-module.exports = {
+export const event: IBotEvent = {
     name: "ready",
     once: true,
-    async execute(_: any, client: Client) {
+    async execute(client: Bot) {
         console.log(`Logged in as ${client.user?.tag}.`);
 
         const data = await getData();

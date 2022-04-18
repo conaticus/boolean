@@ -1,10 +1,11 @@
 import { GuildMember, MessageEmbed, TextChannel } from "discord.js";
 import config from "../config";
-import { IBotClient } from "../types";
+import { Bot } from "../structures/Bot";
+import { IBotEvent } from "../types";
 
-module.exports = {
+export const event: IBotEvent = {
     name: "guildMemberAdd",
-    async execute(member: GuildMember, client: IBotClient) {
+    async execute(member: GuildMember, client: Bot) {
         member.roles.add(config.memberRoleId);
 
         const welcomeMessageEmbed = new MessageEmbed()

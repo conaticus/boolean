@@ -1,10 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {
-    Client,
-    Collection,
+    ClientEvents,
     CommandInteraction,
     PermissionResolvable,
 } from "discord.js";
+import { Bot } from "./structures/Bot";
 
 export interface IBotCommand {
     data:
@@ -13,16 +13,16 @@ export interface IBotCommand {
     requiredPerms?: PermissionResolvable;
     execute: (
         interaction: CommandInteraction<"cached">,
-        client: IBotClient
+        client: Bot
     ) => unknown;
 }
 
-export interface IBotClient extends Client<true> {
-    commands: Collection<string, IBotCommand>;
+export interface IBotEvent {
+    name: keyof ClientEvents;
+    once?: true;
+    execute: (...args: any[]) => unknown;
 }
 
 export interface IDataObject {
-    reactionMessages: {
-        [key: string]: string;
-    };
+    reactionMessages: Record<string, string>;
 }

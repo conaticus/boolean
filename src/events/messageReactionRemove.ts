@@ -1,11 +1,9 @@
-import { Client, MessageReaction, User } from "discord.js";
+import { MessageReaction, User } from "discord.js";
 import config from "../config";
-import { IDataObject } from "../types";
-import fs from "fs/promises";
-import path from "path";
+import { IBotEvent } from "../types";
 import { getData } from "../utils";
 
-module.exports = {
+export const event: IBotEvent = {
     name: "messageReactionRemove",
     async execute(reaction: MessageReaction, user: User) {
         const member = reaction.message.guild?.members.cache.get(user.id);

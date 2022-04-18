@@ -1,12 +1,10 @@
-import { IBotClient } from "../types";
 import { CommandInteraction, MessageEmbed } from "discord.js";
+import { Bot } from "../structures/Bot";
+import { IBotEvent } from "../types";
 
-module.exports = {
+export const event: IBotEvent = {
     name: "interactionCreate",
-    async execute(
-        interaction: CommandInteraction<"cached">,
-        client: IBotClient
-    ) {
+    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
         if (!interaction.isCommand() || !interaction.inCachedGuild()) return;
 
         const command = client.commands.get(interaction.commandName);
