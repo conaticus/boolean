@@ -1,11 +1,14 @@
 import { Client, MessageEmbed, TextChannel } from "discord.js";
 import config from "../config";
 import { getData, writeData } from "../utils";
+import fs from "fs/promises";
+import { IBotClient, IDataObject } from "../types";
+import logger from '../logger/logger'
 
 module.exports = {
     name: "ready",
     once: true,
-    async execute(client: Client) {
+    async execute(server_logger: logger, client: Client) {
         console.log(`Logged in as ${client.user?.tag}.`);
 
         const data = await getData();
