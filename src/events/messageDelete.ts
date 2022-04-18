@@ -1,13 +1,18 @@
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+
+import { Message, MessageEmbed, TextChannel, PartialMessage } from "discord.js";
 import Logger from "../logger/Logger";
 import { Bot } from "../structures/Bot";
 import { IBotEvent } from "../types";
 import utils from "../utils/Utils";
 import config from "./../config"
+import { TypedEvent } from "../types";
 
-export const event: IBotEvent = {
-    name: "messageDelete",
-    execute(message: Message, client: Bot, logger: Logger) {
+export default TypedEvent({
+    eventName: "messageDelete",
+    on: (client: Bot, logger: Logger, message: Message | PartialMessage) => {
+        // Check if the message is partial
+        if (message.partial) return;
+
         // Check if the deleted message is present in the cache
         if (message.author == null) return;
 
@@ -56,4 +61,4 @@ function log(message: Message, client: Bot, logger: Logger) {
         logger.channel(embed, client.channels.cache.get(config.logChannel) as TextChannel)
         logger.console.info(`${message.author.tag} has deleted the message \"${message.content}\"`);
 }
-
+});

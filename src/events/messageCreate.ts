@@ -7,9 +7,9 @@ import config from "./../config"
 
 const forbiddenPhrases: string[] = ["discord.gg"];
 
-export const event: IBotEvent = {
-    name: "messageCreate",
-    execute(message: Message, client: Bot, logger: Logger) {
+export default TypedEvent({
+    eventName: "messageCreate",
+    on: async (client: Bot, logger: Logger, message: Message) => {
         if (message.author.bot) return;
         const foundPhrase = forbiddenPhrases.find((phrase) =>
             message.content.includes(phrase)
@@ -25,6 +25,7 @@ export const event: IBotEvent = {
 
         log(message, client, logger);
     },
+
 };
 
 function log(message: Message, client: Bot, logger: Logger) {
@@ -63,3 +64,6 @@ function log(message: Message, client: Bot, logger: Logger) {
         logger.channel(embed, client.channels.cache.get(config.logChannel) as TextChannel)
         logger.console.info(`${message.author.tag} has sent a message \"${message.content}\"`)
 }
+
+});
+

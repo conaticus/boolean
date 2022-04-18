@@ -1,6 +1,7 @@
 import { Collection, MessageEmbed, TextChannel } from "discord.js";
 import config from "../config";
 import { Bot } from "../structures/Bot";
+import { TypedEvent } from "../types";
 import { getData, writeData } from "../utils";
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
@@ -42,6 +43,10 @@ export const event: IBotEvent = {
             ),
             { body: commandArray }
         );
+export default TypedEvent({
+    eventName: "ready",
+    once: async (client: Bot) => {
+        console.log(`Logged in as ${client.user?.tag}.`);
 
         const data = await getData();
 
@@ -77,4 +82,4 @@ export const event: IBotEvent = {
             await writeData(data);
         });
     },
-};
+});

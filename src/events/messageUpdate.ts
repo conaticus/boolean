@@ -1,18 +1,22 @@
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+import { Message, MessageEmbed, TextChannel, PartialMessage } from "discord.js";
 import Logger from "../logger/Logger";
 import { Bot } from "../structures/Bot";
 import { IBotEvent } from "../types";
 import utils from "../utils/Utils";
 import config from "./../config"
+import { TypedEvent } from "../types";
 
-export const event: IBotEvent = {
-    name: "messageUpdate",
-    execute(
-        oldMessage: Message,
-        newMessage: Message,
+export default TypedEvent({
+    eventName: "messageUpdate",
+    on: (
         client: Bot,
-        logger: Logger
-    ) {
+        logger: Logger,
+        oldMessage: Message | PartialMessage,
+        newMessage: Message | PartialMessage,
+    ) => {
+        // Check if oldMessage OR newMessage is partial
+        if (oldMessage.partial || newMessage.partial) return;
+
         // Check if the old message is present in the cache
         // Throws an exception if the author is null
         if (oldMessage.author == null) return;
@@ -83,3 +87,4 @@ function log(oldMessage: Message, newMessage: Message, client: Bot, logger: Logg
         logger.channel(embed, client.channels.cache.get(config.logChannel) as TextChannel)
         logger.console.info(`${oldMessage.author.tag} has edited the message \"${oldMessage.content}\" to \"${newMessage.content}\"`);
 }
+});

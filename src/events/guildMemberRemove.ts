@@ -1,3 +1,4 @@
+
 import { GuildMember, MessageEmbed, TextChannel } from "discord.js";
 import Logger from "../logger/Logger";
 import { Bot } from "../structures/Bot";
@@ -55,3 +56,20 @@ function memberRemoveEvent(member: GuildMember, client: Bot, logger: Logger) {
     logger.channel(embed, client.channels.cache.get(config.logChannel) as TextChannel)
     logger.console.info(`User ${member.user.tag} has left the server.`);
 }
+=======
+import { GuildMember, PartialGuildMember } from "discord.js";
+import Logger from "../logger/Logger";
+import { Bot } from "../structures/Bot";
+import { TypedEvent } from "../types";
+
+export default TypedEvent({
+    eventName: "guildMemberRemove",
+    on: async (
+        client: Bot,
+        logger: Logger,
+        member: GuildMember | PartialGuildMember
+    ) => {
+        if (member.partial) return;
+        logger.memberRemoveEvent(member, client);
+    },
+});
