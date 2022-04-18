@@ -19,7 +19,7 @@
         "discord.js": "^13.6.0",
         "filehound": "^1.17.5",
         "mathjs": "^10.4.3",
-        "winston": "https://github.com/InfinityDevTech/winston",
+        "winston": "https://github.com/briantanner/winston",
         "moment": "^2.29.1",
         "util": "^0.12.4"
     },
