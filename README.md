@@ -50,4 +50,4 @@ Data is currently stored in the `data.json` file. Only reaction messages are sto
 
 ## Contributing
 
-Look at ```CONTRIBUTING.md``` to find out how you can help contribute to the development of this bot.
+Look at [CONTRIBUTING.md](https://github.com/conaticus/boolean/blob/master/CONTRIBUTING.md) to find out how you can help contribute to the development of this bot.
