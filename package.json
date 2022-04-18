@@ -20,7 +20,9 @@
         "filehound": "^1.17.5",
         "mathjs": "^10.4.3",
         "pino": "^7.10.0",
-        "pino-pretty": "^7.6.1"
+        "pino-pretty": "^7.6.1",
+        "pretty-bytes": "^6.0.0",
+        "pretty-ms": "^7.0.1"
     },
     "devDependencies": {
         "@types/node": "^17.0.24",
