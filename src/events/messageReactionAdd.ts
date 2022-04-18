@@ -1,11 +1,21 @@
-import { MessageReaction, User } from "discord.js";
+import {
+    MessageReaction,
+    PartialMessageReaction,
+    PartialUser,
+    User,
+} from "discord.js";
 import config from "../config";
-import { IBotEvent } from "../types";
+import { TypedEvent } from "../types";
 import { getData } from "../utils";
 
-export const event: IBotEvent = {
-    name: "messageReactionAdd",
-    async execute(reaction: MessageReaction, user: User) {
+export default TypedEvent({
+    eventName: "messageReactionAdd",
+    on: async (
+        _,
+        __,
+        reaction: MessageReaction | PartialMessageReaction,
+        user: User | PartialUser
+    ) => {
         const member = reaction.message.guild?.members.cache.get(user.id);
         if (!member) return;
 
@@ -21,4 +31,4 @@ export const event: IBotEvent = {
             });
         });
     },
-};
+});

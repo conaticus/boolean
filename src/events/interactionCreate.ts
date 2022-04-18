@@ -1,10 +1,10 @@
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { Interaction, MessageEmbed } from "discord.js";
 import { Bot } from "../structures/Bot";
-import { IBotEvent } from "../types";
+import { TypedEvent } from "../types";
 
-export const event: IBotEvent = {
-    name: "interactionCreate",
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+export default TypedEvent({
+    eventName: "interactionCreate",
+    on: async (client: Bot, _, interaction: Interaction) => {
         if (!interaction.isCommand() || !interaction.inCachedGuild()) return;
 
         const command = client.commands.get(interaction.commandName);
@@ -37,4 +37,4 @@ export const event: IBotEvent = {
             });
         }
     },
-};
+});

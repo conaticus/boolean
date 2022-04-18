@@ -1,11 +1,17 @@
-import { GuildMember, MessageEmbed, TextChannel } from "discord.js";
+import {
+    GuildMember,
+    MessageEmbed,
+    PartialGuildMember,
+    TextChannel,
+} from "discord.js";
 import config from "../config";
 import { Bot } from "../structures/Bot";
-import { IBotEvent } from "../types";
+import { TypedEvent } from "../types";
 
-export const event: IBotEvent = {
-    name: "guildMemberAdd",
-    async execute(member: GuildMember, client: Bot) {
+export default TypedEvent({
+    eventName: "guildMemberAdd",
+    on: async (client: Bot, _, member: GuildMember | PartialGuildMember) => {
+        if (member.partial) return;
         member.roles.add(config.memberRoleId);
 
         const welcomeMessageEmbed = new MessageEmbed()
@@ -20,4 +26,4 @@ export const event: IBotEvent = {
         ) as TextChannel;
         welcomeChannel.send({ embeds: [welcomeMessageEmbed] });
     },
-};
+});

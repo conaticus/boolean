@@ -1,16 +1,19 @@
-import { Message } from "discord.js";
+import { Message, PartialMessage } from "discord.js";
 import Logger from "../logger/Logger";
 import { Bot } from "../structures/Bot";
-import { IBotEvent } from "../types";
+import { TypedEvent } from "../types";
 
-export const event: IBotEvent = {
-    name: "messageUpdate",
-    execute(
-        oldMessage: Message,
-        newMessage: Message,
+export default TypedEvent({
+    eventName: "messageUpdate",
+    on: (
         client: Bot,
-        logger: Logger
-    ) {
+        logger: Logger,
+        oldMessage: Message | PartialMessage,
+        newMessage: Message | PartialMessage,
+    ) => {
+        // Check if oldMessage OR newMessage is partial
+        if (oldMessage.partial || newMessage.partial) return;
+
         // Check if the old message is present in the cache
         // Throws an exception if the author is null
         if (oldMessage.author == null) return;
@@ -19,4 +22,4 @@ export const event: IBotEvent = {
 
         logger.messageUpdateEvent(oldMessage, newMessage, client);
     },
-};
+});
