@@ -19,9 +19,8 @@
         "discord.js": "^13.6.0",
         "filehound": "^1.17.5",
         "mathjs": "^10.4.3",
-        "winston": "2.4.0",
-        "moment": "^2.29.1",
-        "util": "^0.12.4"
+        "pino": "^7.10.0",
+        "pino-pretty": "^7.6.1"
     },
     "devDependencies": {
         "@types/node": "^17.0.24",

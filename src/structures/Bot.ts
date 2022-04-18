@@ -6,7 +6,7 @@ import config from "../config";
 
 export class Bot extends Client<true> {
     commands = new Collection<string, IBotCommand>();
-    private logger = new Logger({"logLevel": config.logLevel});
+    private logger = new Logger({"level": config.logLevel});
 
     constructor(options: ClientOptions) {
         super(options);

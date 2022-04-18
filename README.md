@@ -15,11 +15,10 @@ A bot for the Conaticus Discord server. A document of the development process ha
 #### Setting up the .env
 
 In order to setup the bot, you must create a `.env` in the parent directory.
-In this file you must declare the bot's `CLIENT_ID` and `TOKEN` - this is the client and token from the Discord Developer Portal.
+In this file you must declare the bot's `TOKEN` - this is the token from the Discord Developer Portal.
 
 Syntax:
 ```env
-CLIENT_ID="your bot client id"
 TOKEN="your bot token"
 ```
 
