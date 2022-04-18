@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
-import mathjs from "mathjs";
+import { execute } from "mathjs";
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,7 +16,7 @@ module.exports = {
         const calc = interaction.options.getString("calculation", true);
         
         try {
-            const result = mathjs.evaluate(calc);
+            const result = evaluate(calc);
             const successEmbed = new MessageEmbed()
                 .setColor("GREEN")
                 .setDescription(`Input: \`${calc}\`\nResult: \`${result}\``);
