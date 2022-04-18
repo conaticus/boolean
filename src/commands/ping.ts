@@ -28,5 +28,7 @@ export const command: IBotCommand = {
         interaction.channel?.send("Silly human.");
         await timeout(1);
         interaction.channel?.send("Think you can control me?");
+        await timeout(1);
+        interaction.channel?.send("Tactical nuke inbound.");
     },
 };
