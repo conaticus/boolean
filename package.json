@@ -4,9 +4,9 @@
     "description": "",
     "main": "./dist/index.js",
     "scripts": {
-        "dev": "ts-node-dev --respawn ./src/index.ts",
+        "dev": "ts-node-dev --respawn --no-warnings ./src/index.ts",
         "build": "tsc",
-        "start": "node ./dist/index.js",
+        "start": "node --no-warnings ./dist/index.js",
         "check": "tsc -w --noEmit"
     },
     "keywords": [],
@@ -18,7 +18,10 @@
         "discord-api-types": "^0.29.0",
         "discord.js": "^13.6.0",
         "filehound": "^1.17.5",
-        "mathjs": "^10.4.3"
+        "mathjs": "^10.4.3",
+        "winston": "https://github.com/InfinityDevTech/winston",
+        "moment": "^2.29.1",
+        "util": "^0.12.4"
     },
     "devDependencies": {
         "@types/node": "^17.0.24",
