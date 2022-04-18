@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
-import { execute } from "mathjs";
+import execute,{ evaluate } from "mathjs";
 
 module.exports = {
     data: new SlashCommandBuilder()
