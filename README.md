@@ -17,11 +17,10 @@ Also, remember to subscribe at https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBH
 #### Setting up the .env
 
 In order to setup the bot, you must create a `.env` in the parent directory.
-In this file you must declare the bot's `CLIENT_ID` and `TOKEN` - this is the client and token from the [Discord Developer Portal](https://discord.com/developers/applications).
+In this file you must declare the bot's `TOKEN` - this is the token from the [Discord Developer Portal](https://discord.com/developers/applications).
 
 Syntax:
 ```env
-CLIENT_ID="your bot's Application ID AKA Client ID"
 TOKEN="your bot's TOKEN"
 ```
 
