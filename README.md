@@ -31,7 +31,7 @@ This will automatically be ignored from the [.gitignore](https://github.com/cona
 
 #### Running the bot
 
-In order to run the bot, you must run `npm run dev` to run the TypeScript developer environment. Don't worry about the other `package.json` scripts, they are for production.
+In order to run the bot, you must run `npm run dev` to run the TypeScript developer environment. Don't worry about the other [package.json](https://github.com/conaticus/boolean/blob/master/package.json) scripts, they are for production.
 
 ### Other Information
 
