@@ -20,28 +20,35 @@ const client = new Client({
 client.commands = new Collection();
 
 let serverLogger: Logger;
-client.on("ready", () => {
+client.on("ready", async () => {
     serverLogger = new Logger(config.logChannelId, client);
-});
 
-for (const file of commandFiles) {
-    const command = require(file) as IBotCommand;
-    client.commands.set(command.data.name, command);
-}
+    for (const file of commandFiles) {
+        const command = (await import(file)).command as IBotCommand;
+        if (!command) {
+            console.error(
+                `File at path ${file} seems to incorrectly be exporting a command.`
+            );
+            continue;
+        }
 
-for (const file of eventFiles) {
-    const event = require(file);
-
-    if (event.once) {
-        client.once(event.name, (...args) =>
-            event.execute(...args, client, serverLogger)
-        );
-        continue;
+        client.commands.set(command.data.name, command);
     }
 
-    client.on(event.name, (...args) =>
-        event.execute(...args, client, serverLogger)
-    );
-}
+    for (const file of eventFiles) {
+        const event = require(file);
+
+        if (event.once) {
+            client.once(event.name, (...args) =>
+                event.execute(...args, client, serverLogger)
+            );
+            continue;
+        }
+
+        client.on(event.name, (...args) =>
+            event.execute(...args, client, serverLogger)
+        );
+    }
+});
 
 client.login(process.env.TOKEN);

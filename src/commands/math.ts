@@ -1,8 +1,9 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, GuildMember, MessageEmbed } from "discord.js";
-import execute,{ evaluate } from "mathjs";
+import { MessageEmbed } from "discord.js";
+import execute, { evaluate } from "mathjs";
+import { IBotCommand } from "../types";
 
-module.exports = {
+export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("math")
         .setDescription("Calculates the input.")
@@ -12,9 +13,9 @@ module.exports = {
                 .setDescription("Calculation to evaluate.")
                 .setRequired(true)
         ),
-    async execute(interaction: CommandInteraction) {
+    async execute(interaction) {
         const calc = interaction.options.getString("calculation", true);
-        
+
         try {
             const result = evaluate(calc);
             const successEmbed = new MessageEmbed()

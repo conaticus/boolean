@@ -2,21 +2,30 @@ import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import { commandFiles } from "./files";
 import { IBotCommand } from "./types";
-import  config  from "./config"
+import config from "./config";
 
-const commands: object[] = [];
+async () => {
+    const commands: object[] = [];
 
-for (const file of commandFiles) {
-    const command = require(file) as IBotCommand;
-    commands.push(command.data.toJSON());
-}
+    for (const file of commandFiles) {
+        const command = (await import(file)).command as IBotCommand;
+        if (!command) {
+            console.error(
+                `File at path ${file} seems to incorrectly be exporting a command.`
+            );
+            continue;
+        }
 
-const rest = new REST({ version: "9" }).setToken(process.env.TOKEN!);
+        commands.push(command.data.toJSON());
+    }
 
-rest.put(
-    Routes.applicationGuildCommands(
-        process.env.CLIENT_ID!,
-        config.guildId as string
-    ),
-    { body: commands }
-);
+    const rest = new REST({ version: "9" }).setToken(process.env.TOKEN!);
+
+    rest.put(
+        Routes.applicationGuildCommands(
+            process.env.CLIENT_ID!,
+            config.guildId as string
+        ),
+        { body: commands }
+    );
+};
