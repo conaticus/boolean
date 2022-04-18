@@ -20,13 +20,21 @@ interface IConfig {
     memberRoleId: string;
 }
 
-const config: IConfig = {
+const pkg = require('../package.json');
+
+export default {
+
+    token: process.env.TOKEN,
+
+    // Use info (Wont show debug logs), or Debug (Shows EVERYTHING)
+    logLevel: "info",
+
     suggestionsChannelId: "949572444656648262",
     announcementsChannelId: "949567953211387945",
     announcementsRoleId: "960144630857465866",
     welcomeChannelId: "964876565437644820",
     guildId: "891336725912240128",
-    logChannelId: "965246247441162310",
+    logChannel: "965246247441162310",
     rolesChannelId: "949572424079376414",
     reactionMessages: [
         {
@@ -89,6 +97,4 @@ const config: IConfig = {
         },
     ],
     memberRoleId: "949569759308025856",
-};
-
-export default config;
+}

@@ -1,14 +1,12 @@
 import { Client, ClientOptions, Collection } from "discord.js";
 import { IBotCommand, IBotEvent } from "../types";
-import { commandFiles, eventFiles } from "../files";
+import { eventFiles } from "../files";
 import Logger from "../logger/Logger";
-import { REST } from "@discordjs/rest";
-import { Routes } from "discord-api-types/v9";
 import config from "../config";
 
 export class Bot extends Client<true> {
     commands = new Collection<string, IBotCommand>();
-    private logger = new Logger();
+    private logger = new Logger({"level": config.logLevel});
 
     constructor(options: ClientOptions) {
         super(options);
@@ -16,7 +14,7 @@ export class Bot extends Client<true> {
 
     async start() {
         await this.initModules();
-        await this.login(process.env.TOKEN);
+        await this.login(config.token!);
     }
 
     private async initModules() {
@@ -41,34 +39,11 @@ export class Bot extends Client<true> {
                     event[method]!(this, this.logger, ...args)
                 );
             }
-            console.log(`Registered event ${event.eventName}`);
+            this.logger.console.debug(`Registered event ${event.eventName}`);
         }
 
-        const commands: object[] = [];
-
-        for await (const file of commandFiles) {
-            const command = (await import(file)).command as IBotCommand;
-            if (!command) {
-                console.error(
-                    `File at path ${file} seems to incorrectly be exporting a command.`
-                );
-                continue;
-            }
-
-            commands.push(command.data.toJSON());
-            this.commands.set(command.data.name, command);
-            console.log(`Registered command ${command.data.name}`);
-        }
-
-        console.log("Registering slash commands");
-        const rest = new REST({ version: "9" }).setToken(process.env.TOKEN!);
-
-        rest.put(
-            Routes.applicationGuildCommands(
-                process.env.CLIENT_ID!,
-                config.guildId
-            ),
-            { body: commands }
-        );
+        
+        this.logger.console.info("Registering slash commands");
+        
     }
 }
