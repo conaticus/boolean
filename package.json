@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "ts-node-dev --respawn --no-warnings ./src/index.ts",
         "build": "tsc",
-        "start": "node --no-warnings ./dist/index.js",
+        "start": "node --no-warnings .,
         "check": "tsc -w --noEmit"
     },
     "keywords": [],
