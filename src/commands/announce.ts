@@ -1,14 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import {
-    Client,
-    CommandInteraction,
-    MessageEmbed,
-    TextChannel,
-} from "discord.js";
+import { MessageEmbed, TextChannel } from "discord.js";
 import config from "../config";
+import { IBotCommand } from "../types";
 import { askQuestion } from "../utils";
 
-module.exports = {
+export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("announce")
         .setDescription("Write an announcement for the server.")
@@ -19,7 +15,7 @@ module.exports = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction: CommandInteraction<"cached">, client: Client) {
+    async execute(interaction, client) {
         const announcement = await askQuestion(
             interaction,
             "Please now send the announcement message.",

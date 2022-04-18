@@ -1,6 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
-module.exports = {
+import { MessageEmbed } from "discord.js";
+import { IBotCommand } from "../types";
+
+export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("repeat")
         .setDescription("Repeats a given message")
@@ -11,7 +13,7 @@ module.exports = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction: CommandInteraction<"cached">) {
+    async execute(interaction) {
         interaction.channel?.send(
             interaction.options.getString("message", true)
         );

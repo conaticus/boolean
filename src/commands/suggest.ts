@@ -6,8 +6,9 @@ import {
     TextChannel,
 } from "discord.js";
 import config from "../config";
+import { IBotCommand } from "../types";
 
-module.exports = {
+export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("suggest")
         .setDescription("Write a new suggestion for the channel.")
@@ -23,7 +24,7 @@ module.exports = {
                 .setDescription("Set suggestion's description.")
                 .setRequired(true)
         ),
-    async execute(interaction: CommandInteraction<"cached">, client: Client) {
+    async execute(interaction, client) {
         const suggestionsChannel = client.channels.cache.get(
             config.suggestionsChannelId
         ) as TextChannel;

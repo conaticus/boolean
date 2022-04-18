@@ -1,13 +1,12 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {
-    Client,
-    CommandInteraction,
     Message,
     MessageEmbed,
     MessageReaction,
     TextChannel,
     User,
 } from "discord.js";
+import { IBotCommand } from "../types";
 
 interface IQuestion {
     question: string;
@@ -173,7 +172,7 @@ const constructQuestions = async (
     return await constructQuestions(user, channel, questions);
 };
 
-module.exports = {
+export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("quiz")
         .setDescription("Create a quiz for server members to play.")
@@ -184,7 +183,7 @@ module.exports = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction: CommandInteraction<"cached">, client: Client) {
+    async execute(interaction, client) {
         const quizChannel = interaction.options.getChannel(
             "channel"
         ) as TextChannel;
