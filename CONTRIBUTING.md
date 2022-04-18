@@ -1,6 +1,6 @@
 # Contributing
 
-Thank you for taking the time to read the contributing guide, your efforts are greatly appreciated!
+Thank you for taking the time to read the contributing guide, your efforts are greatly appreciated! Please understand that there is a chance your code could be overwritten in the future - that is the nature of open source!
 
 ## Guidelines
 
