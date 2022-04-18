@@ -25,7 +25,7 @@ CLIENT_ID="your bot's Application ID AKA Client ID"
 TOKEN="your bot's TOKEN"
 ```
 
-This will automatically be ignored from the `.gitignore`. So do not worry about this data being public.
+This will automatically be ignored from the [.gitignore](https://github.com/conaticus/boolean/blob/master/.gitignore). So do not worry about this data being public.
 
 #### 
 
@@ -42,11 +42,11 @@ Error: `"RED"`
 
 #### Configuration
 
-The configuration file is used for constant variables that will be reused in the application, such as ids and reaction messages. It is located at `/src/config.ts` - feel free to add anything that matches this description.
+The configuration file is used for constant variables that will be reused in the application, such as ids and reaction messages. It is located at [/src/config.ts](https://github.com/conaticus/boolean/blob/master/src/config.ts) - feel free to add anything that matches this description.
 
 #### Data
 
-Data is currently stored in the `data.json` file. Only reaction messages are stored here, which is why a database is not present. If you are adding more data handling to the bot, please switch to sqlite.
+Data is currently stored in the [data.json](https://github.com/conaticus/boolean/blob/master/data.json) file. Only reaction messages are stored here, which is why a database is not present. If you are adding more data handling to the bot, please switch to sqlite.
 
 ## Contributing
 
