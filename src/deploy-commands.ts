@@ -2,6 +2,7 @@ import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/v9";
 import { commandFiles } from "./files";
 import { IBotCommand } from "./types";
+import  config  from "./config"
 
 const commands: object[] = [];
 
@@ -15,7 +16,7 @@ const rest = new REST({ version: "9" }).setToken(process.env.TOKEN!);
 rest.put(
     Routes.applicationGuildCommands(
         process.env.CLIENT_ID!,
-        process.env.GUILD_ID!
+        config.guildId as string
     ),
     { body: commands }
 );
