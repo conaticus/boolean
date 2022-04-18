@@ -27,4 +27,4 @@ These mainly include:
 
 ### Issues
 
-Contributions must have corresponding issues. If the issue does not yet exist, please make a new one before contributing - also ensure that you add the claimed label, so nobody works on the same issue.
+Contributions must have corresponding issues. If the issue does not yet exist, please make a new one before contributing - also ensure that you add the claimed label, so nobody works on the same issue. **If you are unsure whether your changes will be wanted or not, please check with conaticus**.
