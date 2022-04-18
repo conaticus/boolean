@@ -20,6 +20,30 @@ export class Bot extends Client<true> {
     }
 
     private async initModules() {
+        for await (const file of eventFiles) {
+            const event = (await import(file)).default as IBotEvent<any>;
+            if (!event) {
+                console.error(
+                    `File at path ${file} seems to incorrectly be exporting an event.`
+                );
+                continue;
+            }
+
+            const listenerMethod = ["on", "off", "once"];
+            for await (const method of listenerMethod) {
+                // I can't find a better way to do this, I am sorry
+                // @ts-expect-error
+                if (!event[method] || typeof event[method] != "function")
+                    continue;
+                // @ts-expect-error
+                this[method](event.eventName, (...args: any) =>
+                    // @ts-expect-error
+                    event[method]!(this, this.logger, ...args)
+                );
+            }
+            console.log(`Registered event ${event.eventName}`);
+        }
+
         const commands: object[] = [];
 
         for await (const file of commandFiles) {
@@ -46,30 +70,5 @@ export class Bot extends Client<true> {
             ),
             { body: commands }
         );
-
-        for await (const file of eventFiles) {
-            const event = (await import(file)).event as IBotEvent;
-            if (!event) {
-                console.error(
-                    `File at path ${file} seems to incorrectly be exporting an event.`
-                );
-                continue;
-            }
-
-            if (event.once) {
-                this.once(
-                    event.name,
-                    (...args) => void event.execute(...args, this, this.logger)
-                );
-                console.log(`Registered event ${event.name}`);
-                continue;
-            }
-
-            this.on(
-                event.name,
-                (...args) => void event.execute(...args, this, this.logger)
-            );
-            console.log(`Registered event ${event.name}`);
-        }
     }
 }

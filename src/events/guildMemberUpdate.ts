@@ -1,16 +1,17 @@
-import { GuildMember, User } from "discord.js";
+import { GuildMember, PartialGuildMember, User } from "discord.js";
 import Logger from "../logger/Logger";
 import { Bot } from "../structures/Bot";
-import { IBotEvent } from "../types";
+import { TypedEvent } from "../types";
 
-export const event: IBotEvent = {
-    name: "guildMemberUpdate",
-    async execute(
-        oldMember: GuildMember,
-        newMember: GuildMember,
+export default TypedEvent({
+    eventName: "guildMemberUpdate",
+    on: async (
         client: Bot,
-        logger: Logger
-    ) {
+        logger: Logger,
+        oldMember: GuildMember | PartialGuildMember,
+        newMember: GuildMember | PartialGuildMember
+    ) => {
+        if (oldMember.partial || newMember.partial) return;
         // Fetch the latest audit log
         const AuditLogs = await oldMember.guild.fetchAuditLogs({
             limit: 1,
@@ -58,4 +59,4 @@ export const event: IBotEvent = {
                 client
             );
     },
-};
+});

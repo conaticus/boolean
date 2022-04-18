@@ -1,13 +1,13 @@
 import { Message } from "discord.js";
 import Logger from "../logger/Logger";
 import { Bot } from "../structures/Bot";
-import { IBotEvent } from "../types";
+import { TypedEvent } from "../types";
 
 const forbiddenPhrases: string[] = ["discord.gg"];
 
-export const event: IBotEvent = {
-    name: "messageCreate",
-    execute(message: Message, client: Bot, logger: Logger) {
+export default TypedEvent({
+    eventName: "messageCreate",
+    on: async (client: Bot, logger: Logger, message: Message) => {
         if (message.author.bot) return;
         const foundPhrase = forbiddenPhrases.find((phrase) =>
             message.content.includes(phrase)
@@ -23,4 +23,4 @@ export const event: IBotEvent = {
 
         logger.messageCreateEvent(message, client);
     },
-};
+});
