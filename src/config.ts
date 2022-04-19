@@ -15,7 +15,7 @@ export default config as {
     announcementsRoleId: string;
     welcomeChannelId: string;
     guildId: string;
-    logChannel: string;
+    logChannelId: string;
     rolesChannelId: string;
     reactionMessages: {
         title: string;
