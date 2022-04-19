@@ -36,7 +36,7 @@ export class Bot extends Client<true> {
                 // @ts-expect-error
                 this[method](event.eventName, (...args: any) =>
                     // @ts-expect-error
-                    event[method]!(this, this.logger, ...args)
+                    event[method]!(this, ...args)
                 );
             }
             this.logger.console.debug(`Registered event ${event.eventName}`);
