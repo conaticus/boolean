@@ -1,6 +1,6 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/rest/v9";
-import { Collection, MessageEmbed, TextChannel } from "discord.js";
+import { MessageEmbed, TextChannel } from "discord.js";
 import config from "../config";
 import { Bot } from "../structures/Bot";
 import { IBotCommand, TypedEvent } from "../types";
@@ -32,7 +32,7 @@ export default TypedEvent({
             );
         }
 
-        const rest = new REST({ version: "9" }).setToken(config.token!);
+        const rest = new REST({ version: "9" }).setToken(client.token);
 
         rest.put(
             Routes.applicationGuildCommands(client.user.id, config.guildId),

@@ -14,7 +14,7 @@ export class Bot extends Client<true> {
 
     async start() {
         await this.initModules();
-        await this.login(config.token!);
+        await this.login(process.env.TOKEN!);
     }
 
     private async initModules() {
@@ -41,7 +41,5 @@ export class Bot extends Client<true> {
             }
             this.logger.console.debug(`Registered event ${event.eventName}`);
         }
-
-        this.logger.console.info("Registering slash commands");
     }
 }

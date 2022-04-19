@@ -1,0 +1,22 @@
+{
+    "logLevel": "info",
+    "suggestionsChannelId": "",
+    "announcementsChannelId": "",
+    "announcementsRoleId": "",
+    "welcomeChannelId": "",
+    "guildId": "",
+    "logChannel": "",
+    "rolesChannelId": "",
+    "reactionMessages": [
+        {
+            "title": "foo",
+            "reactions": {
+                "bar": {
+                    "emoji": "",
+                    "roleId": ""
+                },
+            }
+        }
+    ],
+    "memberRoleId": ""
+}
