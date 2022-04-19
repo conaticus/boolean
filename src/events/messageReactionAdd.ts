@@ -27,7 +27,7 @@ export default TypedEvent({
 
             Object.values(rm.reactions).forEach((msgReaction) => {
                 if (msgReaction.emoji.includes(reaction.emoji.id!))
-                    member.roles.remove(msgReaction.roleId);
+                    member.roles.add(msgReaction.roleId);
             });
         });
     },
