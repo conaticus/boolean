@@ -1,22 +1,22 @@
-import { GuildMember, MessageEmbed, PartialGuildMember, TextChannel } from "discord.js";
+import {
+    GuildMember,
+    MessageEmbed,
+    PartialGuildMember,
+    TextChannel,
+} from "discord.js";
 import config from "../config";
-import Logger from "../logger/Logger";
 import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "guildMemberRemove",
-    on: async (
-        client: Bot,
-        logger: Logger,
-        member: GuildMember | PartialGuildMember
-    ) => {
+    on: async (client: Bot, member: GuildMember | PartialGuildMember) => {
         if (member.partial) return;
-        memberRemoveEvent(member, client, logger);
+        memberRemoveEvent(member, client);
     },
 });
 
-function memberRemoveEvent(member: GuildMember, client: Bot, logger: Logger) {
+function memberRemoveEvent(member: GuildMember, client: Bot) {
     const monthName: string[] = [
         "Jan",
         "Feb",
@@ -57,7 +57,9 @@ function memberRemoveEvent(member: GuildMember, client: Bot, logger: Logger) {
     });
     embed.setThumbnail(member.guild?.iconURL()!);
 
-    logger.channel(embed, client.channels.cache.get(config.logChannel) as TextChannel)
-    logger.console.info(`User ${member.user.tag} has left the server.`);
+    client.logger.channel(
+        embed,
+        client.channels.cache.get(config.logChannelId) as TextChannel
+    );
+    client.logger.console.info(`User ${member.user.tag} has left the server.`);
 }
-

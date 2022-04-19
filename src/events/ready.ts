@@ -5,12 +5,12 @@ import config from "../config";
 import { Bot } from "../structures/Bot";
 import { IBotCommand, TypedEvent } from "../types";
 import { getData, writeData } from "../utils";
-import { commandFiles, eventFiles } from "../files";
+import { commandFiles } from "../files";
 
 export default TypedEvent({
     eventName: "ready",
-    once: async (client: Bot, logger) => {
-        logger.console.info(`Logged in as ${client.user?.tag}.`);
+    once: async (client: Bot) => {
+        client.logger.console.info(`Logged in as ${client.user?.tag}.`);
 
         const data = await getData();
 
@@ -28,17 +28,15 @@ export default TypedEvent({
 
             commandArr.push(command.data.toJSON());
             commandCol.set(command.data.name, command);
-            logger.console.debug(`Registered command ${command.data.name}`);
+            client.logger.console.debug(
+                `Registered command ${command.data.name}`
+            );
         }
-
 
         const rest = new REST({ version: "9" }).setToken(config.token!);
 
         rest.put(
-            Routes.applicationGuildCommands(
-                client.user.id,
-                config.guildId
-            ),
+            Routes.applicationGuildCommands(client.user.id, config.guildId),
             { body: commandArr }
         );
 

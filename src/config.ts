@@ -9,6 +9,9 @@ interface IReactionMessage {
 }
 
 interface IConfig {
+    token: string;
+    logLevel: string;
+
     suggestionsChannelId: string;
     welcomeChannelId: string;
     announcementsChannelId: string;
@@ -20,11 +23,8 @@ interface IConfig {
     memberRoleId: string;
 }
 
-const pkg = require('../package.json');
-
-export default {
-
-    token: process.env.TOKEN,
+const config: IConfig = {
+    token: process.env.TOKEN!,
 
     // Use info (Wont show debug logs), or Debug (Shows EVERYTHING)
     logLevel: "info",
@@ -34,7 +34,7 @@ export default {
     announcementsRoleId: "960144630857465866",
     welcomeChannelId: "964876565437644820",
     guildId: "891336725912240128",
-    logChannel: "965246247441162310",
+    logChannelId: "965246247441162310",
     rolesChannelId: "949572424079376414",
     reactionMessages: [
         {
@@ -97,4 +97,6 @@ export default {
         },
     ],
     memberRoleId: "949569759308025856",
-}
+};
+
+export default config;
