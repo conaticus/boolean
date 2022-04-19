@@ -15,7 +15,6 @@ export default TypedEvent({
         const data = await getData();
 
         const commandArr: object[] = [];
-        let commandCol = new Collection<string, IBotCommand>();
 
         for await (const file of commandFiles) {
             const command = (await import(file)).command as IBotCommand;
@@ -27,7 +26,7 @@ export default TypedEvent({
             }
 
             commandArr.push(command.data.toJSON());
-            commandCol.set(command.data.name, command);
+            client.commands.set(command.data.name, command);
             client.logger.console.debug(
                 `Registered command ${command.data.name}`
             );
