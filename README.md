@@ -3,7 +3,7 @@
 ## About
 A bot for Conaticus' [Discord server](https://discord.com/invite/aDAsjZVzaH). A document of the development process has been made here: https://www.youtube.com/watch?v=xq2jR3_msmk. 
 
-(please sub at https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ) 
+If you like cool coding projects like this, subscribe to me at https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ
 
 ## Documentation
 
