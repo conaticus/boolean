@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { Collection, CommandInteraction, MessageAttachment, MessageEmbed } from "discord.js";
 import { IDataObject } from "./types";
 import fs from "fs/promises";
 
@@ -55,4 +55,14 @@ async function askQuestion(
         return null;
     }
 }
-export { askQuestion };
+function formatAttachmentsURL(
+    attachments: Collection<String, MessageAttachment>
+) {
+    let content: string = "";
+    for (const file of attachments.values()) {
+        content += file.url + "\n";
+    }
+    return content;
+}
+
+export default { askQuestion, formatAttachmentsURL };

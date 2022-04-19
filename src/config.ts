@@ -9,6 +9,9 @@ interface IReactionMessage {
 }
 
 interface IConfig {
+    token: string;
+    logLevel: string;
+
     suggestionsChannelId: string;
     welcomeChannelId: string;
     announcementsChannelId: string;
@@ -21,6 +24,11 @@ interface IConfig {
 }
 
 const config: IConfig = {
+    token: process.env.TOKEN!,
+
+    // Use info (Wont show debug logs), or Debug (Shows EVERYTHING)
+    logLevel: "info",
+
     suggestionsChannelId: "949572444656648262",
     announcementsChannelId: "949567953211387945",
     announcementsRoleId: "960144630857465866",

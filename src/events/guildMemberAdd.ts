@@ -10,7 +10,7 @@ import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "guildMemberAdd",
-    on: async (client: Bot, _, member: GuildMember | PartialGuildMember) => {
+    on: async (client: Bot, member: GuildMember | PartialGuildMember) => {
         if (member.partial) return;
         member.roles.add(config.memberRoleId);
 
