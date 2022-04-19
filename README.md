@@ -1,7 +1,7 @@
 # Boolean
 
 ## About
-A bot for the Conaticus' [Discord server](https://discord.com/invite/aDAsjZVzaH). A document of the development process has been made here: https://www.youtube.com/watch?v=xq2jR3_msmk. 
+A bot for Conaticus' [Discord server](https://discord.com/invite/aDAsjZVzaH). A document of the development process has been made here: https://www.youtube.com/watch?v=xq2jR3_msmk. 
 
 Also, remember to subscribe at https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ. 
 
