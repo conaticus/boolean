@@ -6,7 +6,7 @@ import config from "../config";
 
 export class Bot extends Client<true> {
     commands = new Collection<string, IBotCommand>();
-    private logger = new Logger({"level": config.logLevel});
+    logger = new Logger({ level: config.logLevel });
 
     constructor(options: ClientOptions) {
         super(options);
@@ -42,8 +42,6 @@ export class Bot extends Client<true> {
             this.logger.console.debug(`Registered event ${event.eventName}`);
         }
 
-        
         this.logger.console.info("Registering slash commands");
-        
     }
 }

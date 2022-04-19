@@ -1,6 +1,11 @@
-import { GuildMember, MessageEmbed, PartialGuildMember, TextChannel, User } from "discord.js";
+import {
+    GuildMember,
+    MessageEmbed,
+    PartialGuildMember,
+    TextChannel,
+    User,
+} from "discord.js";
 import config from "../config";
-import Logger from "../logger/Logger";
 import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types";
 
@@ -8,7 +13,6 @@ export default TypedEvent({
     eventName: "guildMemberUpdate",
     on: async (
         client: Bot,
-        logger: Logger,
         oldMember: GuildMember | PartialGuildMember,
         newMember: GuildMember | PartialGuildMember
     ) => {
@@ -28,13 +32,12 @@ export default TypedEvent({
             if (roleUpdateLogs.entries.first()?.changes?.at(0)?.key === "$add")
                 if (roleUpdateLogs.entries.first()?.executor?.bot) return;
                 else
-                memberRoleAddEvent(
-                    roleUpdateLogs.entries.first()?.target! as User,
-                    roleUpdateLogs.entries.first()?.executor!,
-                    roleUpdateLogs.entries.first()?.changes?.at(0)?.new,
-                    client,
-                    logger
-                );
+                    memberRoleAddEvent(
+                        roleUpdateLogs.entries.first()?.target! as User,
+                        roleUpdateLogs.entries.first()?.executor!,
+                        roleUpdateLogs.entries.first()?.changes?.at(0)?.new,
+                        client
+                    );
 
             // Role Remove
             if (
@@ -43,27 +46,32 @@ export default TypedEvent({
             )
                 if (roleUpdateLogs.entries.first()?.executor?.bot) return;
                 else
-                memberRoleRemoveEvent(
-                    roleUpdateLogs.entries.first()?.target! as User,
-                    roleUpdateLogs.entries.first()?.executor!,
-                    roleUpdateLogs.entries.first()?.changes?.at(0)?.new,
-                    client,
-                    logger
-                );
+                    memberRoleRemoveEvent(
+                        roleUpdateLogs.entries.first()?.target! as User,
+                        roleUpdateLogs.entries.first()?.executor!,
+                        roleUpdateLogs.entries.first()?.changes?.at(0)?.new,
+                        client
+                    );
         }
 
         // Nickname
         if (oldMember.nickname === newMember.nickname) return;
         else
-        nicknameUpdateEvent(newMember,
-            oldMember.nickname!,
-            newMember.nickname!,
-            client,
-            logger)
+            nicknameUpdateEvent(
+                newMember,
+                oldMember.nickname!,
+                newMember.nickname!,
+                client
+            );
     },
 });
 
-function memberRoleAddEvent(target: User, executor: User, role: any, client: Bot, logger: Logger) {
+function memberRoleAddEvent(
+    target: User,
+    executor: User,
+    role: any,
+    client: Bot
+) {
     const embed = new MessageEmbed();
     embed.setTitle(`• Role added to ${target.tag}`);
     embed.setDescription(
@@ -76,16 +84,20 @@ function memberRoleAddEvent(target: User, executor: User, role: any, client: Bot
         iconURL: client.user?.displayAvatarURL(),
     });
 
-    logger.channel(embed, client.channels.cache.get(config.logChannel) as TextChannel)
-    logger.console.info(`${executor?.tag}(<@${executor?.id}>) added <@&${role[0].id}> to ${target.tag}(<@${target.id}>)`)
+    client.logger.channel(
+        embed,
+        client.channels.cache.get(config.logChannelId) as TextChannel
+    );
+    client.logger.console.info(
+        `${executor?.tag}(<@${executor?.id}>) added <@&${role[0].id}> to ${target.tag}(<@${target.id}>)`
+    );
 }
 
 function memberRoleRemoveEvent(
     target: User,
     executor: User,
     role: any,
-    client: Bot,
-    logger: Logger
+    client: Bot
 ) {
     const embed = new MessageEmbed();
     embed.setTitle(`• Role removed from ${target.tag}`);
@@ -99,16 +111,20 @@ function memberRoleRemoveEvent(
         iconURL: client.user?.displayAvatarURL(),
     });
 
-    logger.channel(embed, client.channels.cache.get(config.logChannel) as TextChannel)
-    logger.console.info(`${executor?.tag}(<@${executor?.id}>) removed <@&${role[0].id}> from ${target.tag}(<@${target.id}>)`)
+    client.logger.channel(
+        embed,
+        client.channels.cache.get(config.logChannelId) as TextChannel
+    );
+    client.logger.console.info(
+        `${executor?.tag}(<@${executor?.id}>) removed <@&${role[0].id}> from ${target.tag}(<@${target.id}>)`
+    );
 }
 
 function nicknameUpdateEvent(
     member: GuildMember,
     oldMemberNickname: string,
     newMemberNickname: string,
-    client: Bot, 
-    logger: Logger
+    client: Bot
 ) {
     const embed = new MessageEmbed();
     embed.setAuthor({
@@ -130,6 +146,11 @@ function nicknameUpdateEvent(
         iconURL: client.user?.displayAvatarURL(),
     });
 
-    logger.channel(embed, client.channels.cache.get(config.logChannel) as TextChannel)
-    logger.console.info(`${member.user.tag} changed their nickname from ${oldMemberNickname} to ${newMemberNickname}`)
+    client.logger.channel(
+        embed,
+        client.channels.cache.get(config.logChannelId) as TextChannel
+    );
+    client.logger.console.info(
+        `${member.user.tag} changed their nickname from ${oldMemberNickname} to ${newMemberNickname}`
+    );
 }

@@ -4,7 +4,6 @@ import {
     CommandInteraction,
     PermissionResolvable,
 } from "discord.js";
-import Logger from "./logger/Logger";
 import { Bot } from "./structures/Bot";
 
 export interface IBotCommand {
@@ -26,7 +25,6 @@ export type EventName = keyof ClientEvents;
 
 export type EventListener<T extends EventName> = (
     _client: Bot,
-    _logger: Logger,
     ...args: ClientEvents[T]
 ) => void;
 

@@ -12,7 +12,6 @@ export default TypedEvent({
     eventName: "messageReactionRemove",
     on: async (
         _,
-        __,
         reaction: MessageReaction | PartialMessageReaction,
         user: User | PartialUser
     ) => {

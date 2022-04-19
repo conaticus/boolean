@@ -1,16 +1,14 @@
 import { Message, MessageEmbed, TextChannel } from "discord.js";
 import config from "../config";
-import Logger from "../logger/Logger";
 import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types";
-import utils from "./../utils"
-
+import utils from "./../utils";
 
 const forbiddenPhrases: string[] = ["discord.gg"];
 
 export default TypedEvent({
     eventName: "messageCreate",
-    on: async (client: Bot, logger: Logger, message: Message) => {
+    on: async (client: Bot, message: Message) => {
         if (message.author.bot) return;
         const foundPhrase = forbiddenPhrases.find((phrase) =>
             message.content.includes(phrase)
@@ -24,11 +22,11 @@ export default TypedEvent({
             message.delete();
         }
 
-        log(message, client, logger);
+        log(message, client);
     },
 });
 
-function log(message: Message, client: Bot, logger: Logger) {
+function log(message: Message, client: Bot) {
     const embed = new MessageEmbed();
     embed.setAuthor({
         name: message.author.tag,
@@ -61,7 +59,11 @@ function log(message: Message, client: Bot, logger: Logger) {
         iconURL: client.user?.displayAvatarURL(),
     });
     embed.setThumbnail(message.guild?.iconURL()!);
-        logger.channel(embed, client.channels.cache.get(config.logChannel) as TextChannel)
-        logger.console.info(`${message.author.tag} has sent a message \"${message.content}\"`)
+    client.logger.channel(
+        embed,
+        client.channels.cache.get(config.logChannelId) as TextChannel
+    );
+    client.logger.console.info(
+        `${message.author.tag} has sent a message \"${message.content}\"`
+    );
 }
-
