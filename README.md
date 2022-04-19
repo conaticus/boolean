@@ -33,6 +33,8 @@ This will automatically be ignored from the [.gitignore](https://github.com/cona
 
 In order to run the bot, you must run `npm run dev` to run the TypeScript developer environment. Don't worry about the other `package.json` scripts, they are for production.
 
+Due to many of the values being hardcoded, in order to run your instance you will need to change some values - such as the `guildId` in `config.ts` as it is used for deploying slash commands.
+
 ### Other Information
 
 #### Embed Colours
