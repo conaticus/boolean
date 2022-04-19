@@ -15,18 +15,19 @@ export const command: IBotCommand = {
         ),
     async execute(interaction) {
         const calc = interaction.options.getString("calculation", true);
+        interaction.deferReply({ ephemeral: true })
 
         try {
             const result = evaluate(calc);
             const successEmbed = new MessageEmbed()
                 .setColor("GREEN")
                 .setDescription(`Input: \`${calc}\`\nResult: \`${result}\``);
-            interaction.reply({ embeds: [successEmbed], ephemeral: true });
+            interaction.editReply({ embeds: [successEmbed], ephemeral: true });
         } catch (err) {
             const errorEmbed = new MessageEmbed()
                 .setColor("RED")
                 .setDescription(`Input: \`${calc}\`\nError: \`${err}\``);
-            interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+            interaction.editReply({ embeds: [errorEmbed], ephemeral: true });
         }
     },
 };
