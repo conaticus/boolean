@@ -28,8 +28,7 @@ export const command: IBotCommand = {
             .setColor("ORANGE")
             .setTitle(
                 `${interaction.options.getString("title")} - ${
-                    interaction.member?.user.username
-                }#${interaction.member?.user.discriminator}`
+                    interaction.member?.user.tag}`
             )
             .setDescription(interaction.options.getString("description", true));
 
@@ -37,7 +36,11 @@ export const command: IBotCommand = {
             embeds: [suggestionEmbed],
         });
         await message.react("✅");
-        message.react("❌");
+        await message.react("❌");
+        await message.startThread({
+            name: interaction.options.getString("title"),
+            autoArchiveDuration: "MAX"
+        });
 
         const successMessageEmbed = new MessageEmbed()
             .setColor("GREEN")
