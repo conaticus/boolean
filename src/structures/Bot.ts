@@ -27,7 +27,7 @@ export class Bot extends Client<true> {
                 continue;
             }
 
-            const listenerMethod = ["on", "off", "once"];
+            const listenerMethod = ["on", "once"];
             for await (const method of listenerMethod) {
                 // I can't find a better way to do this, I am sorry
                 // @ts-expect-error

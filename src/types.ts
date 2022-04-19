@@ -34,7 +34,6 @@ export interface IBotEvent<T extends EventName> {
     eventName: T;
     on?: EventListener<T>;
     once?: EventListener<T>;
-    off?: EventListener<T>;
 }
 
 export const TypedEvent = <T extends EventName>(event: IBotEvent<T>) => event;
