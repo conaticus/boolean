@@ -11,7 +11,7 @@ import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "guildMemberUpdate",
-    on: async (
+    run: async (
         client: Bot,
         oldMember: GuildMember | PartialGuildMember,
         newMember: GuildMember | PartialGuildMember
