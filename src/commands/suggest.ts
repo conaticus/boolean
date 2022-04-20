@@ -38,7 +38,7 @@ export const command: IBotCommand = {
         await message.react("✅");
         await message.react("❌");
         await message.startThread({
-            name: interaction.options.getString("title"),
+            name: interaction.options.getString("title", true),
             autoArchiveDuration: "MAX"
         });
 
