@@ -6,7 +6,7 @@ import utils from "../utils";
 
 export default TypedEvent({
     eventName: "messageUpdate",
-    on: (
+    run: (
         client: Bot,
         oldMessage: Message | PartialMessage,
         newMessage: Message | PartialMessage

@@ -4,7 +4,7 @@ import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "interactionCreate",
-    on: async (client: Bot, interaction: Interaction) => {
+    run: async (client: Bot, interaction: Interaction) => {
         if (!interaction.isCommand() || !interaction.inCachedGuild()) return;
 
         const command = client.commands.get(interaction.commandName);
