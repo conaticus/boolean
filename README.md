@@ -39,8 +39,6 @@ In order to start the bot, you must run `npm run dev` to run the TypeScript deve
 
 Due to many of the values being hardcoded, in order to run your instance you will need to change some values - such as the `guildId` in `config.ts` as it is used for deploying slash commands.
 
-Due to many of the values being hardcoded, in order to run your instance you will need to change some values - such as the `guildId` in `config.ts` as it is used for deploying slash commands.
-
 ### Other Information
 
 #### Embed Colours
