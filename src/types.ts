@@ -30,8 +30,8 @@ export type EventListener<T extends EventName> = (
 
 export interface IBotEvent<T extends EventName> {
     eventName: T;
-    on?: EventListener<T>;
-    once?: EventListener<T>;
+    once?: boolean;
+    run: EventListener<T>;
 }
 
 export const TypedEvent = <T extends EventName>(event: IBotEvent<T>) => event;

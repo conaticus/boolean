@@ -10,7 +10,7 @@ import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "guildMemberRemove",
-    on: async (client: Bot, member: GuildMember | PartialGuildMember) => {
+    run: async (client: Bot, member: GuildMember | PartialGuildMember) => {
         if (member.partial) return;
         memberRemoveEvent(member, client);
     },

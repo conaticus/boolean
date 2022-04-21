@@ -9,7 +9,8 @@ import { commandFiles } from "../files";
 
 export default TypedEvent({
     eventName: "ready",
-    once: async (client: Bot) => {
+    once: true,
+    run: async (client: Bot) => {
         client.logger.console.info(`Logged in as ${client.user?.tag}.`);
 
         const data = await getData();
@@ -54,7 +55,6 @@ export default TypedEvent({
             const emojis = [];
 
             for (const reactionKey in reactionMessage.reactions) {
-                //@ts-ignore
                 const reaction = reactionMessage.reactions[reactionKey];
                 reactionEmbed.description += `${reaction.emoji}: ${reactionKey}\n`;
                 emojis.push(reaction.emoji);

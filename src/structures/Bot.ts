@@ -27,18 +27,10 @@ export class Bot extends Client<true> {
                 continue;
             }
 
-            const listenerMethod = ["on", "once"];
-            for await (const method of listenerMethod) {
-                // I can't find a better way to do this, I am sorry
-                // @ts-expect-error
-                if (!event[method] || typeof event[method] != "function")
-                    continue;
-                // @ts-expect-error
-                this[method](event.eventName, (...args: any) =>
-                    // @ts-expect-error
-                    event[method]!(this, ...args)
-                );
-            }
+            if (event.once)
+                this.once(event.eventName, event.run.bind(null, this));
+            else this.on(event.eventName, event.run.bind(null, this));
+
             this.logger.console.debug(`Registered event ${event.eventName}`);
         }
     }

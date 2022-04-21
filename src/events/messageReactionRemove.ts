@@ -10,7 +10,7 @@ import { getData } from "../utils";
 
 export default TypedEvent({
     eventName: "messageReactionRemove",
-    on: async (
+    run: async (
         _,
         reaction: MessageReaction | PartialMessageReaction,
         user: User | PartialUser
