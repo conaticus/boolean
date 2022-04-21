@@ -54,6 +54,29 @@ The configuration file is used for constant variables that will be reused in the
 
 Data is currently stored in the [data.json](https://github.com/conaticus/boolean/blob/master/data.json) file. Only reaction messages are stored here, which is why a database is not present. If you are adding more data handling to the bot, please switch to sqlite.
 
+## Config
+
+# Set
+ To specify something in the config find the `config` object in the `config.ts` file, after specify something like `"NAME": <VALUE>`.
+
+# Get
+ To read from it, require `config` then read the value specified by doing `config.<VALUE TO READ>`.
+
+## Logging
+
+# Console levels and their refrences
+ - Fatal   :   `logger.console.fatal("")`
+ - Error   :   `logger.console.error("")`
+ - Warn    :   `logger.console.warn("")`
+ - Info    :   `logger.console.info("")`
+ - Debug   :   `logger.console.debug("")`
+ - Trace   :   `logger.console.trace("")`
+ - Silent  :   `logger.console.silent("")`
+
+# Channel logging
+ -Embed    : `logger.channel(<EMBED>, <CHANNEL>)`
+
 ## Contributing
 
 Look at [CONTRIBUTING.md](https://github.com/conaticus/boolean/blob/master/CONTRIBUTING.md) to find out how you can help contribute to the development of this bot.
+
