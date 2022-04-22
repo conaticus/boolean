@@ -27,7 +27,7 @@ export const command: IBotCommand = {
                     let start,
                         end,
                         step = undefined;
-                    let includeEnd: boolean;
+                    let includeEnd: boolean | undefined;
                     if (typeof str === "string") {
                         includeEnd = e as boolean;
                         if (str.split(":").length > 2)
@@ -37,7 +37,7 @@ export const command: IBotCommand = {
                         start = str;
                         end = e as number | BigNumber;
                         step = stp;
-                        includeEnd = _includeEnd ?? false;
+                        includeEnd = _includeEnd;
                     }
                     if (
                         math.compare(
