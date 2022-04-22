@@ -19,20 +19,44 @@ export const command: IBotCommand = {
         math.import(
             {
                 range: (
-                    start: number | BigNumber,
-                    end: number | BigNumber,
-                    step: number | BigNumber,
-                    includeEnd?: boolean
+                    str: number | BigNumber | string,
+                    e?: number | BigNumber | boolean,
+                    stp?: number | BigNumber,
+                    _includeEnd?: boolean
                 ): math.Matrix => {
-                    if (math.compare(math.subtract(end, start), 99999) === 1)
+                    let start,
+                        end,
+                        step = undefined;
+                    let includeEnd: boolean;
+                    if (typeof str === "string") {
+                        includeEnd = e as boolean;
+                        if (str.split(":").length > 2)
+                            [start, step, end] = str.split(":").map(Number);
+                        else [start, end] = str.split(":").map(Number);
+                    } else {
+                        start = str;
+                        end = e as number | BigNumber;
+                        step = stp;
+                        includeEnd = _includeEnd ?? false;
+                    }
+                    if (
+                        math.compare(
+                            math.divide(
+                                math.add(math.subtract(end, start), 1),
+                                step ?? 1
+                            ),
+                            99999
+                        ) === 1
+                    )
                         throw new Error(
                             "Range size can't be bigger than 99999"
                         );
-                    if (step !== undefined) return oldRange(start, end, step);
+                    if (step !== undefined && includeEnd !== undefined)
+                        return oldRange(start, end, step, includeEnd);
+                    else if (step !== undefined)
+                        return oldRange(start, end, step);
                     else if (includeEnd !== undefined)
                         return oldRange(start, end, includeEnd);
-                    else if (step !== undefined && includeEnd !== undefined)
-                        return oldRange(start, end, step, includeEnd);
                     else return oldRange(start, end);
                 },
             },
