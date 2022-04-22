@@ -6,6 +6,7 @@ import {
     TextChannel,
     User,
 } from "discord.js";
+
 import { IBotCommand } from "../types";
 
 interface IQuestion {

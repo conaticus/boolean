@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed, TextChannel } from "discord.js";
+
 import config from "../config";
 import { IBotCommand } from "../types";
 import utils from "../utils";

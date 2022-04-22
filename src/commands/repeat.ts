@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed } from "discord.js";
+
 import { IBotCommand } from "../types";
 
 export const command: IBotCommand = {

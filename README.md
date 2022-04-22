@@ -1,8 +1,8 @@
 # Boolean
 
 ## About
-A bot for Conaticus' [Discord server](https://discord.com/invite/aDAsjZVzaH). A document of the development process has been made here: https://www.youtube.com/watch?v=xq2jR3_msmk. 
 
+A bot for Conaticus' [Discord server](https://discord.com/invite/aDAsjZVzaH). A document of the development process has been made here: https://www.youtube.com/watch?v=xq2jR3_msmk.
 
 If you like cool coding projects like this, subscribe to me at https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ
 
@@ -12,26 +12,25 @@ If you like cool coding projects like this, subscribe to me at https://www.youtu
 
 #### Installation
 
-- Clone/Fork the repository
-- Run `cd boolean`
-- Run `npm i`
+-   Clone/Fork the repository
+-   Run `cd boolean`
+-   Run `npm i`
 
 #### Setting up the .env
-
 
 In order to setup the bot, you must create a `.env` in the parent directory as you can see in the example, [.env.example](https://github.com/conaticus/boolean/blob/master/.env.example).
 
 In this file you must declare the bot's `TOKEN` - this is the token from the [Discord Developer Portal](https://discord.com/developers/applications).
 
 Syntax:
+
 ```env
 TOKEN="your bot's TOKEN"
 ```
 
-
 This will automatically be ignored from the [.gitignore](https://github.com/conaticus/boolean/blob/master/.gitignore). So don't worry about this data being public.
 
-#### 
+####
 
 #### Running the bot
 
@@ -42,6 +41,7 @@ Due to many of the values being hardcoded, in order to run your instance you wil
 ### Other Information
 
 #### Embed Colours
+
 General: `"ORANGE"` \
 Success: `"GREEN"` \
 Error: `"RED"`
@@ -57,26 +57,29 @@ Data is currently stored in the [data.json](https://github.com/conaticus/boolean
 # Config
 
 #### Set
- To specify something in the config find the `config` object in the `config.ts` file, after specify something like `"NAME": <VALUE>`.
+
+To specify something in the config find the `config` object in the `config.ts` file, after specify something like `"NAME": <VALUE>`.
 
 #### Get
- To read from it, require `config` then read the value specified by doing `config.<VALUE TO READ>`.
+
+To read from it, require `config` then read the value specified by doing `config.<VALUE TO READ>`.
 
 # Logging
 
 #### Console levels and their refrences
- - Fatal   :   `logger.console.fatal("")`
- - Error   :   `logger.console.error("")`
- - Warn    :   `logger.console.warn("")`
- - Info    :   `logger.console.info("")`
- - Debug   :   `logger.console.debug("")`
- - Trace   :   `logger.console.trace("")`
- - Silent  :   `logger.console.silent("")`
+
+-   Fatal : `logger.console.fatal("")`
+-   Error : `logger.console.error("")`
+-   Warn : `logger.console.warn("")`
+-   Info : `logger.console.info("")`
+-   Debug : `logger.console.debug("")`
+-   Trace : `logger.console.trace("")`
+-   Silent : `logger.console.silent("")`
 
 #### Channel logging
- -Embed    : `logger.channel(<EMBED>, <CHANNEL>)`
+
+-Embed : `logger.channel(<EMBED>, <CHANNEL>)`
 
 ## Contributing
 
 Look at [CONTRIBUTING.md](https://github.com/conaticus/boolean/blob/master/CONTRIBUTING.md) to find out how you can help contribute to the development of this bot.
-
