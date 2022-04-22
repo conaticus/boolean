@@ -8,7 +8,6 @@ import { IBotCommand, IBotEvent } from "../types";
 export class Bot extends Client<true> {
     commands = new Collection<string, IBotCommand>();
     logger = new Logger({ level: config.logLevel });
-
     constructor(options: ClientOptions) {
         super(options);
     }
