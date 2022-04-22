@@ -1,8 +1,9 @@
 import { Client, ClientOptions, Collection } from "discord.js";
-import { IBotCommand, IBotEvent } from "../types";
+
+import config from "../config";
 import { eventFiles } from "../files";
 import Logger from "../logger/Logger";
-import config from "../config";
+import { IBotCommand, IBotEvent } from "../types";
 
 export class Bot extends Client<true> {
     commands = new Collection<string, IBotCommand>();

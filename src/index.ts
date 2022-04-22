@@ -1,5 +1,6 @@
-import "dotenv/config";
 import { Intents } from "discord.js";
+import "dotenv/config";
+
 import { Bot } from "./structures/Bot";
 
 export const bot = new Bot({

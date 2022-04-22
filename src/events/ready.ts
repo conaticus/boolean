@@ -1,11 +1,12 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/rest/v9";
 import { Collection, MessageEmbed, TextChannel } from "discord.js";
+
 import config from "../config";
+import { commandFiles } from "../files";
 import { Bot } from "../structures/Bot";
 import { IBotCommand, TypedEvent } from "../types";
 import { getData, writeData } from "../utils";
-import { commandFiles } from "../files";
 
 export default TypedEvent({
     eventName: "ready",

@@ -1,4 +1,5 @@
 import { Interaction, MessageEmbed } from "discord.js";
+
 import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types";
 
