@@ -5,13 +5,14 @@ import {
     TextChannel,
     User,
 } from "discord.js";
+
 import config from "../config";
 import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "guildMemberUpdate",
-    on: async (
+    run: async (
         client: Bot,
         oldMember: GuildMember | PartialGuildMember,
         newMember: GuildMember | PartialGuildMember

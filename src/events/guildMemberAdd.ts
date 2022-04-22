@@ -4,13 +4,14 @@ import {
     PartialGuildMember,
     TextChannel,
 } from "discord.js";
+
 import config from "../config";
 import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "guildMemberAdd",
-    on: async (client: Bot, member: GuildMember | PartialGuildMember) => {
+    run: async (client: Bot, member: GuildMember | PartialGuildMember) => {
         if (member.partial) return;
         member.roles.add(config.memberRoleId);
 

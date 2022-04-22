@@ -1,4 +1,5 @@
 import { Message, MessageEmbed, TextChannel } from "discord.js";
+
 import config from "../config";
 import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types";
@@ -8,7 +9,7 @@ const forbiddenPhrases: string[] = ["discord.gg"];
 
 export default TypedEvent({
     eventName: "messageCreate",
-    on: async (client: Bot, message: Message) => {
+    run: async (client: Bot, message: Message) => {
         if (message.author.bot) return;
         const foundPhrase = forbiddenPhrases.find((phrase) =>
             message.content.includes(phrase)

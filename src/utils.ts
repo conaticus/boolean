@@ -1,6 +1,12 @@
-import { Collection, CommandInteraction, MessageAttachment, MessageEmbed } from "discord.js";
-import { IDataObject } from "./types";
+import {
+    Collection,
+    CommandInteraction,
+    MessageAttachment,
+    MessageEmbed,
+} from "discord.js";
 import fs from "fs/promises";
+
+import { IDataObject } from "./types";
 
 export const getData = async (): Promise<IDataObject> =>
     JSON.parse(await fs.readFile("./data.json", "utf8"));

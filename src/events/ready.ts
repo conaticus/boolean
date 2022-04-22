@@ -1,15 +1,17 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/rest/v9";
 import { Collection, MessageEmbed, TextChannel } from "discord.js";
+
 import config from "../config";
+import { commandFiles } from "../files";
 import { Bot } from "../structures/Bot";
 import { IBotCommand, TypedEvent } from "../types";
 import { getData, writeData } from "../utils";
-import { commandFiles } from "../files";
 
 export default TypedEvent({
     eventName: "ready",
-    once: async (client: Bot) => {
+    once: true,
+    run: async (client: Bot) => {
         client.logger.console.info(`Logged in as ${client.user?.tag}.`);
 
         const data = await getData();
@@ -32,7 +34,7 @@ export default TypedEvent({
             );
         }
 
-        const rest = new REST({ version: "9" }).setToken(config.token!);
+        const rest = new REST({ version: "9" }).setToken(config.token);
 
         rest.put(
             Routes.applicationGuildCommands(client.user.id, config.guildId),
@@ -54,7 +56,6 @@ export default TypedEvent({
             const emojis = [];
 
             for (const reactionKey in reactionMessage.reactions) {
-                //@ts-ignore
                 const reaction = reactionMessage.reactions[reactionKey];
                 reactionEmbed.description += `${reaction.emoji}: ${reactionKey}\n`;
                 emojis.push(reaction.emoji);

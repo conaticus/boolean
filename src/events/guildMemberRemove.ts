@@ -4,14 +4,14 @@ import {
     PartialGuildMember,
     TextChannel,
 } from "discord.js";
-import { create } from "domain";
+
 import config from "../config";
 import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "guildMemberRemove",
-    on: async (client: Bot, member: GuildMember | PartialGuildMember) => {
+    run: async (client: Bot, member: GuildMember | PartialGuildMember) => {
         if (member.partial) return;
         memberRemoveEvent(member, client);
     },

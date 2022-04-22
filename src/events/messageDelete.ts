@@ -1,4 +1,5 @@
 import { Message, MessageEmbed, PartialMessage, TextChannel } from "discord.js";
+
 import config from "../config";
 import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types";
@@ -6,7 +7,7 @@ import utils from "../utils";
 
 export default TypedEvent({
     eventName: "messageDelete",
-    on: (client: Bot, message: Message | PartialMessage) => {
+    run: (client: Bot, message: Message | PartialMessage) => {
         // Check if the message is partial
         if (message.partial) return;
 

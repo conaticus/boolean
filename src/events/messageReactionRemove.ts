@@ -4,13 +4,14 @@ import {
     PartialUser,
     User,
 } from "discord.js";
+
 import config from "../config";
 import { TypedEvent } from "../types";
 import { getData } from "../utils";
 
 export default TypedEvent({
     eventName: "messageReactionRemove",
-    on: async (
+    run: async (
         _,
         reaction: MessageReaction | PartialMessageReaction,
         user: User | PartialUser
