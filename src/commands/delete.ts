@@ -11,6 +11,7 @@ export const command: IBotCommand = {
             option
                 .setName("amount")
                 .setDescription("Amount of messages to delete")
+                .setMinValue(1)
                 .setRequired(true)
         ),
     requiredPerms: ["MANAGE_MESSAGES"],
