@@ -15,6 +15,7 @@ interface IConfig {
     suggestionsChannelId: string;
     welcomeChannelId: string;
     announcementsChannelId: string;
+    warnChannelId: string;
     announcementsRoleId: string;
     guildId: string;
     logChannelId: string;
@@ -30,10 +31,11 @@ const config: IConfig = {
     logLevel: "info",
 
     suggestionsChannelId: "949572444656648262",
-    announcementsChannelId: "949567953211387945",
-    announcementsRoleId: "960144630857465866",
     welcomeChannelId: "964876565437644820",
-    guildId: "891336725912240128",
+    announcementsChannelId: "949567953211387945",
+    warnChannelId: "966649682975658047",
+    announcementsRoleId: "960144630857465866",
+    guildId: "966649682975658044",
     logChannelId: "965246247441162310",
     rolesChannelId: "949572424079376414",
     reactionMessages: [
