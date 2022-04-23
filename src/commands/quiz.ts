@@ -109,7 +109,7 @@ const constructQuestionOptions = async (
     if (optionMessage.content === "next") return options;
 
     options.push(optionMessage.content);
-    return await constructQuestionOptions(
+    return constructQuestionOptions(
         user,
         channel,
         questionNumber,
@@ -170,7 +170,7 @@ const constructQuestions = async (
         options: questionOptions,
         correctOptionIdx,
     });
-    return await constructQuestions(user, channel, questions);
+    return constructQuestions(user, channel, questions);
 };
 
 export const command: IBotCommand = {
