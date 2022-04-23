@@ -35,7 +35,9 @@ export default TypedEvent({
 
             const errorEmbed = new MessageEmbed()
                 .setColor("RED")
-                .setDescription("❌ **|** An error occurred while executing the command.");
+                .setDescription(
+                    "❌ An error occurred while executing the command."
+                );
 
             if (interaction.deferred || interaction.replied) {
                 await interaction.editReply({
