@@ -7,17 +7,19 @@ import { IBotCommand } from "../types";
 export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("verbal")
-        .setDescription("warn members in a warnings channel about rule violations.")
-        .addStringOption((option) =>
+        .setDescription(
+            "warn members in a warnings channel about rule violations."
+        )
+        .addUserOption((option) =>
             option
                 .setName("user")
-                .setDescription("User Warned.")
+                .setDescription("User recieving the warning.")
                 .setRequired(true)
         )
         .addStringOption((option) =>
             option
                 .setName("reason")
-                .setDescription("Reason for warn.")
+                .setDescription("Reason for the warning.")
                 .setRequired(true)
         ),
     requiredPerms: ["MANAGE_MESSAGES"],
@@ -26,23 +28,38 @@ export const command: IBotCommand = {
             config.warnChannelId
         ) as TextChannel;
 
-        const warnEmbed = new MessageEmbed()
-            .setColor("RED")
-            .setTitle(
-                `Warning - ${interaction.member?.user.tag}`
-            )
-            .setDescription(interaction.options.getString("reason", true));
+        const member = interaction.options.getMember("user");
 
-        const message = await warnChannel.send({
+        const warnEmbed = new MessageEmbed().setColor("RED").setTitle(`Warning`)
+            .setDescription(`
+User: <@${member?.user.id}>
+Reason: \`${interaction.options.getString("reason", true)}\`
+Moderator: <@${interaction.member.user.id}>
+`);
+
+        const dmEmbed = new MessageEmbed()
+            .setColor("RED")
+            .setTitle("You have recieved a warning").setDescription(`
+Reason: ${interaction.options.getString("reason", true)}
+Moderator: <@${interaction.member.user.id}>
+
+If you believe this warning is unjustified, please contact Conaticus.
+`);
+
+        await member?.send({ embeds: [dmEmbed] });
+
+        await warnChannel.send({
             embeds: [warnEmbed],
         });
+
+        await interaction;
 
         const successMessageEmbed = new MessageEmbed()
             .setColor("GREEN")
             .setDescription(
-                `Warning successfully created at <#${config.warnChannelId}>`
+                `Warning successfully issued at <#${config.warnChannelId}>`
             );
 
         interaction.reply({ embeds: [successMessageEmbed], ephemeral: true });
-    }
-}
+    },
+};
