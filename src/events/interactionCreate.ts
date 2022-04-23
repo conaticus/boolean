@@ -32,10 +32,16 @@ export default TypedEvent({
             await command.execute(interaction, client);
         } catch (e) {
             console.error(e);
-            await interaction.reply({
-                content: "There was an error while executing this command.",
-                ephemeral: true,
-            });
+            if (interaction.deferred || interaction.replied) {
+                await interaction.editReply({
+                    content: "There was an error while executing this command."
+                });
+            } else {
+                await interaction.reply({
+                    content: "There was an error while executing this command.",
+                    ephemeral: true,
+                });
+            }
         }
     },
 });
