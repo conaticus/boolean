@@ -181,6 +181,7 @@ export const command: IBotCommand = {
             option
                 .setName("channel")
                 .setDescription("Channel to host the quiz.")
+                .addChannelType(0) // Guild Text channel
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
