@@ -26,7 +26,7 @@ export default TypedEvent({
             if (id !== reaction.message.id) return;
 
             Object.values(rm.reactions).forEach((msgReaction) => {
-                if (msgReaction.emoji.includes(reaction.emoji.id! ?? reaction.emoji.name!))
+                if (msgReaction.emoji.includes(reaction.emoji.id! ?? reaction.emoji.name))
                     member.roles.add(msgReaction.roleId);
             });
         });
