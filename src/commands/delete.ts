@@ -15,6 +15,8 @@ export const command: IBotCommand = {
         ),
     requiredPerms: ["MANAGE_MESSAGES"],
     async execute(interaction) {
+        await interaction.deferReply({ ephemeral: true });
+        
         const deleted = await interaction.channel!.bulkDelete(
             interaction.options.getNumber("amount", true),
             true
@@ -23,6 +25,6 @@ export const command: IBotCommand = {
         const successEmbed = new MessageEmbed()
             .setColor("GREEN")
             .setDescription(`Deleted \`${deleted.size}\` messages.`);
-        await interaction.reply({ embeds: [successEmbed], ephemeral: true });
+        await interaction.editReply({ embeds: [successEmbed] });
     },
 };

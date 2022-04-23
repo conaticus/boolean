@@ -34,6 +34,8 @@ export const command: IBotCommand = {
             )
             .setDescription(interaction.options.getString("description", true));
 
+        await interaction.deferReply({ ephemeral: true });
+
         const message = await suggestionsChannel.send({
             embeds: [suggestionEmbed],
         });
@@ -50,6 +52,6 @@ export const command: IBotCommand = {
                 `Suggestion successfully created at <#${config.suggestionsChannelId}>`
             );
 
-        interaction.reply({ embeds: [successMessageEmbed], ephemeral: true });
+        interaction.editReply({ embeds: [successMessageEmbed] });
     },
 };
