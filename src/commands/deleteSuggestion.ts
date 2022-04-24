@@ -77,7 +77,6 @@ export const command: IBotCommand = {
         });
 
         await suggestionAuthor?.send({
-            content: `Your suggestion, **${suggestionTitleSplit![0]}**, has been deleted.`,
             embeds: [dmEmbed],
         });
     }
