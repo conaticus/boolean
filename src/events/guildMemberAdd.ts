@@ -8,19 +8,10 @@ import {
 import config from "../config";
 import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types";
-const { Captcha } = require("discord.js-captcha");
 
 export default TypedEvent({
     eventName: "guildMemberAdd",
     run: async (client: Bot, member: GuildMember | PartialGuildMember) => {
-        // if (Date.now() - member.user.createdAt.valueOf() < 1000*60*60*24*30) {
-        //     const captcha = new Captcha(client, {
-        //         guildID: "966649682975658044",
-        //         channelID: "966649682975658047",
-        //     });
-        //     captcha.present(member);
-        // }
-
         if (member.partial) return;
         member.roles.add(config.memberRoleId);
 
