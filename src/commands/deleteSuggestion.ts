@@ -64,7 +64,7 @@ export const command: IBotCommand = {
                 .setDescription(
                     `<@${interaction?.user.id}> deleted suggestion by <@${suggestionAuthor?.id}>`
                 )
-                .addField('• Title', suggestionTitleSplit![0])
+                .addField('• Title', suggestionTitleSplit![0] || ' ')
                 .addField('• Description', suggestionMessage.embeds[0].description ?? ' ')
                 .addField('• Reason', reason);
 
