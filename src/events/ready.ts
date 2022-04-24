@@ -1,6 +1,6 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/rest/v9";
-import { Collection, MessageEmbed, TextChannel } from "discord.js";
+import { MessageEmbed, TextChannel } from "discord.js";
 
 import config from "../config";
 import { commandFiles } from "../files";

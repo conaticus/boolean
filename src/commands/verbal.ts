@@ -30,21 +30,24 @@ export const command: IBotCommand = {
 
         const member = interaction.options.getMember("user");
 
-        const warnEmbed = new MessageEmbed().setColor("RED").setTitle(`Warning`)
+        const warnEmbed = new MessageEmbed()
+            .setColor("RED")
+            .setTitle(`Warning`)
             .setDescription(`
-Moderator: <@${member?.user.id}>
-Reason: \`${interaction.options.getString("reason", true)}\`
-Moderator: <@${interaction.member.user.id}>
-`);
+                User: <@${member?.user.id}>
+                Reason: \`${interaction.options.getString("reason", true)}\`
+                Moderator: <@${interaction.member.user.id}>
+            `);
 
         const dmEmbed = new MessageEmbed()
             .setColor("RED")
-            .setTitle("You have recieved a warning").setDescription(`
-Reason: ${interaction.options.getString("reason", true)}
-Moderator: <@${interaction.member.user.id}>
+            .setTitle("You have recieved a warning")
+            .setDescription(`
+                Reason: ${interaction.options.getString("reason", true)}
+                Moderator: <@${interaction.member.user.id}>
 
-If you believe this warning is unjustified, please contact Conaticus.
-`);
+                If you believe this warning is unjustified, please contact Conaticus.
+            `);
 
         await member?.send({ embeds: [dmEmbed] });
 
