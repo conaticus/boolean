@@ -47,11 +47,12 @@ export const command: IBotCommand = {
         }
 
         const logChannel = client.channels.cache.get(
-            config.warnChannelId
+            config.logChannelId
         ) as TextChannel;
 
         const dmEmbed = new MessageEmbed().setColor("RED").setTitle(`Suggestion Deleted`)
                 .setDescription(`
+        Suggestion Title: \`${suggestionTitleSplit![0]}\`
         Reason: \`${reason}\`
         by: <@${interaction.user.id}>
         `);

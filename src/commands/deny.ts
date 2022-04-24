@@ -30,7 +30,7 @@ export const command: IBotCommand = {
         const member = interaction.options.getMember("user");
 
         const dmEmbed = new MessageEmbed()
-                .setColor("YELLOW")
+                .setColor("RED")
                 .setTitle("Your application has been denied")
         
         switch(interaction.options.getString("reason", true)){
@@ -38,7 +38,7 @@ export const command: IBotCommand = {
                 dmEmbed
                     .setDescription(`
 Hello ${interaction.options.getMember("user")?.user.username}, thank you for applying to be a moderator in the conaticus server. Unfortunately, your application has been denied because you do not meet the age requirement of 15.
-                    `);
+`);
                 break;
             case("Not been in the server long enough"):
                 dmEmbed
@@ -46,7 +46,7 @@ Hello ${interaction.options.getMember("user")?.user.username}, thank you for app
 Hello ${interaction.options.getMember("user")?.user.username}, thank you for applying to be a moderator in the conaticus server. Unfortunately, your application has been denied because you do not meet the requirement of being in the server for at least one week.
 
 You may reapply in a month.
-                    `);
+`);
                 break;
             case("Other"):
                 dmEmbed
@@ -62,8 +62,7 @@ Inappropiate scenario action
 Can't be as active as other applicants
 Unprofessionalism in the application
 Inactivity in the server
-Also, do you think you could quickly make an accept command for ADMINISTRATOR:
-                    `);
+`);
                 break;
         };
 
