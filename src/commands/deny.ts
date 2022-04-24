@@ -54,7 +54,7 @@ You may reapply in a month.
 Hello ${interaction.options.getMember("user")?.user.username}, unfortunately your moderation application has been denied - but don't worry - this is nothing personal!
 Thank you for applying, and there is always the opportunity to try again in a month.
 
-The reason your application was not accepted cannot be revelaed, however here are some common reasons:
+The reason your application was not accepted cannot be disclosed, however here are some common reasons:
 
 Answers that are too short/vague
 Lack of moderator experience
