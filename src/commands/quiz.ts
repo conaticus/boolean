@@ -7,7 +7,7 @@ import {
     User,
 } from "discord.js";
 
-import { IBotCommand } from "../types";
+import { IBotCommand } from "../types/types";
 
 interface IQuestion {
     question: string;
@@ -109,12 +109,7 @@ const constructQuestionOptions = async (
     if (optionMessage.content === "next") return options;
 
     options.push(optionMessage.content);
-    return constructQuestionOptions(
-        user,
-        channel,
-        questionNumber,
-        options
-    );
+    return constructQuestionOptions(user, channel, questionNumber, options);
 };
 
 const constructQuestions = async (

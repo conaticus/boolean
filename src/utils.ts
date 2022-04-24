@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import fs from "fs/promises";
 
-import { IDataObject } from "./types";
+import { IDataObject } from "./types/types";
 
 export const getData = async (): Promise<IDataObject> =>
     JSON.parse(await fs.readFile("./data.json", "utf8"));
