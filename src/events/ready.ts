@@ -78,6 +78,7 @@ export default TypedEvent({
                         ],
                     },
                 ],
+                placholder: reactionMessage.title,
             });
 
             data.reactionMessages[reactionMessage.title] = rolesMessage.id;
