@@ -19,7 +19,6 @@
         "@discordjs/rest": "^0.3.0",
         "discord-api-types": "^0.29.0",
         "discord.js": "^13.6.0",
-        "discord.js-captcha": "^2.5.2",
         "filehound": "^1.17.5",
         "pino": "^7.10.0",
         "pino-pretty": "^7.6.1"

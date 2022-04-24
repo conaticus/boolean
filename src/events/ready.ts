@@ -51,13 +51,10 @@ export default TypedEvent({
                 .setColor("ORANGE")
                 .setTitle(reactionMessage.title);
 
-            reactionEmbed.description = "";
-
             const options = [];
 
             for (const reactionKey in reactionMessage.reactions) {
                 const reaction = reactionMessage.reactions[reactionKey];
-                reactionEmbed.description += `${reaction.emoji}: ${reactionKey}\n`;
                 options.push({
                     label: reactionKey,
                     value: reaction.roleId,
