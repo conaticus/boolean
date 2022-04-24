@@ -6,7 +6,7 @@ import { IBotCommand } from '../types';
 export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName('delsug')
-        .setDescription('Delete the current suggestion')
+        .setDescription('Delete the current suggestion.')
         .addStringOption(reason =>
             reason
                 .setName('reason')

@@ -8,7 +8,7 @@ export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("deny")
         .setDescription(
-            "warn members in a warnings channel about rule violations."
+            "Deny a user's moderator application."
         )
         .addUserOption((option) =>
             option

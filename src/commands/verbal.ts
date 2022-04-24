@@ -8,7 +8,7 @@ export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("verbal")
         .setDescription(
-            "warn members in a warnings channel about rule violations."
+            "Warn members in a warnings channel about rule violations."
         )
         .addUserOption((option) =>
             option
