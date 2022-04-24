@@ -76,8 +76,10 @@ export const command: IBotCommand = {
             embeds: [logEmbed],
         });
 
-        await suggestionAuthor?.send({
-            embeds: [dmEmbed],
-        });
+        try {
+            await suggestionAuthor?.send({
+                embeds: [dmEmbed],
+            });
+        } catch {}
     }
 }
