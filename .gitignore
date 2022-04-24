@@ -2,5 +2,3 @@
 /dist
 .env
 package-lock.json
-
-.idea

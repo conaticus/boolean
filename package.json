@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "ts-node-dev --respawn ./src/index.ts",
         "build": "tsc",
-        "start": "NODE_ENV=production node .",
+        "start": "node .",
         "check": "tsc -w --noEmit",
         "format": "prettier --write .",
         "prepare": "husky install"
