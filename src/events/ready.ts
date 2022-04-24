@@ -2,10 +2,10 @@ import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/rest/v9";
 import { MessageEmbed, TextChannel } from "discord.js";
 
-import config from "../config";
+import { config_ as config } from "../configs/config-handler";
 import { commandFiles } from "../files";
 import { Bot } from "../structures/Bot";
-import { IBotCommand, TypedEvent } from "../types";
+import { IBotCommand, TypedEvent } from "../types/types";
 import { getData, writeData } from "../utils";
 
 export default TypedEvent({
@@ -44,8 +44,11 @@ export default TypedEvent({
         const rolesChannel = client.channels.cache.get(
             config.rolesChannelId
         ) as TextChannel;
-        config.reactionMessages.forEach(async (reactionMessage) => {
-            if (reactionMessage.title in data.reactionMessages) return;
+
+        const guildObject = client.guilds.cache.get(config.guildId);
+
+        for (const reactionMessage of config.reactionMessages) {
+            if (reactionMessage.title in data.reactionMessages) continue;
 
             const reactionEmbed = new MessageEmbed()
                 .setColor("ORANGE")
@@ -55,35 +58,47 @@ export default TypedEvent({
 
             for (const reactionKey in reactionMessage.reactions) {
                 const reaction = reactionMessage.reactions[reactionKey];
+
+                let object = {
+                    id: guildObject?.roles.cache.find(
+                        (role) => role.name == reaction.name
+                    )?.id,
+                    emoji: reaction.emoji,
+                };
+
                 options.push({
                     label: reactionKey,
-                    value: reaction.roleId,
-                    emoji: reaction.emoji,
+                    value: object.id || "undefined",
+                    emoji: object.emoji,
                 });
             }
 
-            const rolesMessage = await rolesChannel.send({
-                embeds: [reactionEmbed],
-                components: [
-                    {
-                        type: "ACTION_ROW",
-                        components: [
-                            {
-                                type: "SELECT_MENU",
-                                customId: reactionMessage.title,
-                                minValues: 0,
-                                maxValues: options.length,
-                                options,
-                                placeholder: reactionMessage.title,
-                            },
-                        ],
-                    },
-                ],
-                
-            });
-
-            data.reactionMessages[reactionMessage.title] = rolesMessage.id;
-            await writeData(data);
-        });
+            const rolesMessage = await rolesChannel
+                .send({
+                    embeds: [reactionEmbed],
+                    components: [
+                        {
+                            type: "ACTION_ROW",
+                            components: [
+                                {
+                                    type: "SELECT_MENU",
+                                    customId: reactionMessage.title,
+                                    minValues: 0,
+                                    maxValues: options.length,
+                                    options,
+                                    placeholder: reactionMessage.title,
+                                },
+                            ],
+                        },
+                    ],
+                })
+                .then((result: any) => {
+                    client.logger.console.debug(
+                        `Added roles selector: ${reactionMessage.title}`
+                    );
+                    data.reactionMessages[reactionMessage.title] = result.id;
+                    writeData(data);
+                });
+        }
     },
 });

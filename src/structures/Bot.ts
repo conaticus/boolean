@@ -1,13 +1,13 @@
 import { Client, ClientOptions, Collection } from "discord.js";
 
-import config from "../config";
+import { config_ as config } from "../configs/config-handler";
 import { eventFiles } from "../files";
 import Logger from "../logger/Logger";
-import { IBotCommand, IBotEvent } from "../types";
+import { IBotCommand, IBotEvent } from "../types/types";
 
 export class Bot extends Client<true> {
     commands = new Collection<string, IBotCommand>();
-    logger = new Logger({ level: config.logLevel });
+    logger = new Logger({ level: config.logLevel || "info" });
 
     constructor(options: ClientOptions) {
         super(options);
