@@ -17,7 +17,7 @@ export const command: IBotCommand = {
             const errorMessageEmbed = new MessageEmbed()
                 .setColor('RED')
                 .setDescription(
-                    'You can only delete a suggestion in a thread.' + reply.channelId
+                    'You can only delete a suggestion in a thread.'
                 );
 
             return interaction.editReply({ embeds: [errorMessageEmbed] });
