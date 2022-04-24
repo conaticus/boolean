@@ -48,7 +48,7 @@ export const command: IBotCommand = {
                 .setTitle("Your suggestion has been deleted")
                 .setDescription(`
                     Reason: ${interaction.options.getString("reason", true)}
-                    By: ${interaction.member.user.id}
+                    By: ${interaction.member.user.username}
                 `)
 
         await member?.send({ embeds: [dmEmbed] });
