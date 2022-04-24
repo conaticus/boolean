@@ -22,7 +22,5 @@ export default TypedEvent({
         ) {
             message.delete();
         }
-
-        log(message, client);
     },
 });
