@@ -5,8 +5,14 @@ import { IBotCommand } from '../types';
 
 export const command: IBotCommand = {
     data: new SlashCommandBuilder()
-        .setName('delete')
-        .setDescription('Delete the current suggestion'),
+        .setName('delsug')
+        .setDescription('Delete the current suggestion')
+        .addStringOption((option) =>
+            option
+                .setName("reason")
+                .setDescription("Reason for deleting suggestion.")
+                .setRequired(true)
+        ),
     requiredPerms: ['MANAGE_MESSAGES'],
     async execute(interaction, client) {
         await interaction.deferReply({ ephemeral: true });
@@ -34,6 +40,18 @@ export const command: IBotCommand = {
 
             return interaction.editReply({ embeds: [errorMessageEmbed] });
         }
+        
+        const member=suggestionMessage.author
+
+        const dmEmbed = new MessageEmbed()
+                .setColor("RED")
+                .setTitle("Your suggestion has been deleted")
+                .setDescription(`
+                    Reason: ${interaction.options.getString("reason", true)}
+                    By: ${interaction.member.user.username}
+                `)
+
+        await member?.send({ embeds: [dmEmbed] });
 
         await suggestionMessage.delete();
         await reply.channel.delete();
