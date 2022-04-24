@@ -74,11 +74,12 @@ export default TypedEvent({
                                 minValues: 0,
                                 maxValues: options.length,
                                 options,
+                                placeholder: reactionMessage.title,
                             },
                         ],
                     },
                 ],
-                placeholder: reactionMessage.title,
+                
             });
 
             data.reactionMessages[reactionMessage.title] = rolesMessage.id;

@@ -7,6 +7,7 @@
         "outDir": "./dist" /* Specify an output folder for all emitted files. */,
         "removeComments": true /* Disable emitting comments. */,
         "esModuleInterop": true /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */,
-        "strict": true /* Enable all strict type-checking options. */
+        "strict": true, /* Enable all strict type-checking options. */
+        "include": ["src/**/*"]
     }
 }
