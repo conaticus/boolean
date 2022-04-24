@@ -1,24 +1,17 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageEmbed, TextChannel } from 'discord.js';
+import { MessageEmbed } from 'discord.js';
 import config from '../config';
 import { IBotCommand } from '../types';
 
 export const command: IBotCommand = {
     data: new SlashCommandBuilder()
-        .setName('delsug')
-        .setDescription('Delete the current suggestion')
-        .addStringOption(reason =>
-            reason
-                .setName('reason')
-                .setDescription('Reason for the deletion')
-                .setRequired(true)
-        ),
+        .setName('delete')
+        .setDescription('Delete the current suggestion'),
     requiredPerms: ['MANAGE_MESSAGES'],
     async execute(interaction, client) {
         await interaction.deferReply({ ephemeral: true });
         
         const reply = await interaction.fetchReply();
-        const reason = interaction.options.getString('reason', true);
 
         if (reply.channel.type !== 'GUILD_PUBLIC_THREAD') {
             const errorMessageEmbed = new MessageEmbed()
@@ -31,11 +24,7 @@ export const command: IBotCommand = {
         }
 
         const suggestionMessage = await reply.channel?.fetchStarterMessage();
-        const suggestionTitleSplit = suggestionMessage?.embeds[0].title?.split(' - ');
-        const suggestionAuthor = suggestionTitleSplit ? client.users.cache.find(u => 
-                u.tag === suggestionTitleSplit[1]
-            ) : undefined;
-
+        
         if (!suggestionMessage || suggestionMessage.channelId !== config.suggestionsChannelId) {
             const errorMessageEmbed = new MessageEmbed()
                 .setColor('RED')
@@ -46,38 +35,7 @@ export const command: IBotCommand = {
             return interaction.editReply({ embeds: [errorMessageEmbed] });
         }
 
-        const logChannel = client.channels.cache.get(
-            config.warnChannelId
-        ) as TextChannel;
-
-        const dmEmbed = new MessageEmbed().setColor("RED").setTitle(`Suggestion Deleted`)
-                .setDescription(`
-        Reason: \`${reason}\`
-        by: <@${interaction.user.id}>
-        `);
-
-        const logEmbed = new MessageEmbed().setColor("RED").setTitle(`Suggestion Deleted`)
-                .setAuthor({
-                    name: `${suggestionAuthor?.tag}`,
-                    iconURL: suggestionAuthor?.displayAvatarURL(),
-                })
-                .setDescription(
-                    `<@${interaction?.user.id}> deleted suggestion by <@${suggestionAuthor?.id}>`
-                )
-                .addField('• Title', suggestionTitleSplit![0])
-                .addField('• Description', suggestionMessage.embeds[0].description ?? ' ')
-                .addField('• Reason', reason);
-
-        suggestionMessage.delete();
-        reply.channel.delete();
-
-        await logChannel.send({
-            embeds: [logEmbed],
-        });
-
-        await suggestionAuthor?.send({
-            content: `Your suggestion, **${suggestionTitleSplit![0]}**, has been deleted.`,
-            embeds: [dmEmbed],
-        });
+        await suggestionMessage.delete();
+        await reply.channel.delete();
     }
 }
