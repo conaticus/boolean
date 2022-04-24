@@ -45,7 +45,6 @@ export const command: IBotCommand = {
             name: interaction.options.getString("title", true),
             autoArchiveDuration: "MAX",
         });
-        message.author=interaction.member.user;
 
         const successMessageEmbed = new MessageEmbed()
             .setColor("GREEN")
