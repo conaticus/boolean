@@ -44,7 +44,7 @@ export const command: IBotCommand = {
         const member=suggestionMessage.author
 
         const dmEmbed = new MessageEmbed()
-                .setColor("YELLOW")
+                .setColor("RED")
                 .setTitle("Your suggestion has been deleted")
                 .setDescription(`
                     Reason: ${interaction.options.getString("reason", true)}
