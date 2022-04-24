@@ -51,22 +51,35 @@ export default TypedEvent({
                 .setColor("ORANGE")
                 .setTitle(reactionMessage.title);
 
-            reactionEmbed.description = "";
-
-            const emojis = [];
+            const options = [];
 
             for (const reactionKey in reactionMessage.reactions) {
                 const reaction = reactionMessage.reactions[reactionKey];
-                reactionEmbed.description += `${reaction.emoji}: ${reactionKey}\n`;
-                emojis.push(reaction.emoji);
+                options.push({
+                    label: reactionKey,
+                    value: reaction.roleId,
+                    emoji: reaction.emoji,
+                });
             }
 
             const rolesMessage = await rolesChannel.send({
                 embeds: [reactionEmbed],
-            });
-
-            emojis.forEach((emoji) => {
-                rolesMessage.react(emoji);
+                components: [
+                    {
+                        type: "ACTION_ROW",
+                        components: [
+                            {
+                                type: "SELECT_MENU",
+                                customId: reactionMessage.title,
+                                minValues: 0,
+                                maxValues: options.length,
+                                options,
+                                placeholder: reactionMessage.title,
+                            },
+                        ],
+                    },
+                ],
+                
             });
 
             data.reactionMessages[reactionMessage.title] = rolesMessage.id;
