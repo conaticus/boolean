@@ -32,7 +32,7 @@ export const command: IBotCommand = {
 
         const warnEmbed = new MessageEmbed().setColor("RED").setTitle(`Warning`)
             .setDescription(`
-User: <@${member?.user.id}>
+Moderator: <@${member?.user.id}>
 Reason: \`${interaction.options.getString("reason", true)}\`
 Moderator: <@${interaction.member.user.id}>
 `);
