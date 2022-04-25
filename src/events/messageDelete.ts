@@ -7,7 +7,7 @@ import utils from "../utils";
 
 export default TypedEvent({
     eventName: "messageDelete",
-    run: (client: Bot, message: Message | PartialMessage) => {
+    run: async (client: Bot, message: Message | PartialMessage) => {
         // Check if the message is partial
         if (message.partial) return;
 
@@ -17,46 +17,47 @@ export default TypedEvent({
         // Check if the author of the deleted messaage is the bot
         if (message.author.bot) return;
 
-        log(message, client);
+        await log(message, client);
     },
 });
 
-function log(message: Message, client: Bot) {
-    const embed = new MessageEmbed();
-
-    embed.setAuthor({
-        name: message.author.tag,
-        iconURL: message.author.displayAvatarURL(),
-    });
-    embed.setDescription(
-        `Message sent by <@${message.author.id}> in <#${message.channel.id}> was deleted`
-    );
-    embed.setColor("RED");
-    if (message.content !== "") {
-        if (message.attachments.size >= 1)
-            embed.addField(
-                "• Content",
-                (message.content += "\n".concat(
-                    utils.formatAttachmentsURL(message.attachments)
-                )),
-                false
-            );
-        else embed.addField("• Content", message.content, false);
-    } else {
-        embed.addField(
-            "• Content",
-            utils.formatAttachmentsURL(message.attachments),
-            false
-        );
+async function log(message: Message, client: Bot) {
+    const embed = new MessageEmbed()
+        .setAuthor({
+            name: "Deleted message",
+            iconURL: message.author.displayAvatarURL(),
+            url: message.url,
+        })
+        .setDescription(message.content)
+        .setColor("RED")
+        .setTimestamp()
+        .setFooter({
+            text: "Boolean",
+            iconURL: client.user?.displayAvatarURL(),
+        })
+        .addField("Author", message.author.toString(), true)
+        .addField("Channel", message.channel.toString(), true)
+        .addField("\u200B", "\u200B", true)
+        .addField(
+            "Sent at",
+            `<t:${Math.round(message.createdTimestamp / 1000)}>`,
+            true
+        )
+        .addField("\u200B", "\u200B", true);
+    const sticker = message.stickers.first();
+    if (sticker) {
+        if (sticker.format === "LOTTIE") {
+            embed.addField("Sticker", `[${sticker.name}](${sticker.url})`);
+        } else {
+            embed.setThumbnail(sticker.url);
+        }
     }
-    embed.setTimestamp();
-    embed.setFooter({
-        text: "Boolean",
-        iconURL: client.user?.displayAvatarURL(),
-    });
-    embed.setThumbnail(message.guild?.iconURL()!);
-
-    client.logger.channel(
+    if (message.attachments.size)
+        embed.addField(
+            "Attachments",
+            utils.formatAttachmentsURL(message.attachments)
+        );
+    await client.logger.channel(
         embed,
         client.channels.cache.get(config.logChannelId) as TextChannel
     );
