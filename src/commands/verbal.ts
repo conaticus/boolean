@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed, TextChannel } from "discord.js";
 
-import config from "../config";
-import { IBotCommand } from "../types";
+import { config_ as config } from "../configs/config-handler";
+import { IBotCommand } from "../types/types";
 
 export const command: IBotCommand = {
     data: new SlashCommandBuilder()
@@ -30,9 +30,7 @@ export const command: IBotCommand = {
 
         const member = interaction.options.getMember("user");
 
-        const warnEmbed = new MessageEmbed()
-            .setColor("RED")
-            .setTitle(`Warning`)
+        const warnEmbed = new MessageEmbed().setColor("RED").setTitle(`Warning`)
             .setDescription(`
                 User: <@${member?.user.id}>
                 Reason: \`${interaction.options.getString("reason", true)}\`
@@ -41,8 +39,7 @@ export const command: IBotCommand = {
 
         const dmEmbed = new MessageEmbed()
             .setColor("RED")
-            .setTitle("You have recieved a warning")
-            .setDescription(`
+            .setTitle("You have recieved a warning").setDescription(`
                 Reason: ${interaction.options.getString("reason", true)}
                 Moderator: <@${interaction.member.user.id}>
 

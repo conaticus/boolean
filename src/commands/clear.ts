@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed, TextChannel } from "discord.js";
 
-import config from "../config";
-import { IBotCommand } from "../types";
+import { config_ as config } from "../configs/config-handler";
+import { IBotCommand } from "../types/types";
 import utils from "../utils";
 
 export const command: IBotCommand = {
@@ -30,7 +30,6 @@ export const command: IBotCommand = {
             .setDescription(`Deleted \`${deleted.size}\` messages.`);
         await interaction.editReply({ embeds: [successEmbed] });
         for (const message of deleted.filter((e) => !e.author.bot).values()) {
-            console.log(message);
             const content = message.content ?? "";
             if (message.attachments.size)
                 content.concat(
