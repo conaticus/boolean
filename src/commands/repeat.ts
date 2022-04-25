@@ -4,6 +4,9 @@ import { MessageEmbed } from "discord.js";
 import { IBotCommand } from "../types";
 
 export const command: IBotCommand = {
+    name: "Repeat",
+    desc: "Repeats a given message",
+    timeout: 60000,
     data: new SlashCommandBuilder()
         .setName("repeat")
         .setDescription("Repeats a given message")

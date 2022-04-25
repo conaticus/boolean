@@ -12,6 +12,9 @@ const timeout = (seconds: number): Promise<void> => {
 };
 
 export const command: IBotCommand = {
+    name: "Ping",
+    desc: "Pings The the bot",
+    timeout: 2000,
     data: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("Replies with a pong!"),

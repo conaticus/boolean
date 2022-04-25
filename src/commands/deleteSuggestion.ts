@@ -4,9 +4,11 @@ import config from '../config';
 import { IBotCommand } from '../types';
 
 export const command: IBotCommand = {
+    name: "Delete Suggestions",
+    desc: "Delete the current suggestion.",
     data: new SlashCommandBuilder()
         .setName('delete')
-        .setDescription('Delete the current suggestion'),
+        .setDescription('Delete the current suggestion.'),
     requiredPerms: ['MANAGE_MESSAGES'],
     async execute(interaction, client) {
         await interaction.deferReply({ ephemeral: true });

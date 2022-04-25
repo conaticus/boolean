@@ -6,6 +6,9 @@ import { IBotCommand } from "../types";
 import utils from "../utils";
 
 export const command: IBotCommand = {
+    name: "Announce",
+    desc: "Write an announcement for the server.",
+    timeout: 6000,
     data: new SlashCommandBuilder()
         .setName("announce")
         .setDescription("Write an announcement for the server.")

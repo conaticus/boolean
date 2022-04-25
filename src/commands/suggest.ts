@@ -5,6 +5,9 @@ import config from "../config";
 import { IBotCommand } from "../types";
 
 export const command: IBotCommand = {
+    name: "Suggest",
+    desc: "Write a new suggestion for the channel.",
+    timeout: 600000,
     data: new SlashCommandBuilder()
         .setName("suggest")
         .setDescription("Write a new suggestion for the channel.")

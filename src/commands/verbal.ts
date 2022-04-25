@@ -5,6 +5,8 @@ import config from "../config";
 import { IBotCommand } from "../types";
 
 export const command: IBotCommand = {
+    name: "Verbal",
+    desc: "Warn members in a warnings channel about rule violations.",
     data: new SlashCommandBuilder()
         .setName("verbal")
         .setDescription(

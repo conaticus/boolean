@@ -30,14 +30,14 @@ const config: IConfig = {
     // Use info (Wont show debug logs), or Debug (Shows EVERYTHING)
     logLevel: "info",
 
-    suggestionsChannelId: "949572444656648262",
-    welcomeChannelId: "964876565437644820",
-    announcementsChannelId: "949567953211387945",
-    warnChannelId: "967369612847108176",
-    announcementsRoleId: "960144630857465866",
-    guildId: "949566380523548672",
-    logChannelId: "965246247441162310",
-    rolesChannelId: "949572424079376414",
+    suggestionsChannelId: "967737630018134030",
+    welcomeChannelId: "967737630018134030",
+    announcementsChannelId: "967737630018134030",
+    warnChannelId: "967737630018134030",
+    announcementsRoleId: "967737630018134030",
+    guildId: "967737630018134027",
+    logChannelId: "967737630018134030",
+    rolesChannelId: "967737630018134030",
     reactionMessages: [
         {
             title: "Languages",
@@ -93,7 +93,7 @@ const config: IConfig = {
                 Kotlin: {
                     emoji: "<:kotlin:967665403604107334>",
                     roleId: "967665472424259604",
-                }
+                },
             },
         },
         {
@@ -110,7 +110,7 @@ const config: IConfig = {
             },
         },
     ],
-    memberRoleId: "949569759308025856",
+    memberRoleId: "967748521023373315",
 };
 
 export default config;

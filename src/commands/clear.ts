@@ -4,6 +4,8 @@ import { MessageEmbed } from "discord.js";
 import { IBotCommand } from "../types";
 
 export const command: IBotCommand = {
+    name: "Clear",
+    desc: "Delete specified amount of messages. ",
     data: new SlashCommandBuilder()
         .setName("clear")
         .setDescription("Delete specified amount of messages.")

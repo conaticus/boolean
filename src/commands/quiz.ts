@@ -174,6 +174,8 @@ const constructQuestions = async (
 };
 
 export const command: IBotCommand = {
+    name: "Quiz",
+    desc: "Create a quiz for server members to play..",
     data: new SlashCommandBuilder()
         .setName("quiz")
         .setDescription("Create a quiz for server members to play.")
