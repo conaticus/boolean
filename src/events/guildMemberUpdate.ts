@@ -91,8 +91,8 @@ Duration: ${durationFormatted} (<t:${Math.floor(
                 newMember.communicationDisabledUntilTimestamp / 1000
             )}:R>)
 
-**If you believe this time out is unjustified, fill in the [appeal form](https://google.com).**
-                `);
+**If you believe this time out is unjustified, please contact Conaticus.**
+                `); // change this ^ to "fill in the [appeal form](${formURL})" when there's an appeal form
             await newMember.send({ embeds: [dmEmbed] }).catch(() => {});
         }
     },
