@@ -51,7 +51,6 @@ export const command: IBotCommand = {
                 })
                 .setThumbnail(interaction.guild?.iconURL()!)
                 .addField("• Content", message.content, false);
-            console.log(config.logChannelId);
             await client.logger.channel(
                 embed,
                 client.channels.cache.get(config.logChannelId) as TextChannel

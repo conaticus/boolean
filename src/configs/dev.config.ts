@@ -6,14 +6,14 @@ const devConfig: IConfig = {
     // Use info (Wont show debug logs), or Debug (Shows EVERYTHING)
     logLevel: "debug",
 
-    suggestionsChannelId: "960568357692776580",
-    welcomeChannelId: "960568357306896425",
-    announcementsChannelId: "960568357306896428",
+    suggestionsChannelId: "967622032252633088",
+    welcomeChannelId: "967622032252633088",
+    announcementsChannelId: "967622032252633088",
     warnChannelId: "960568357692776582",
     announcementsRoleId: "960568356744884258",
-    guildId: "960568356707115078",
-    logChannelId: "960568358888177742",
-    rolesChannelId: "960568357306896430",
+    guildId: "369598637623345165",
+    logChannelId: "967622032252633088",
+    rolesChannelId: "967622032252633088",
     reactionMessages: [
         {
             title: "Languages",
