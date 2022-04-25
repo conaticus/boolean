@@ -17,7 +17,6 @@ export default TypedEvent({
         oldMember: GuildMember | PartialGuildMember,
         newMember: GuildMember | PartialGuildMember
     ) => {
-        if (oldMember.partial) return;
         if (newMember.partial) await newMember.fetch();
         // Fetch the latest audit log
         const AuditLogs = await oldMember.guild.fetchAuditLogs({
@@ -51,7 +50,10 @@ export default TypedEvent({
                     );
         }
         // Nickname
-        else if (oldMember.nickname != newMember.nickname) {
+        else if (
+            !oldMember.partial &&
+            oldMember.nickname != newMember.nickname
+        ) {
             nicknameUpdateEvent(
                 newMember as GuildMember,
                 oldMember.nickname!,
@@ -59,9 +61,10 @@ export default TypedEvent({
                 client
             );
         } else if (
-            newMember.isCommunicationDisabled() &&
-            !oldMember.isCommunicationDisabled() &&
-            lastLog
+            lastLog?.changes?.some(
+                (e) => e.key === "communication_disabled_until"
+            ) &&
+            newMember.isCommunicationDisabled()
         ) {
             const durationMinutes = Math.round(
                 (newMember.communicationDisabledUntilTimestamp -
