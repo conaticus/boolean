@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 
+import { Bot } from "../structures/Bot";
 import { IBotCommand } from "../types/types";
 
 const timeout = (seconds: number): Promise<void> => {
@@ -15,7 +16,7 @@ export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("Replies with a pong!"),
-    async execute(interaction: CommandInteraction<"cached">) {
+    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
         // This is purely for my own amusement - conaticus
 
         if (Math.random() < 0.9) {

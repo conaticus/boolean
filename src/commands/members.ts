@@ -1,13 +1,14 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 
-import { IBotCommand } from "../types";
+import { Bot } from "../structures/Bot";
+import { IBotCommand } from "../types/types";
 
 export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("members")
         .setDescription("returns number of members in a server"),
-    async execute(interaction, client) {
+    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
         let membersCount = client.guilds.cache
             .map((guild) => guild.memberCount)
             .reduce((a, b) => a + b, 0);

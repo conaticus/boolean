@@ -1,8 +1,9 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 
-import config from "../config";
-import { IBotCommand } from "../types";
+import config from "../configs/config";
+import { Bot } from "../structures/Bot";
+import { IBotCommand } from "../types/types";
 
 export const command: IBotCommand = {
     data: new SlashCommandBuilder()
@@ -27,7 +28,7 @@ export const command: IBotCommand = {
                 .addChoice("Other", "Other")
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction, client) {
+    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
         const member = interaction.options.getMember("user");
 
         const dmEmbed = new MessageEmbed()

@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {
+    CommandInteraction,
     Message,
     MessageEmbed,
     MessageReaction,
@@ -7,6 +8,7 @@ import {
     User,
 } from "discord.js";
 
+import { Bot } from "../structures/Bot";
 import { IBotCommand } from "../types/types";
 
 interface IQuestion {
@@ -179,7 +181,7 @@ export const command: IBotCommand = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction, client) {
+    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
         const quizChannel = interaction.options.getChannel(
             "channel"
         ) as TextChannel;

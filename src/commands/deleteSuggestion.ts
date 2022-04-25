@@ -1,8 +1,9 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 
-import config from "../config";
-import { IBotCommand } from "../types";
+import { config_ } from "../configs/config-handler";
+import { Bot } from "../structures/Bot";
+import { IBotCommand } from "../types/types";
 
 export const command: IBotCommand = {
     data: new SlashCommandBuilder()
@@ -15,7 +16,7 @@ export const command: IBotCommand = {
                 .setRequired(true)
         ),
     requiredPerms: ["MANAGE_MESSAGES"],
-    async execute(interaction, client) {
+    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
         await interaction.deferReply({ ephemeral: true });
 
         const reply = await interaction.fetchReply();
@@ -40,19 +41,19 @@ export const command: IBotCommand = {
 
         if (
             !suggestionMessage ||
-            suggestionMessage.channelId !== config.suggestionsChannelId
+            suggestionMessage.channelId !== config_.suggestionsChannelId
         ) {
             const errorMessageEmbed = new MessageEmbed()
                 .setColor("RED")
                 .setDescription(
-                    `You can only delete a suggestion in <#${config.suggestionsChannelId}>.`
+                    `You can only delete a suggestion in <#${config_.suggestionsChannelId}>.`
                 );
 
             return interaction.editReply({ embeds: [errorMessageEmbed] });
         }
 
         const logChannel = client.channels.cache.get(
-            config.logChannelId
+            config_.logChannelId
         ) as TextChannel;
 
         const dmEmbed = new MessageEmbed()

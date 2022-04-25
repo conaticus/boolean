@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 
 import { config_ as config } from "../configs/config-handler";
+import { Bot } from "../structures/Bot";
 import { IBotCommand } from "../types/types";
 import utils from "../utils";
 
@@ -16,7 +17,7 @@ export const command: IBotCommand = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction, client) {
+    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
         const announcement = await utils.askQuestion(
             interaction,
             "Please now send the announcement message.",

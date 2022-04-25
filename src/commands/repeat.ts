@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 
+import { Bot } from "../structures/Bot";
 import { IBotCommand } from "../types/types";
 
 export const command: IBotCommand = {
@@ -14,7 +15,7 @@ export const command: IBotCommand = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction) {
+    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
         interaction.channel?.send(
             interaction.options.getString("message", true)
         );
