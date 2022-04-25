@@ -18,7 +18,7 @@ it("should format attachment url", () => {
     );
 
     expect(util.formatAttachmentsURL(mockDataCollection)).toBe(
-        "https://example.com/file.png\n"
+        "[`Attachment-0-File`](https://example.com/file.png)"
     );
 
     mockDataCollection.set(
@@ -27,6 +27,6 @@ it("should format attachment url", () => {
     );
 
     expect(util.formatAttachmentsURL(mockDataCollection)).toBe(
-        "https://example.com/file.png\nhttps://example.com/file2.png\n"
+        "[`Attachment-0-File`](https://example.com/file.png)\n[`Attachment-1-File`](https://example.com/file2.png)"
     );
 });
