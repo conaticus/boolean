@@ -30,11 +30,7 @@ export const command: IBotCommand = {
             .setDescription(`Deleted \`${deleted.size}\` messages.`);
         await interaction.editReply({ embeds: [successEmbed] });
         for (const message of deleted.filter((e) => !e.author.bot).values()) {
-            const content = message.content ?? "";
-            if (message.attachments.size)
-                content.concat(
-                    `\n${utils.formatAttachmentsURL(message.attachments)}`
-                );
+            const attachments = utils.formatAttachmentsURL(message.attachments);
             const embed = new MessageEmbed()
                 .setAuthor({
                     name: message.author.tag,
@@ -50,7 +46,14 @@ export const command: IBotCommand = {
                     iconURL: client.user?.displayAvatarURL(),
                 })
                 .setThumbnail(interaction.guild?.iconURL()!)
-                .addField("• Content", message.content, false);
+                .addField(
+                    "• Content",
+                    `${message.content.slice(
+                        0,
+                        1023 - attachments.length
+                    )}\n${attachments}`,
+                    false
+                );
             await client.logger.channel(
                 embed,
                 client.channels.cache.get(config.logChannelId) as TextChannel
