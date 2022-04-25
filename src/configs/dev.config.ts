@@ -2,6 +2,8 @@ import { IConfig } from "../types/configtypes";
 
 const devConfig: IConfig = {
     token: process.env.TOKEN!,
+    clientId: process.env.CLIENT_ID!,
+    guildId: process.env.GUILD_ID!,
 
     // Use info (Wont show debug logs), or Debug (Shows EVERYTHING)
     logLevel: "debug",
@@ -11,7 +13,6 @@ const devConfig: IConfig = {
     announcementsChannelId: "960568357306896428",
     warnChannelId: "960568357692776582",
     announcementsRoleId: "960568356744884258",
-    guildId: "960568356707115078",
     logChannelId: "960568358888177742",
     rolesChannelId: "960568357306896430",
     reactionMessages: [

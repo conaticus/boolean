@@ -37,7 +37,7 @@ export default TypedEvent({
         const rest = new REST({ version: "9" }).setToken(config.token);
 
         rest.put(
-            Routes.applicationGuildCommands(client.user.id, config.guildId),
+            Routes.applicationGuildCommands(config.clientId, config.guildId),
             { body: commandArr }
         );
 

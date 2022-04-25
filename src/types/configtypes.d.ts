@@ -21,6 +21,7 @@ export type ReactionMessage = {
 export interface IConfig {
     token: string;
     logLevel: string;
+    clientId: string;
 
     suggestionsChannelId: string;
     welcomeChannelId: string;
@@ -37,6 +38,7 @@ export interface IConfig {
 export type Config = {
     token: string;
     logLevel: string;
+    clientId: string;
 
     suggestionsChannelId: string;
     welcomeChannelId: string;
