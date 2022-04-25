@@ -30,29 +30,44 @@ export const command: IBotCommand = {
             .setDescription(`Deleted \`${deleted.size}\` messages.`);
         await interaction.editReply({ embeds: [successEmbed] });
         for (const message of deleted.filter((e) => !e.author.bot).values()) {
-            const attachments = utils.formatAttachmentsURL(message.attachments);
             const embed = new MessageEmbed()
                 .setAuthor({
-                    name: message.author.tag,
+                    name: "Deleted message",
                     iconURL: message.author.displayAvatarURL(),
+                    url: message.url,
                 })
-                .setDescription(
-                    `Message sent by ${message.author} in ${interaction.channel} was deleted by ${interaction.user}`
-                )
+                .setDescription(message.content)
                 .setColor("RED")
                 .setTimestamp()
                 .setFooter({
                     text: "Boolean",
                     iconURL: client.user?.displayAvatarURL(),
                 })
-                .setThumbnail(interaction.guild?.iconURL()!)
+                .addField("Author", message.author.toString(), true)
+                .addField("Channel", message.channel.toString(), true)
+                .addField("\u200B", "\u200B", true)
+                .addField("Executor", interaction.user.toString(), true)
                 .addField(
-                    "• Content",
-                    `${message.content.slice(
-                        0,
-                        1023 - attachments.length
-                    )}\n${attachments}`,
-                    false
+                    "Sent at",
+                    `<t:${Math.round(message.createdTimestamp / 1000)}>`,
+                    true
+                )
+                .addField("\u200B", "\u200B", true);
+            const sticker = message.stickers.first();
+            if (sticker) {
+                if (sticker.format === "LOTTIE") {
+                    embed.addField(
+                        "Sticker",
+                        `[${sticker.name}](${sticker.url})`
+                    );
+                } else {
+                    embed.setThumbnail(sticker.url);
+                }
+            }
+            if (message.attachments.size)
+                embed.addField(
+                    "Attachments",
+                    utils.formatAttachmentsURL(message.attachments)
                 );
             await client.logger.channel(
                 embed,
