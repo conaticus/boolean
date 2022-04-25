@@ -1,6 +1,7 @@
 import { Collection, MessageAttachment } from "discord.js";
-import { MockMessageAttachment } from "./mock.test";
+
 import util from "../src/utils";
+import { MockMessageAttachment } from "./mock.test";
 
 const attachmentWithUrl = (url: string): MessageAttachment => {
     const mockMessageAtatchment = new MockMessageAttachment();

@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed } from "discord.js";
 
-import { IBotCommand } from "../types";
+import { IBotCommand } from "../types/types";
 
 export const command: IBotCommand = {
     name: "Repeat",

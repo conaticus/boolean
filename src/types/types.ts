@@ -5,7 +5,7 @@ import {
     PermissionResolvable,
 } from "discord.js";
 
-import { Bot } from "./structures/Bot";
+import { Bot } from "../structures/Bot";
 
 export interface IBotCommand {
     name: String;

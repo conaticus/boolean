@@ -1,8 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed, TextChannel } from "discord.js";
 
-import config from "../config";
-import { IBotCommand } from "../types";
+import { config_ as config } from "../configs/config-handler";
+import { IBotCommand } from "../types/types";
 
 export const command: IBotCommand = {
     name: "Verbal",
@@ -10,7 +10,7 @@ export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("verbal")
         .setDescription(
-            "warn members in a warnings channel about rule violations."
+            "Warn members in a warnings channel about rule violations."
         )
         .addUserOption((option) =>
             option
@@ -34,19 +34,19 @@ export const command: IBotCommand = {
 
         const warnEmbed = new MessageEmbed().setColor("RED").setTitle(`Warning`)
             .setDescription(`
-Moderator: <@${member?.user.id}>
-Reason: \`${interaction.options.getString("reason", true)}\`
-Moderator: <@${interaction.member.user.id}>
-`);
+                User: <@${member?.user.id}>
+                Reason: \`${interaction.options.getString("reason", true)}\`
+                Moderator: <@${interaction.member.user.id}>
+            `);
 
         const dmEmbed = new MessageEmbed()
             .setColor("RED")
             .setTitle("You have recieved a warning").setDescription(`
-Reason: ${interaction.options.getString("reason", true)}
-Moderator: <@${interaction.member.user.id}>
+                Reason: ${interaction.options.getString("reason", true)}
+                Moderator: <@${interaction.member.user.id}>
 
-If you believe this warning is unjustified, please contact Conaticus.
-`);
+                If you believe this warning is unjustified, please contact Conaticus.
+            `);
 
         await member?.send({ embeds: [dmEmbed] });
 

@@ -1,8 +1,8 @@
 import { Message, MessageEmbed, PartialMessage, TextChannel } from "discord.js";
 
-import config from "../config";
+import { config_ as config } from "../configs/config-handler";
 import { Bot } from "../structures/Bot";
-import { TypedEvent } from "../types";
+import { TypedEvent } from "../types/types";
 import utils from "../utils";
 
 export default TypedEvent({
