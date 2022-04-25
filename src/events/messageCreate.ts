@@ -10,7 +10,7 @@ const forbiddenPhrases: string[] = ["discord.gg"];
 export default TypedEvent({
     eventName: "messageCreate",
     run: async (client: Bot, message: Message) => {
-        if (message.author.bot) return;
+        if (message.author.bot || message.system) return;
         const foundPhrase = forbiddenPhrases.find((phrase) =>
             message.content.includes(phrase)
         );

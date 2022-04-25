@@ -17,53 +17,81 @@ export default TypedEvent({
         oldMember: GuildMember | PartialGuildMember,
         newMember: GuildMember | PartialGuildMember
     ) => {
-        if (oldMember.partial || newMember.partial) return;
+        if (oldMember.partial) return;
+        if (newMember.partial) await newMember.fetch();
         // Fetch the latest audit log
         const AuditLogs = await oldMember.guild.fetchAuditLogs({
             limit: 1,
         });
+        const lastLog = AuditLogs.entries.first();
 
-        if (
-            (AuditLogs.entries.first()?.action as string) ==
-            "MEMBER_ROLE_UPDATE"
-        ) {
+        if (lastLog && (lastLog.action as string) === "MEMBER_ROLE_UPDATE") {
             const roleUpdateLogs = AuditLogs;
 
             // Role add
-            if (roleUpdateLogs.entries.first()?.changes?.at(0)?.key === "$add")
-                if (roleUpdateLogs.entries.first()?.executor?.bot) return;
+            if (lastLog.changes?.at(0)?.key === "$add")
+                if (lastLog.executor?.bot) return;
                 else
                     memberRoleAddEvent(
-                        roleUpdateLogs.entries.first()?.target! as User,
-                        roleUpdateLogs.entries.first()?.executor!,
-                        roleUpdateLogs.entries.first()?.changes?.at(0)?.new,
+                        lastLog.target! as User,
+                        lastLog.executor!,
+                        lastLog.changes?.at(0)?.new,
                         client
                     );
 
             // Role Remove
-            if (
-                roleUpdateLogs.entries.first()?.changes?.at(0)?.key ===
-                "$remove"
-            )
-                if (roleUpdateLogs.entries.first()?.executor?.bot) return;
+            if (lastLog.changes?.at(0)?.key === "$remove")
+                if (lastLog.executor?.bot) return;
                 else
                     memberRoleRemoveEvent(
-                        roleUpdateLogs.entries.first()?.target! as User,
-                        roleUpdateLogs.entries.first()?.executor!,
-                        roleUpdateLogs.entries.first()?.changes?.at(0)?.new,
+                        lastLog.target! as User,
+                        lastLog.executor!,
+                        lastLog.changes?.at(0)?.new,
                         client
                     );
         }
-
         // Nickname
-        if (oldMember.nickname === newMember.nickname) return;
-        else
+        else if (oldMember.nickname != newMember.nickname) {
             nicknameUpdateEvent(
-                newMember,
+                newMember as GuildMember,
                 oldMember.nickname!,
                 newMember.nickname!,
                 client
             );
+        } else if (
+            newMember.isCommunicationDisabled() &&
+            !oldMember.isCommunicationDisabled() &&
+            lastLog
+        ) {
+            const durationMinutes = Math.round(
+                (newMember.communicationDisabledUntilTimestamp -
+                    lastLog.createdTimestamp) /
+                    60000
+            );
+            const durationUnits = [
+                [Math.floor(durationMinutes / 1440), "d"],
+                [Math.floor((durationMinutes % 1440) / 60), "h"],
+                [Math.floor(durationMinutes % 60), "m"],
+            ];
+            const durationFormatted = durationUnits
+                .filter((e) => e[0])
+                .flat()
+                .join("");
+            const reason = lastLog.reason?.slice(0, 500);
+            const reasonField = reason ? `Reason: *${reason}*` : "";
+            const dmEmbed = new MessageEmbed()
+                .setColor("RED")
+                .setTitle("You have received a time out").setDescription(`
+${reasonField}
+Moderator: ${lastLog.executor}
+Duration: ${durationFormatted} (<t:${Math.floor(
+                newMember.communicationDisabledUntilTimestamp / 1000
+            )}:R>)
+
+**If you believe this time out is unjustified, fill in the [appeal form](https://google.com).**
+                `);
+            await newMember.send({ embeds: [dmEmbed] }).catch(() => {});
+        }
     },
 });
 
