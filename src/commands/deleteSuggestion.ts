@@ -1,10 +1,12 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed, TextChannel } from "discord.js";
 
-import config from "../config";
-import { IBotCommand } from "../types";
+import config from "../configs/config";
+import { IBotCommand } from "../types/types";
 
-export const command: IBotCommand = {
+const command: IBotCommand = {
+    name: "Delete Suggestion",
+    desc: "Delete the current suggestion.",
     data: new SlashCommandBuilder()
         .setName("delsug")
         .setDescription("Delete the current suggestion.")
@@ -94,3 +96,4 @@ export const command: IBotCommand = {
         } catch {}
     },
 };
+export default command;
