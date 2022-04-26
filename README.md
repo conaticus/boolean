@@ -4,8 +4,6 @@
 
 A bot for Conaticus' [Discord server](https://discord.com/invite/aDAsjZVzaH). A document of the development process has been made here: https://www.youtube.com/watch?v=xq2jR3_msmk.
 
-If you like cool coding projects like this, subscribe to me at https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ
-
 ## Documentation
 
 ### Setup
@@ -42,9 +40,9 @@ Due to many of the values being hardcoded, in order to run your instance you wil
 
 #### Embed Colours
 
-General: `"ORANGE"` \
-Success: `"GREEN"` \
-Error: `"RED"`
+General: `"#5E81AC"` \
+Success: `"#A3BE8C"` \
+Error: `"#BF616A"`
 
 #### Configuration
 
@@ -83,3 +81,8 @@ To read from it, require `config` then read the value specified by doing `config
 ## Contributing
 
 Look at [CONTRIBUTING.md](https://github.com/conaticus/boolean/blob/master/CONTRIBUTING.md) to find out how you can help contribute to the development of this bot.
+
+## Support
+
+If you like cool coding projects like this, subscribe to me at https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ
+Help the community with a simple ⭐
