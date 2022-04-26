@@ -15,7 +15,7 @@ export default TypedEvent({
         if (message.author.bot) return;
 
         const messageWords = weirdToNormalChars(message.content.toLowerCase()).split(" ");
-        const foundPhrase = forbiddenPhrases.find((phrase) =>
+        const foundPhrase = forbiddenPhrases.some((phrase) =>
             messageWords.join(" ").includes(phrase.toLowerCase())
             || stringSimilarity(messageWords.join(" "), phrase) > 0.6
             || messageWords.some((word) => stringSimilarity(word, phrase) > 0.6)
