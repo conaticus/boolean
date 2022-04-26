@@ -1,9 +1,12 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed } from "discord.js";
 
+
+
 import { IBotCommand } from "../types/types";
 
-export const command: IBotCommand = {
+
+const command: IBotCommand = {
     name: "Repeat",
     desc: "Repeats a given message",
     timeout: 60000,
@@ -28,3 +31,4 @@ export const command: IBotCommand = {
         interaction.reply({ embeds: [successEmbed], ephemeral: true });
     },
 };
+export default command;
