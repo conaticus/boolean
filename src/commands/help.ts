@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import * as fs from "fs";
 
-import { IBotCommand } from "../types";
+import { IBotCommand } from "../types/types";
 
 const { Message, MessageEmbed } = require("discord.js");
 const values: any = [];
@@ -34,7 +34,7 @@ export const command: IBotCommand = {
                 }
                 var namelist = "";
                 var desclist = "";
-                jsfiles.forEach((f, i) => {
+                jsfiles.forEach((f, _i) => {
                     let props = require(`./${f}`);
                     namelist = props.command.name;
                     desclist = props.command.desc;
