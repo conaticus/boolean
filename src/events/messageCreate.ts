@@ -5,7 +5,7 @@ import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types/types";
 import utils from "./../utils";
 
-const forbiddenPhrases: string[] = ["discord.gg", "porn", "orange youtube"];
+const forbiddenPhrases: string[] = ["discord.gg", "porn", "orange youtube", "faggot", "kys"];
 
 export default TypedEvent({
     eventName: "messageCreate",
