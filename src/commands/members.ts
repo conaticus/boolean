@@ -8,7 +8,7 @@ export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("members")
         .setDescription("returns number of members in a server"),
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+    async execute(interaction, client) {
         let membersCount = client.guilds.cache
             .map((guild) => guild.memberCount)
             .reduce((a, b) => a + b, 0);

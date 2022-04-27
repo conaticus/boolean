@@ -16,7 +16,7 @@ export const command: IBotCommand = {
                 .setRequired(true)
         ),
     requiredPerms: ["MANAGE_MESSAGES"],
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+    async execute(interaction, client) {
         await interaction.deferReply({ ephemeral: true });
 
         const deleted = await interaction.channel!.bulkDelete(

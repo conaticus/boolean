@@ -181,7 +181,7 @@ export const command: IBotCommand = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+    async execute(interaction, client) {
         const quizChannel = interaction.options.getChannel(
             "channel"
         ) as TextChannel;

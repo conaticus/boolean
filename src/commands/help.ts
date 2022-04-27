@@ -9,7 +9,7 @@ export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("help")
         .setDescription("A help embed to guide users to all the commands"),
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+    async execute(interaction, client) {
         const embed = new MessageEmbed()
             .setTitle("Help Embed")
             .setColor("ORANGE")

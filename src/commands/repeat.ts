@@ -15,7 +15,7 @@ export const command: IBotCommand = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+    async execute(interaction, client) {
         interaction.channel?.send(
             interaction.options.getString("message", true)
         );

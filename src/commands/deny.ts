@@ -28,7 +28,7 @@ export const command: IBotCommand = {
                 .addChoice("Other", "Other")
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+    async execute(interaction, client) {
         const member = interaction.options.getMember("user");
 
         const dmEmbed = new MessageEmbed()

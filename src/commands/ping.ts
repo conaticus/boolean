@@ -16,7 +16,7 @@ export const command: IBotCommand = {
     data: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("Replies with a pong!"),
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+    async execute(interaction, client) {
         // This is purely for my own amusement - conaticus
 
         if (Math.random() < 0.9) {

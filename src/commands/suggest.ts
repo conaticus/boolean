@@ -21,7 +21,7 @@ export const command: IBotCommand = {
                 .setDescription("Set suggestion's description.")
                 .setRequired(true)
         ),
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+    async execute(interaction, client) {
         const suggestionsChannel = client.channels.cache.get(
             config.suggestionsChannelId
         ) as TextChannel;

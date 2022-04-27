@@ -17,7 +17,7 @@ export const command: IBotCommand = {
                 .setRequired(true)
         ),
     requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+    async execute(interaction, client) {
         const announcement = await utils.askQuestion(
             interaction,
             "Please now send the announcement message.",

@@ -24,7 +24,7 @@ export const command: IBotCommand = {
                 .setRequired(true)
         ),
     requiredPerms: ["MANAGE_MESSAGES"],
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+    async execute(interaction, client) {
         const warnChannel = client.channels.cache.get(
             config.warnChannelId
         ) as TextChannel;

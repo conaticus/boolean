@@ -17,7 +17,7 @@ export const command: IBotCommand = {
                 .setDescription("the target user.")
                 .setRequired(true)
         ),
-    async execute(interaction: CommandInteraction<"cached">, client: Bot) {
+    async execute(interaction, client) {
         const target = interaction.options.getUser("target");
         const guild = client.guilds.cache.get(config.guildId);
         const member = guild?.members.cache.get(target?.id!);
