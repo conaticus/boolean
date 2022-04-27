@@ -17,3 +17,4 @@ src/configs/config.ts
 package-lock.json
 .vscode
 .idea
+.DS_Store
