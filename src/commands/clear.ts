@@ -3,7 +3,9 @@ import { MessageEmbed } from "discord.js";
 
 import { IBotCommand } from "../types/types";
 
-export const command: IBotCommand = {
+const command: IBotCommand = {
+    name: "Clear",
+    desc: "Delete specified amount of messages. ",
     data: new SlashCommandBuilder()
         .setName("clear")
         .setDescription("Delete specified amount of messages.")
@@ -29,3 +31,5 @@ export const command: IBotCommand = {
         await interaction.editReply({ embeds: [successEmbed] });
     },
 };
+
+export default command;

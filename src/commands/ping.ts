@@ -1,7 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 
+
+
 import { IBotCommand } from "../types/types";
+
 
 const timeout = (seconds: number): Promise<void> => {
     return new Promise((resolve) => {
@@ -11,7 +14,10 @@ const timeout = (seconds: number): Promise<void> => {
     });
 };
 
-export const command: IBotCommand = {
+const command: IBotCommand = {
+    name: "Ping",
+    desc: "Pings The the bot",
+    timeout: 2000,
     data: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("Replies with a pong!"),
@@ -33,3 +39,4 @@ export const command: IBotCommand = {
         interaction.channel?.send("Tactical nuke inbound.");
     },
 };
+export default command;
