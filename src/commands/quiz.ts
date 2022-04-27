@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {
-    CommandInteraction,
     Message,
     MessageEmbed,
     MessageReaction,
@@ -8,7 +7,6 @@ import {
     User,
 } from "discord.js";
 
-import { Bot } from "../structures/Bot";
 import { IBotCommand } from "../types/types";
 
 interface IQuestion {

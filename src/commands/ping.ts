@@ -1,7 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
 
-import { Bot } from "../structures/Bot";
 import { IBotCommand } from "../types/types";
 
 const timeout = (seconds: number): Promise<void> => {

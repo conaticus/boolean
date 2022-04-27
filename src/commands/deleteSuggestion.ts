@@ -1,8 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
+import { MessageEmbed, TextChannel } from "discord.js";
 
-import { config_ } from "../configs/config-handler";
-import { Bot } from "../structures/Bot";
+import { config_ as config } from "../configs/config-handler";
 import { IBotCommand } from "../types/types";
 
 export const command: IBotCommand = {
@@ -41,19 +40,19 @@ export const command: IBotCommand = {
 
         if (
             !suggestionMessage ||
-            suggestionMessage.channelId !== config_.suggestionsChannelId
+            suggestionMessage.channelId !== config.suggestionsChannelId
         ) {
             const errorMessageEmbed = new MessageEmbed()
                 .setColor("RED")
                 .setDescription(
-                    `You can only delete a suggestion in <#${config_.suggestionsChannelId}>.`
+                    `You can only delete a suggestion in <#${config.suggestionsChannelId}>.`
                 );
 
             return interaction.editReply({ embeds: [errorMessageEmbed] });
         }
 
         const logChannel = client.channels.cache.get(
-            config_.logChannelId
+            config.logChannelId
         ) as TextChannel;
 
         const dmEmbed = new MessageEmbed()

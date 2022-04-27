@@ -1,10 +1,4 @@
-import {
-    CommandInteraction,
-    Interaction,
-    MessageEmbed,
-    Role,
-} from "discord.js";
-import { type } from "os";
+import { Interaction, MessageEmbed, Role } from "discord.js";
 
 import { config_ as config } from "../configs/config-handler";
 import { Bot } from "../structures/Bot";

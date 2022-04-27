@@ -1,10 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
-import moment from "moment";
+import { MessageEmbed } from "discord.js";
 
 import { config_ as config } from "../configs/config-handler";
-import { commandFiles } from "../files";
-import { Bot } from "../structures/Bot";
 import { IBotCommand } from "../types/types";
 
 export const command: IBotCommand = {
