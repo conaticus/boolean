@@ -1,4 +1,10 @@
-import { Message, MessageEmbed, PartialMessage, TextChannel } from "discord.js";
+import {
+    GuildAuditLogs,
+    Message,
+    MessageEmbed,
+    PartialMessage,
+    TextChannel,
+} from "discord.js";
 
 import { config_ as config } from "../configs/config-handler";
 import { Bot } from "../structures/Bot";
@@ -11,9 +17,6 @@ export default TypedEvent({
         // Check if the message is partial
         if (message.partial) return;
 
-        // Check if the deleted message is present in the cache
-        if (message.author == null) return;
-
         // Check if the author of the deleted messaage is the bot
         if (message.author.bot) return;
 
@@ -22,6 +25,20 @@ export default TypedEvent({
 });
 
 async function log(message: Message, client: Bot) {
+    const audits = await message.guild?.fetchAuditLogs({
+        type: GuildAuditLogs.Actions.MESSAGE_DELETE,
+        limit: 1,
+    });
+    const lastEntry = audits?.entries.first();
+    let executor;
+    if (
+        lastEntry &&
+        client.lastLoggedDeletion &&
+        (lastEntry.id != client.lastLoggedDeletion.id ||
+            lastEntry.extra.count != client.lastLoggedDeletion.extra.count)
+    )
+        executor = lastEntry.executor;
+    client.lastLoggedDeletion = lastEntry;
     const embed = new MessageEmbed()
         .setAuthor({
             name: "Deleted message",
@@ -36,14 +53,24 @@ async function log(message: Message, client: Bot) {
             iconURL: client.user?.displayAvatarURL(),
         })
         .addField("Author", message.author.toString(), true)
-        .addField("Channel", message.channel.toString(), true)
-        .addField("\u200B", "\u200B", true)
-        .addField(
+        .addField("Channel", message.channel.toString(), true);
+    if (executor) {
+        embed
+            .addField("\u200B", "\u200B", true)
+            .addField("Executor", executor.toString(), true)
+            .addField(
+                "Sent at",
+                `<t:${Math.round(message.createdTimestamp / 1000)}>`,
+                true
+            )
+            .addField("\u200B", "\u200B", true);
+    } else {
+        embed.addField(
             "Sent at",
             `<t:${Math.round(message.createdTimestamp / 1000)}>`,
             true
-        )
-        .addField("\u200B", "\u200B", true);
+        );
+    }
     const sticker = message.stickers.first();
     if (sticker) {
         if (sticker.format === "LOTTIE") {

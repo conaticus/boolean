@@ -1,6 +1,6 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/rest/v9";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { GuildAuditLogs, MessageEmbed, TextChannel } from "discord.js";
 
 import { config_ as config } from "../configs/config-handler";
 import { commandFiles } from "../files";
@@ -33,6 +33,14 @@ export default TypedEvent({
                 `Registered command ${command.data.name}`
             );
         }
+
+        const audits = await client.guilds.cache
+            .get(config.guildId)
+            ?.fetchAuditLogs({
+                type: GuildAuditLogs.Actions.MESSAGE_DELETE,
+                limit: 1,
+            });
+        client.lastLoggedDeletion = audits?.entries.first();
 
         const rest = new REST({ version: "9" }).setToken(config.token);
 

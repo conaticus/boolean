@@ -25,8 +25,6 @@ export default TypedEvent({
         const lastLog = AuditLogs.entries.first();
 
         if (lastLog && (lastLog.action as string) === "MEMBER_ROLE_UPDATE") {
-            const roleUpdateLogs = AuditLogs;
-
             // Role add
             if (lastLog.changes?.at(0)?.key === "$add")
                 if (lastLog.executor?.bot) return;
