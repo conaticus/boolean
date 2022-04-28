@@ -4,7 +4,9 @@ import { MessageEmbed, TextChannel } from "discord.js";
 import { config_ as config } from "../configs/config-handler";
 import { IBotCommand } from "../types/types";
 
-export const command: IBotCommand = {
+const command: IBotCommand = {
+    name: "deny",
+    desc: "Deny a user's moderator application.",
     data: new SlashCommandBuilder()
         .setName("deny")
         .setDescription("Deny a user's moderator application.")
@@ -81,3 +83,4 @@ Inactivity in the server
         interaction.reply({ embeds: [successMessageEmbed], ephemeral: true });
     },
 };
+export default command;

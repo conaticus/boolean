@@ -3,10 +3,12 @@ import { MessageEmbed } from "discord.js";
 
 import { IBotCommand } from "../types/types";
 
-export const command: IBotCommand = {
+const command: IBotCommand = {
+    name: "Members",
+    desc: "The number of members in this server",
     data: new SlashCommandBuilder()
         .setName("members")
-        .setDescription("returns number of members in a server"),
+        .setDescription("returns number of members in this server"),
     async execute(interaction, client) {
         let membersCount = client.guilds.cache
             .map((guild) => guild.memberCount)
@@ -18,3 +20,4 @@ export const command: IBotCommand = {
         interaction.reply({ embeds: [successMessageEmbed], ephemeral: true });
     },
 };
+export default command;

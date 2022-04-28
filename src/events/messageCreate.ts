@@ -5,14 +5,14 @@ import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types/types";
 import utils from "./../utils";
 
-const forbiddenPhrases: string[] = ["discord.gg"];
+const forbiddenPhrases: string[] = ["discord.gg", "porn", "orange youtube", "faggot", "kys"];
 
 export default TypedEvent({
     eventName: "messageCreate",
     run: async (client: Bot, message: Message) => {
         if (message.author.bot || message.system) return;
         const foundPhrase = forbiddenPhrases.find((phrase) =>
-            message.content.includes(phrase)
+            message.content.toLowerCase().includes(phrase.toLowerCase())
         );
         if (foundPhrase) return message.delete();
 

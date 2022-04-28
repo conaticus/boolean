@@ -8,6 +8,9 @@ import {
 import { Bot } from "../structures/Bot";
 
 export interface IBotCommand {
+    name: String;
+    desc: String;
+    timeout?: number;
     data:
         | SlashCommandBuilder
         | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;

@@ -5,7 +5,9 @@ import { config_ as config } from "../configs/config-handler";
 import { IBotCommand } from "../types/types";
 import utils from "../utils";
 
-export const command: IBotCommand = {
+const command: IBotCommand = {
+    name: "Clear",
+    desc: "Delete specified amount of messages. ",
     data: new SlashCommandBuilder()
         .setName("clear")
         .setDescription("Delete specified amount of messages.")
@@ -76,3 +78,5 @@ export const command: IBotCommand = {
         }
     },
 };
+
+export default command;

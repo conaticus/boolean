@@ -1,11 +1,17 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed, TextChannel } from "discord.js";
 
+
+
 import { config_ as config } from "../configs/config-handler";
 import { IBotCommand } from "../types/types";
 import utils from "../utils";
 
-export const command: IBotCommand = {
+
+const command: IBotCommand = {
+    name: "Announce",
+    desc: "Write an announcement for the server.",
+    timeout: 6000,
     data: new SlashCommandBuilder()
         .setName("announce")
         .setDescription("Write an announcement for the server.")
@@ -56,3 +62,5 @@ export const command: IBotCommand = {
         });
     },
 };
+
+export default command;
