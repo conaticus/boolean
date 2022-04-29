@@ -4,7 +4,7 @@ import { MessageEmbed, TextChannel } from "discord.js";
 import { config_ as config } from "../configs/config-handler";
 import { IBotCommand } from "../types/types";
 
-const command: IBotCommand = {
+export const command: IBotCommand = {
     name: "Verbal",
     desc: "Warn members in a warnings channel about rule violations.",
     data: new SlashCommandBuilder()
@@ -65,4 +65,3 @@ const command: IBotCommand = {
         interaction.reply({ embeds: [successMessageEmbed], ephemeral: true });
     },
 };
-export default command;
