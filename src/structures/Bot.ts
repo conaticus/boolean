@@ -1,4 +1,4 @@
-import { Client, ClientOptions, Collection } from "discord.js";
+import { Client, Intents, Collection } from "discord.js";
 
 import { config_ as config } from "../configs/config-handler";
 import { eventFiles } from "../files";
@@ -9,8 +9,17 @@ export class Bot extends Client<true> {
     commands = new Collection<string, IBotCommand>();
     logger = new Logger({ level: config.logLevel || "info" });
 
-    constructor(options: ClientOptions) {
-        super(options);
+    constructor() {
+        super({
+            intents: [
+                Intents.FLAGS.GUILDS,
+                Intents.FLAGS.GUILD_MESSAGES,
+                Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+                Intents.FLAGS.GUILD_MEMBERS,
+                Intents.FLAGS.GUILD_PRESENCES,
+            ],
+            partials: ["MESSAGE", "CHANNEL", "REACTION"],
+        });
     }
 
     async start() {
