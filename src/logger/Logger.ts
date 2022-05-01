@@ -21,9 +21,9 @@ export default class Logger {
         return this.Wconsole;
     }
 
-    channel(embed: MessageEmbed, channel: Channel) {
+    async channel(embed: MessageEmbed, channel: Channel) {
         if (channel instanceof TextChannel) {
-            channel.send({ embeds: [embed] });
+            await channel.send({ embeds: [embed] });
         }
     }
 }
