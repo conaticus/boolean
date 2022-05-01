@@ -1,4 +1,9 @@
-import { Client, Intents, Collection } from "discord.js";
+import {
+    Client,
+    Collection,
+    Intents,
+    GuildAuditLogsEntry,
+} from "discord.js";
 
 import { config_ as config } from "../configs/config-handler";
 import { eventFiles } from "../files";
@@ -8,6 +13,7 @@ import { IBotCommand, IBotEvent } from "../types/types";
 export class Bot extends Client<true> {
     commands = new Collection<string, IBotCommand>();
     logger = new Logger({ level: config.logLevel || "info" });
+    lastLoggedDeletion: GuildAuditLogsEntry<72> | undefined; // This feels wrong but I don't know TS and I need to use this property
 
     constructor() {
         super({
