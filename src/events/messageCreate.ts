@@ -17,8 +17,8 @@ export default TypedEvent({
         const messageWords = weirdToNormalChars(message.content.toLowerCase()).split(" ");
         const foundPhrase = forbiddenPhrases.some((phrase) =>
             messageWords.join(" ").includes(phrase.toLowerCase())
-            || stringSimilarity(messageWords.join(" "), phrase) > 0.6
-            || messageWords.some((word) => stringSimilarity(word, phrase) > 0.6)
+            || stringSimilarity(messageWords.join(" "), phrase) > 0.7
+            || messageWords.some((word) => stringSimilarity(word, phrase) > 0.7)
         );
         if (foundPhrase) return message.delete();
 
