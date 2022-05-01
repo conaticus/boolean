@@ -18,45 +18,32 @@ export default TypedEvent({
 });
 
 function memberRemoveEvent(member: GuildMember, client: Bot) {
-    const monthName: string[] = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ];
-
-    const d1: Date = new Date(member.user.createdAt),
-        d = d1.getDate(),
-        m = d1.getMonth(),
-        y = d1.getFullYear();
-
-    const embed = new MessageEmbed();
-    embed.setAuthor({
+    const createdTimestamp = Math.floor(member.user.createdTimestamp/1000);
+    const joinedTimestamp = Math.floor(member.joinedTimestamp!/1000);
+    const embed = new MessageEmbed()
+    .setAuthor({
         name: member.user.tag,
         iconURL: member.displayAvatarURL(),
-    });
-    embed.setDescription("Member left");
-    embed.setColor("RED");
-    embed.addField(
-        "• Account creation date",
-        monthName[m] + " " + d + ", " + y,
+    })
+    .setDescription("Member left")
+    .setColor("RED")
+    .addField(
+        "• Account Created",
+        `<t:${createdTimestamp}> (<t:${createdTimestamp}:R>)`,
         false
-    );
-    embed.addField("• Account ID", member.id, false);
-    embed.setTimestamp();
-    embed.setFooter({
+    )
+    .addField(
+      "• Joined",
+      `<t:${joinedTimestamp}> (<t:${joinedTimestamp}:R>)`,
+      false
+    )
+    .addField("• Account ID", member.id, false)
+    .setTimestamp()
+    .setFooter({
         text: "Boolean",
         iconURL: client.user?.displayAvatarURL(),
-    });
-    embed.setThumbnail(member.guild?.iconURL()!);
+    })
+    .setThumbnail(member.guild?.iconURL()!);
 
     client.logger.channel(
         embed,

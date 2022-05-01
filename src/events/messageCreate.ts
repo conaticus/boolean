@@ -12,7 +12,7 @@ const forbiddenPhrases: string[] = ["discord.gg", "porn", "orange youtube", "fag
 export default TypedEvent({
     eventName: "messageCreate",
     run: async (client: Bot, message: Message) => {
-        if (message.author.bot) return;
+        if (message.author.bot || message.author.system) return;
 
         const messageWords = weirdToNormalChars(message.content.toLowerCase()).split(" ");
         const foundPhrase = forbiddenPhrases.some((phrase) =>

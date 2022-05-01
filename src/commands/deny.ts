@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed, TextChannel } from "discord.js";
 
-import config from "../configs/config";
+import { config_ as config } from "../configs/config-handler";
 import { IBotCommand } from "../types/types";
 
 const command: IBotCommand = {

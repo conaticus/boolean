@@ -64,11 +64,18 @@ async function askQuestion(
 function formatAttachmentsURL(
     attachments: Collection<String, MessageAttachment>
 ) {
-    let content: string = "";
-    for (const file of attachments.values()) {
-        content += file.url + "\n";
-    }
-    return content;
+    return [...attachments.values()]
+        .map((e, i) =>
+            e.height
+                ? `[\`Attachment-${i}-Media\`](${e.proxyURL})`
+                : `[\`Attachment-${i}-File\`](${e.url})`
+        )
+        .join("\n")
+        .concat("\n")
+        .slice(0, 1024)
+        .split(/\n/g)
+        .slice(0, -1)
+        .join("\n");
 }
 
 export default { askQuestion, formatAttachmentsURL };
