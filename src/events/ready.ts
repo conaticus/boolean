@@ -19,7 +19,7 @@ export default TypedEvent({
         const commandArr: object[] = [];
 
         for await (const file of commandFiles) {
-            const command = (await import(file)).command as IBotCommand;
+            const command = (await import(file)).default as IBotCommand;
             if (!command) {
                 console.error(
                     `File at path ${file} seems to incorrectly be exporting a command.`

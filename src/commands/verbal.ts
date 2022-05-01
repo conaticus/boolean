@@ -65,4 +65,5 @@ const command: IBotCommand = {
         interaction.reply({ embeds: [successMessageEmbed], ephemeral: true });
     },
 };
+
 export default command;
