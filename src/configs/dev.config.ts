@@ -84,7 +84,7 @@ const devConfig: IConfig = {
                     name: "Event ping",
                 },
             },
-        }*/
+        },
     ],
     badges: {
         DISCORD_EMPLOYEE: "",
@@ -98,7 +98,7 @@ const devConfig: IConfig = {
         EARLY_SUPPORTER: "",
         TEAM_USER: "",
         EARLY_VERIFIED_BOT_DEVELOPER: "",
-        DISCORD_CERTIFIED_MODERATOR: ""
+        DISCORD_CERTIFIED_MODERATOR: "",
     },
     memberRoleId: "960568356728090648",
 };
