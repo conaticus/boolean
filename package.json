@@ -22,7 +22,9 @@
         "discord.js": "^13.6.0",
         "filehound": "^1.17.5",
         "pino": "^7.10.0",
-        "pino-pretty": "^7.6.1"
+        "pino-pretty": "^7.6.1",
+        "string-similarity-js": "^2.1.4",
+        "weird-to-normal-chars": "^1.8.2"
     },
     "devDependencies": {
         "@trivago/prettier-plugin-sort-imports": "^3.2.0",
