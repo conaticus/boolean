@@ -87,6 +87,20 @@ const config: IConfig = {
         },
     ],
     memberRoleId: "949569759308025856",
+    badges: {
+        DISCORD_EMPLOYEE: "",
+        PARTNERED_SERVER_OWNER: "",
+        HYPESQUAD_EVENTS: "",
+        BUGHUNTER_LEVEL_1: "",
+        BUGHUNTER_LEVEL_2: "",
+        HOUSE_BRAVERY: "",
+        HOUSE_BRILLIANCE: "",
+        HOUSE_BALANCE: "",
+        EARLY_SUPPORTER: "",
+        TEAM_USER: "",
+        EARLY_VERIFIED_BOT_DEVELOPER: "",
+        DISCORD_CERTIFIED_MODERATOR: ""
+    },
 };
 
 export default config;

@@ -84,8 +84,22 @@ const devConfig: IConfig = {
                     name: "Event ping",
                 },
             },
-        },
+        }*/
     ],
+    badges: {
+        DISCORD_EMPLOYEE: "",
+        PARTNERED_SERVER_OWNER: "",
+        HYPESQUAD_EVENTS: "",
+        BUGHUNTER_LEVEL_1: "",
+        BUGHUNTER_LEVEL_2: "",
+        HOUSE_BRAVERY: "",
+        HOUSE_BRILLIANCE: "",
+        HOUSE_BALANCE: "",
+        EARLY_SUPPORTER: "",
+        TEAM_USER: "",
+        EARLY_VERIFIED_BOT_DEVELOPER: "",
+        DISCORD_CERTIFIED_MODERATOR: ""
+    },
     memberRoleId: "960568356728090648",
 };
 
