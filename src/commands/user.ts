@@ -18,11 +18,11 @@ const command: IBotCommand = {
             return option;
         }),
     async execute(interaction, client) {
-        const user_id =
+        const userId =
             (interaction.options.get("user")?.value as string) ||
             interaction.user.id;
         const member = await interaction.guild.members
-            .fetch(user_id)
+            .fetch(userId)
             .catch((e) => undefined);
         if (!member)
             return interaction.reply({
@@ -34,7 +34,7 @@ const command: IBotCommand = {
                 ephemeral: true,
             });
         await member.user.fetch().catch((e) => undefined); //Fetching user to get their banner
-        const user_badges = member.user.flags
+        const userBadges = member.user.flags
             ? member.user.flags
                   .toArray()
                   .map((el) => {
@@ -52,10 +52,10 @@ const command: IBotCommand = {
             .addFields(
                 {
                     name: "**Basic Informations**",
-                    value: `**User's ID:** ${user_id}\n**Account Created At:** <t:${Math.floor(
+                    value: `**User's ID:** ${userId}\n**Account Created At:** <t:${Math.floor(
                         member.user.createdAt.getTime() / 1000
                     )}:D>\n**User Badges:** ${
-                        user_badges.length > 0 ? user_badges.join(" ") : "None"
+                        userBadges.length > 0 ? userBadges.join(" ") : "None"
                     }
                     `,
                 },
