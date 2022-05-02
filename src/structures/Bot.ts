@@ -1,7 +1,7 @@
 import {
     Client,
-    ClientOptions,
     Collection,
+    Intents,
     GuildAuditLogsEntry,
 } from "discord.js";
 
@@ -15,8 +15,17 @@ export class Bot extends Client<true> {
     logger = new Logger({ level: config.logLevel || "info" });
     lastLoggedDeletion: GuildAuditLogsEntry<72> | undefined; // This feels wrong but I don't know TS and I need to use this property
 
-    constructor(options: ClientOptions) {
-        super(options);
+    constructor() {
+        super({
+            intents: [
+                Intents.FLAGS.GUILDS,
+                Intents.FLAGS.GUILD_MESSAGES,
+                Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+                Intents.FLAGS.GUILD_MEMBERS,
+                Intents.FLAGS.GUILD_PRESENCES,
+            ],
+            partials: ["MESSAGE", "CHANNEL", "REACTION"],
+        });
     }
 
     async start() {
