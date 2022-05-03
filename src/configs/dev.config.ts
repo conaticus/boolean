@@ -86,7 +86,6 @@ const devConfig: IConfig = {
             },
         },
     ],
-    memberRoleId: "960568356728090648",
 };
 
 export default devConfig;

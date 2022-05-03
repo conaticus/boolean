@@ -31,7 +31,6 @@ export interface IConfig {
     logChannelId: string;
     rolesChannelId: string;
     reactionMessages: IReactionMessage[];
-    memberRoleId: string;
 }
 
 export type Config = {
@@ -47,5 +46,4 @@ export type Config = {
     logChannelId: string;
     rolesChannelId: string;
     reactionMessages: IReactionMessage[];
-    memberRoleId: string;
 };

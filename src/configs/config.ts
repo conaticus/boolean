@@ -86,7 +86,6 @@ const config: IConfig = {
             },
         },
     ],
-    memberRoleId: "949569759308025856",
 };
 
 export default config;
