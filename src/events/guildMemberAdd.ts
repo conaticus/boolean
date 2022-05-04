@@ -18,12 +18,15 @@ export default TypedEvent({
             .setColor("ORANGE")
             .setTitle("New Member")
             .setDescription(
-                `Welcome <@${member.user.name}> to the conaticus server, enjoy your stay!`
+                `Welcome ${member.user.username} to the conaticus server, enjoy your stay!`
             );
 
         const welcomeChannel = client.channels.cache.get(
             config.welcomeChannelId
         ) as TextChannel;
-        welcomeChannel.send({ content: `<@${member.user.id}>`, embeds: [welcomeMessageEmbed] });
+        welcomeChannel.send({
+            content: `<@${member.user.id}>`,
+            embeds: [welcomeMessageEmbed],
+        });
     },
 });

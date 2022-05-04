@@ -1,14 +1,9 @@
-import {
-    Client,
-    Collection,
-    Intents,
-    GuildAuditLogsEntry,
-} from "discord.js";
+import { Client, Collection, GuildAuditLogsEntry, Intents } from "discord.js";
 
 import { config_ as config } from "../configs/config-handler";
 import { eventFiles } from "../files";
-import Logger from "../logger/Logger";
 import { IBotCommand, IBotEvent } from "../types/types";
+import Logger from "./Logger";
 
 export class Bot extends Client<true> {
     commands = new Collection<string, IBotCommand>();
