@@ -25,7 +25,7 @@ export default TypedEvent({
             config.welcomeChannelId
         ) as TextChannel;
         welcomeChannel.send({
-            content: member.toString(),
+            content: `<@${member.user.id}>`,
             embeds: [welcomeMessageEmbed],
         });
     },
