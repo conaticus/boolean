@@ -68,7 +68,6 @@ export interface IConfig {
 export type Config = {
     token: string;
     logLevel: string;
-
     suggestionsChannelId: string;
     welcomeChannelId: string;
     announcementsChannelId: string;

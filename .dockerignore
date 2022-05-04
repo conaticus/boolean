@@ -1,0 +1,13 @@
+.github
+.husky
+__tests__
+.editorconfig
+.env.example
+.eslintignore
+.eslintrc.json
+.gitignore
+.prettierignore
+.prettierrc.json
+CONTRIBUTING.md
+jest.config.ts
+README.md
