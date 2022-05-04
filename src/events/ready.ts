@@ -14,6 +14,11 @@ export default TypedEvent({
     run: async (client: Bot) => {
         client.logger.console.info(`Logged in as ${client.user?.tag}.`);
 
+        client.user.setActivity({
+            name: "/help",
+            type: "WATCHING",
+        });
+
         const data = await getData();
 
         const commandArr: object[] = [];
