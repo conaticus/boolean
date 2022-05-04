@@ -20,6 +20,8 @@ export default TypedEvent({
         // Check if the author of the deleted messaage is the bot
         if (message.author.bot) return;
 
+        if (!["DEFAULT", "REPLY"].includes(message.type)) return;
+
         await log(message, client);
     },
 });
