@@ -40,7 +40,8 @@ const command: IBotCommand = {
                   .map((el) => {
                       if (
                           el === "BOT_HTTP_INTERACTIONS" ||
-                          el === "VERIFIED_BOT"
+                          el === "VERIFIED_BOT" ||
+                          el === "TEAM_USER"
                       )
                           return undefined; //filter bot badges
                       return config.badges[el] !== "" ? config.badges[el] : el;
