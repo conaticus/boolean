@@ -1,11 +1,8 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { MessageEmbed, TextChannel } from "discord.js";
 
-
-
 import { config_ as config } from "../configs/config-handler";
 import { IBotCommand } from "../types/types";
-
 
 const command: IBotCommand = {
     name: "Suggest",
@@ -47,10 +44,11 @@ const command: IBotCommand = {
         });
         await message.react("✅");
         await message.react("❌");
-        await message.startThread({
+        const thread = await message.startThread({
             name: interaction.options.getString("title", true),
             autoArchiveDuration: "MAX",
         });
+        await thread.members.add(interaction.user);
 
         const successMessageEmbed = new MessageEmbed()
             .setColor("GREEN")
