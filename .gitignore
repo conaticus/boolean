@@ -15,6 +15,7 @@ src/configs/config.ts
 /dist
 .env
 package-lock.json
+yarn.lock
 .vscode
 .idea
 .DS_Store

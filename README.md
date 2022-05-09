@@ -12,7 +12,6 @@ A bot for Conaticus' [Discord server](https://discord.com/invite/aDAsjZVzaH). A 
 
 -   Clone/Fork the repository
 -   Run `cd boolean`
--   Run `npm i`
 
 #### Setting up the .env
 
@@ -28,9 +27,16 @@ TOKEN="your bot's TOKEN"
 
 This will automatically be ignored from the [.gitignore](https://github.com/conaticus/boolean/blob/master/.gitignore). So don't worry about this data being public.
 
-####
+#### Docker
+
+For Docker users, simply run
+
+-   `docker build --tag boolean:latest .`
+-   `docker run boolean:latest`
 
 #### Running the bot
+
+-   Run `npm i`
 
 In order to start the bot, you must run `npm run dev` to run the TypeScript developer environment. Don't worry about the other `package.json` scripts, they are for production.
 

@@ -86,6 +86,19 @@ const devConfig: IConfig = {
             },
         },
     ],
+    badges: {
+        DISCORD_EMPLOYEE: "<:discord_staff:585598614521511948>",
+        PARTNERED_SERVER_OWNER: "<:discord_partner:585598614685089792>",
+        HYPESQUAD_EVENTS: "<:discord_hypesquad:971698541313556491> ",
+        BUGHUNTER_LEVEL_1: "<:discord_bughunterlv1:971698294743007253>",
+        BUGHUNTER_LEVEL_2: "<:discord_bughunterlv2:971698415438274570> ",
+        HOUSE_BRAVERY: "<:bravery:889966063100493914>",
+        HOUSE_BRILLIANCE: "<:brilliance:889966063377317908>",
+        HOUSE_BALANCE: "<:balance:889966062962094090>",
+        EARLY_SUPPORTER: "<:discord_earlysupporter:971698655495082004>",
+        EARLY_VERIFIED_BOT_DEVELOPER: "<:verified:710970919736311942>",
+        DISCORD_CERTIFIED_MODERATOR: "<:certified_moderator:971699462072303656>"
+    },
     memberRoleId: "960568356728090648",
 };
 
