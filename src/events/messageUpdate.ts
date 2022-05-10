@@ -19,7 +19,8 @@ export default TypedEvent({
         // Throws an exception if the author is null
         if (oldMessage.author == null) return;
 
-        if (newMessage.author.bot) return;
+        if (newMessage.author.bot || oldMessage.content === newMessage.content)
+            return;
 
         log(oldMessage, newMessage, client);
     },
