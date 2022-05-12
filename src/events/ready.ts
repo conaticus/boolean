@@ -1,6 +1,14 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/rest/v9";
-import { GuildAuditLogs, MessageEmbed, TextChannel } from "discord.js";
+import {
+    Collection,
+    GuildAuditLogs,
+    MessageActionRow,
+    MessageEmbed,
+    MessageSelectMenu,
+    MessageSelectOptionData,
+    TextChannel,
+} from "discord.js";
 
 import { config_ as config } from "../configs/config-handler";
 import { commandFiles } from "../files";
@@ -56,57 +64,81 @@ export default TypedEvent({
         const guildObject = client.guilds.cache.get(config.guildId);
 
         for (const reactionMessage of config.reactionMessages) {
-            if (reactionMessage.title in data.reactionMessages) continue;
-
             const reactionEmbed = new MessageEmbed()
                 .setColor("ORANGE")
                 .setTitle(reactionMessage.title);
 
-            const options = [];
+            let currentOptions = new Collection();
 
-            for (const reactionKey in reactionMessage.reactions) {
-                const reaction = reactionMessage.reactions[reactionKey];
+            let fetchedMessage;
 
-                let object = {
-                    id: guildObject?.roles.cache.find(
-                        (role) => role.name == reaction.name
-                    )?.id,
-                    emoji: reaction.emoji,
-                };
-
-                options.push({
-                    label: reactionKey,
-                    value: object.id || "undefined",
-                    emoji: object.emoji,
-                });
+            if (reactionMessage.title in data.reactionMessages) {
+                fetchedMessage = await rolesChannel.messages
+                    .fetch(data.reactionMessages[reactionMessage.title])
+                    .catch(() => null);
+                if (fetchedMessage)
+                    currentOptions = new Collection(
+                        (
+                            fetchedMessage.components[0]
+                                .components[0] as MessageSelectMenu
+                        ).options.map((e) => [e.label, e])
+                    );
             }
 
-            const rolesMessage = await rolesChannel
-                .send({
-                    embeds: [reactionEmbed],
-                    components: [
-                        {
-                            type: "ACTION_ROW",
-                            components: [
-                                {
-                                    type: "SELECT_MENU",
-                                    customId: reactionMessage.title,
-                                    minValues: 0,
-                                    maxValues: options.length,
-                                    options,
-                                    placeholder: reactionMessage.title,
-                                },
-                            ],
-                        },
-                    ],
-                })
-                .then((result: any) => {
-                    client.logger.console.debug(
-                        `Added roles selector: ${reactionMessage.title}`
+            const options = [] as MessageSelectOptionData[];
+
+            for (const reactionKey in reactionMessage.reactions) {
+                if (currentOptions.has(reactionKey)) {
+                    options.push(
+                        currentOptions.get(
+                            reactionKey
+                        ) as MessageSelectOptionData
                     );
-                    data.reactionMessages[reactionMessage.title] = result.id;
-                    writeData(data);
+                } else {
+                    let role = guildObject?.roles.cache.find(
+                        (e) => e.name === reactionKey
+                    );
+                    if (!role)
+                        role = await guildObject?.roles.create({
+                            name: reactionKey,
+                        });
+                    options.push({
+                        label: reactionKey,
+                        value: role!.id,
+                        emoji: reactionMessage.reactions[reactionKey],
+                    });
+                }
+            }
+
+            const components = [
+                new MessageActionRow({
+                    components: [
+                        new MessageSelectMenu({
+                            type: "SELECT_MENU",
+                            customId: reactionMessage.title,
+                            minValues: 0,
+                            maxValues: options.length,
+                            options,
+                            placeholder: reactionMessage.title,
+                        }),
+                    ],
+                }),
+            ];
+
+            if (fetchedMessage) {
+                await fetchedMessage.edit({ components });
+            } else {
+                const rolesMessage = await rolesChannel.send({
+                    embeds: [reactionEmbed],
+                    components,
                 });
+                await rolesMessage.suppressEmbeds();
+                client.logger.console.debug(
+                    `Added roles selector: ${reactionMessage.title}`
+                );
+                data.reactionMessages[reactionMessage.title] = rolesMessage.id;
+                writeData(data);
+            }
         }
     },
 });

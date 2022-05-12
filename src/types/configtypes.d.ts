@@ -1,20 +1,14 @@
 export interface IReactionMessage {
     title: string;
     reactions: {
-        [key: string]: {
-            emoji: string;
-            name: string;
-        };
+        [key: string]: string;
     };
 }
 
 export type ReactionMessage = {
     title: string;
     reactions: {
-        [key: string]: {
-            emoji: string;
-            name: string;
-        };
+        [key: string]: string;
     };
 };
 
