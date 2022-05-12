@@ -18,71 +18,27 @@ const devConfig: IConfig = {
         {
             title: "Languages",
             reactions: {
-                JavaScript: {
-                    emoji: "<:js:960813493135757352>",
-                    name: "JavaScript",
-                },
-                TypeScript: {
-                    emoji: "<:ts:960813517982822410>",
-                    name: "TypeScript",
-                },
-                /*Python: {
-                    emoji: "<:py:960813603492081694>",
-                    name: "960816353110024232",
-                },
-                C: {
-                    emoji: "<:clang:960813561284788244>",
-                    name: "960816289671155732",
-                },
-                "C++": {
-                    emoji: "<:cpp:960813535649210379>",
-                    name: "960816260147478538",
-                },
-                "C#": {
-                    emoji: "<:cs:960815222921244712>",
-                    name: "960816310806265876",
-                },
-                Java: {
-                    emoji: "<:java:960813579530043412>",
-                    name: "960816335196160040",
-                },
-                Go: {
-                    emoji: "<:go:960813668721889320>",
-                    name: "960816400283361340",
-                },
-                Rust: {
-                    emoji: "<:rust:960813646567583786>",
-                    name: "960816373255258133",
-                },
-                PHP: {
-                    emoji: "<:php:960813688502226974>",
-                    name: "960816427756040212",
-                },
-                Lua: {
-                    emoji: "<:lua:967665289078661130>",
-                    name: "967665492607254548",
-                },
-                Ruby: {
-                    emoji: "<:ruby:967665230211600424>",
-                    name: "967665450198634546",
-                },
-                Kotlin: {
-                    emoji: "<:kotlin:967665403604107334>",
-                    name: "967665472424259604",
-                } */
+                JavaScript: "960813493135757352",
+                TypeScript: "960813517982822410",
+                Python: "960813603492081694",
+                C: "960813561284788244",
+                "C++": "960813535649210379",
+                "C#": "960815222921244712",
+                Java: "960813579530043412",
+                Go: "960813668721889320",
+                Rust: "960813646567583786",
+                PHP: "960813688502226974",
+                Lua: "967665289078661130",
+                Ruby: "967665230211600424",
+                Kotlin: "967665403604107334",
+                Assembly: "974179289492758558",
             },
         },
         {
             title: "Pings",
             reactions: {
-                Announcements: {
-                    emoji: "📢",
-                    name: "Announcement ping",
-                },
-                Events: {
-                    emoji: "🗓️",
-                    name: "Event ping",
-                },
+                Announcements: "📢",
+                Events: "🗓️",
             },
         },
     ],
@@ -97,7 +53,9 @@ const devConfig: IConfig = {
         HOUSE_BALANCE: "<:balance:889966062962094090>",
         EARLY_SUPPORTER: "<:discord_earlysupporter:971698655495082004>",
         EARLY_VERIFIED_BOT_DEVELOPER: "<:verified:710970919736311942>",
-        DISCORD_CERTIFIED_MODERATOR: "<:certified_moderator:971699462072303656>"
+        DISCORD_CERTIFIED_MODERATOR:
+            "<:certified_moderator:971699462072303656>",
+        TEAM_USER: "",
     },
     memberRoleId: "960568356728090648",
 };
