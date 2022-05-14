@@ -1,4 +1,4 @@
-import { Message, MessageEmbed, TextChannel } from "discord.js";
+import { Invite, Message, MessageEmbed, TextChannel } from "discord.js";
 import { stringSimilarity } from "string-similarity-js";
 import { weirdToNormalChars } from "weird-to-normal-chars";
 
@@ -7,13 +7,7 @@ import { Bot } from "../structures/Bot";
 import { TypedEvent } from "../types/types";
 import utils from "./../utils";
 
-const forbiddenPhrases: string[] = [
-    "discord.gg",
-    "porn",
-    "orange youtube",
-    "faggot",
-    "kys",
-];
+const forbiddenPhrases: string[] = ["porn", "orange youtube", "faggot", "kys"];
 
 export default TypedEvent({
     eventName: "messageCreate",
@@ -32,6 +26,15 @@ export default TypedEvent({
                 )
         );
         if (foundPhrase) return message.delete();
+
+        const inviteURLs = message.content.match(Invite.INVITES_PATTERN) ?? [];
+        for (const inviteURL of inviteURLs) {
+            const invite = await client
+                .fetchInvite(inviteURL)
+                .catch(() => null);
+            if (invite && invite.guild?.id !== config.guildId)
+                return await message.delete();
+        }
 
         if (
             message.mentions.users.size > 5 &&
