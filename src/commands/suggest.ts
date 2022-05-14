@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { MessageEmbed, TextChannel, Util } from "discord.js";
 
 import { config_ as config } from "../configs/config-handler";
 import { IBotCommand } from "../types/types";
@@ -28,13 +28,14 @@ const command: IBotCommand = {
             config.suggestionsChannelId
         ) as TextChannel;
 
+        const title = Util.cleanContent(
+            interaction.options.getString("title", true),
+            interaction.channel!
+        );
+
         const suggestionEmbed = new MessageEmbed()
             .setColor("ORANGE")
-            .setTitle(
-                `${interaction.options.getString("title")} - ${
-                    interaction.member?.user.tag
-                }`
-            )
+            .setTitle(`${title} - ${interaction.member?.user.tag}`)
             .setDescription(interaction.options.getString("description", true));
 
         await interaction.deferReply({ ephemeral: true });
@@ -45,7 +46,7 @@ const command: IBotCommand = {
         await message.react("✅");
         await message.react("❌");
         const thread = await message.startThread({
-            name: interaction.options.getString("title", true),
+            name: title,
             autoArchiveDuration: "MAX",
         });
         await thread.members.add(interaction.user);
