@@ -35,7 +35,7 @@ class Profile extends BotCommand {
                 ephemeral: true,
             });
         // NOTE(Kall7): Fetching user to get their banner
-        await member.user.fetch().catch();
+        await member.user.fetch();
         const userBadges: string[] = [];
         const tasks: Promise<any>[] = [];
         member.user.flags?.toArray().forEach((flag) => {
