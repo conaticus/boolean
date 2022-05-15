@@ -87,5 +87,4 @@ class Profile extends BotCommand {
     }
 }
 
-const cmd = new Profile();
-export default cmd;
+export default new Profile();

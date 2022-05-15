@@ -74,5 +74,4 @@ class Suggest extends BotCommand {
     }
 }
 
-const cmd = new Suggest();
-export default cmd;
+export default new Suggest();

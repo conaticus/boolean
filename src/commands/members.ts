@@ -34,5 +34,4 @@ class Members extends BotCommand {
     }
 }
 
-const cmd = new Members();
-export default cmd;
+export default new Members();

@@ -99,5 +99,4 @@ class Deny extends BotCommand {
     }
 }
 
-const cmd = new Deny();
-export default cmd;
+export default new Deny();

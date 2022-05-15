@@ -71,5 +71,4 @@ class RoleMe extends BotCommand {
     }
 }
 
-const cmd = new RoleMe();
-export default cmd;
+export default new RoleMe();
