@@ -66,7 +66,7 @@ class RoleMe extends BotCommand {
 
         await inter.reply({
             ephemeral: true,
-            components: [row],
+            components,
         });
     }
 }
