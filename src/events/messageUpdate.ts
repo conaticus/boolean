@@ -1,13 +1,12 @@
-import { Message, MessageEmbed, PartialMessage, TextChannel } from "discord.js";
+import { Message, MessageEmbed, PartialMessage } from "discord.js";
+import { Bot } from "structures";
+import { TypedEvent } from "types";
 
-import { config_ as config } from "../configs/config-handler";
-import { Bot } from "../structures/Bot";
-import { TypedEvent } from "../types/types";
 import utils from "../utils";
 
 export default TypedEvent({
     eventName: "messageUpdate",
-    run: (
+    run: async (
         client: Bot,
         oldMessage: Message | PartialMessage,
         newMessage: Message | PartialMessage
@@ -22,11 +21,11 @@ export default TypedEvent({
         if (newMessage.author.bot || oldMessage.content === newMessage.content)
             return;
 
-        log(oldMessage, newMessage, client);
+        await log(oldMessage, newMessage, client);
     },
 });
 
-function log(oldMessage: Message, newMessage: Message, client: Bot) {
+async function log(oldMessage: Message, newMessage: Message, client: Bot) {
     const embed = new MessageEmbed();
     embed.setAuthor({
         name: newMessage.author.tag,
@@ -83,11 +82,8 @@ function log(oldMessage: Message, newMessage: Message, client: Bot) {
     });
     embed.setThumbnail(newMessage.guild?.iconURL()!);
 
-    client.logger.channel(
-        embed,
-        client.channels.cache.get(config.logChannelId) as TextChannel
-    );
     client.logger.console.info(
         `${oldMessage.author.tag} has edited the message \"${oldMessage.content}\" to \"${newMessage.content}\"`
     );
+    await client.logger.channel(newMessage?.guildId || "", embed);
 }

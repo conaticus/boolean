@@ -1,13 +1,13 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {
+    CommandInteraction,
     Message,
     MessageEmbed,
     MessageReaction,
     TextChannel,
     User,
 } from "discord.js";
-
-import { IBotCommand } from "../types/types";
+import { Bot, BotCommand } from "structures";
 
 interface IQuestion {
     question: string;
@@ -55,22 +55,24 @@ const collectMessage = async (
     });
 };
 
-const cancelQuiz = (user: User, channel: TextChannel) => {
+const cancelQuiz = async (user: User, channel: TextChannel) => {
     const errEmbed = new MessageEmbed()
         .setColor("RED")
         .setTitle("Quiz cancelled.")
         .setDescription("Quiz creation timed out.");
-    channel.send({ embeds: [errEmbed] });
+    await channel.send({ embeds: [errEmbed] });
 };
 
 const querySeconds = async (
     user: User,
     channel: TextChannel
 ): Promise<number | null> => {
-    channel.send(constructEmbedMessage("How many seconds for each question?"));
+    await channel.send(
+        constructEmbedMessage("How many seconds for each question?")
+    );
     const secondsMsg = await collectMessage(user, channel);
     if (!secondsMsg) {
-        cancelQuiz(user, channel);
+        await cancelQuiz(user, channel);
         return null;
     }
 
@@ -79,7 +81,7 @@ const querySeconds = async (
         const errEmbed = new MessageEmbed()
             .setColor("RED")
             .setDescription("Questions must be at least 5 seconds long.");
-        channel.send({ embeds: [errEmbed] });
+        await channel.send({ embeds: [errEmbed] });
         await querySeconds(user, channel);
     }
 
@@ -92,7 +94,7 @@ const constructQuestionOptions = async (
     questionNumber: number,
     options: string[] = []
 ): Promise<string[] | null> => {
-    channel.send(
+    await channel.send(
         constructEmbedMessage(
             `Write option (${
                 options.length + 1
@@ -102,7 +104,7 @@ const constructQuestionOptions = async (
 
     const optionMessage = await collectMessage(user, channel);
     if (!optionMessage) {
-        cancelQuiz(user, channel);
+        await cancelQuiz(user, channel);
         return null;
     }
 
@@ -117,12 +119,12 @@ const constructQuestions = async (
     channel: TextChannel,
     questions: IQuestion[] = []
 ): Promise<IQuestion[] | null> => {
-    channel.send(
+    await channel.send(
         constructEmbedMessage(`Write question (${questions.length + 1}).`)
     );
     const questionMessage = await collectMessage(user, channel);
     if (!questionMessage) {
-        cancelQuiz(user, channel);
+        await cancelQuiz(user, channel);
         return null;
     }
 
@@ -137,7 +139,7 @@ const constructQuestions = async (
     );
     if (!questionOptions) return null;
 
-    channel.send(
+    await channel.send(
         constructEmbedMessage(
             `Write the correct option number for question (${
                 questions.length + 1
@@ -146,7 +148,7 @@ const constructQuestions = async (
     );
     const correctOptionMsg = await collectMessage(user, channel);
     if (!correctOptionMsg) {
-        cancelQuiz(user, channel);
+        await cancelQuiz(user, channel);
         return null;
     }
 
@@ -156,7 +158,7 @@ const constructQuestions = async (
             .setTitle("Quiz cancelled")
             .setDescription("That option does not exist.")
             .setColor("RED");
-        channel.send({ embeds: [errEmbed] });
+        await channel.send({ embeds: [errEmbed] });
         return null;
     }
 
@@ -168,20 +170,29 @@ const constructQuestions = async (
     return constructQuestions(user, channel, questions);
 };
 
-export const command: IBotCommand = {
-    name: "Quiz",
-    desc: "Create a quiz for server members to play..",
-    data: new SlashCommandBuilder()
-        .setName("quiz")
-        .setDescription("Create a quiz for server members to play.")
-        .addChannelOption((option) =>
-            option
-                .setName("channel")
-                .setDescription("Channel to host the quiz.")
-                .setRequired(true)
-        ),
-    requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction, client) {
+export default class Quiz extends BotCommand {
+    constructor() {
+        super(
+            "quiz",
+            "Create a quiz for server members to play..",
+            new SlashCommandBuilder()
+                .setName("quiz")
+                .setDescription("Create a quiz for server members to play..")
+                .addChannelOption((option) =>
+                    option
+                        .setName("channel")
+                        .setDescription("Channel to host the quiz.")
+                        .setRequired(true)
+                )
+                .toJSON(),
+            { requiredPerms: ["ADMINISTRATOR"] }
+        );
+    }
+
+    public async execute(
+        interaction: CommandInteraction<"cached">,
+        client: Bot
+    ): Promise<void> {
         const quizChannel = interaction.options.getChannel(
             "channel"
         ) as TextChannel;
@@ -200,7 +211,10 @@ export const command: IBotCommand = {
             interaction.channel as TextChannel
         );
         if (!titleMsg) {
-            cancelQuiz(interaction.user, interaction.channel as TextChannel);
+            await cancelQuiz(
+                interaction.user,
+                interaction.channel as TextChannel
+            );
             return;
         }
 
@@ -217,7 +231,7 @@ export const command: IBotCommand = {
         );
         if (!questions) return;
 
-        quizChannel.send(
+        await quizChannel.send(
             constructEmbedMessage(
                 `Quiz starting in <#${interaction.channel?.id}>`
             )
@@ -285,7 +299,7 @@ export const command: IBotCommand = {
                 await loopQuestion();
             };
 
-            loopQuestion();
+            await loopQuestion();
         });
 
         const userCorrectCount: Record<string, number> = {};
@@ -317,6 +331,6 @@ export const command: IBotCommand = {
                 `Congratulations <@${winnerId}>, you won the quiz!`
             );
 
-        quizChannel.send({ embeds: [finishEmbed] });
-    },
-};
+        await quizChannel.send({ embeds: [finishEmbed] });
+    }
+}

@@ -1,39 +1,50 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { getSpecialChannel } from "database";
+import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
+import { Bot, BotCommand } from "structures";
 
-import { config_ as config } from "../configs/config-handler";
-import { IBotCommand } from "../types/types";
+export default class Verbal extends BotCommand {
+    constructor() {
+        super(
+            "verbal",
+            "Warn members in a warnings channel about rule violations.",
+            new SlashCommandBuilder()
+                .setName("verbal")
+                .setDescription(
+                    "Warn members in a warnings channel about rule violations."
+                )
+                .addUserOption((option) =>
+                    option
+                        .setName("user")
+                        .setDescription("User recieving the warning.")
+                        .setRequired(true)
+                )
+                .addStringOption((option) =>
+                    option
+                        .setName("reason")
+                        .setDescription("Reason for the warning.")
+                        .setRequired(true)
+                )
+                .toJSON(),
+            { requiredPerms: ["MANAGE_MESSAGES"] }
+        );
+    }
 
-const command: IBotCommand = {
-    name: "Verbal",
-    desc: "Warn members in a warnings channel about rule violations.",
-    data: new SlashCommandBuilder()
-        .setName("verbal")
-        .setDescription(
-            "Warn members in a warnings channel about rule violations."
-        )
-        .addUserOption((option) =>
-            option
-                .setName("user")
-                .setDescription("User recieving the warning.")
-                .setRequired(true)
-        )
-        .addStringOption((option) =>
-            option
-                .setName("reason")
-                .setDescription("Reason for the warning.")
-                .setRequired(true)
-        ),
-    requiredPerms: ["MANAGE_MESSAGES"],
-    async execute(interaction, client) {
-        const warnChannel = client.channels.cache.get(
-            config.warnChannelId
-        ) as TextChannel;
-
+    public async execute(
+        interaction: CommandInteraction<"cached">,
+        _: Bot
+    ): Promise<void> {
+        const optWarnings = await getSpecialChannel(
+            interaction.guildId,
+            "warnings"
+        );
+        if (optWarnings === null) {
+            throw new Error("There is not a warnings channel yet.");
+        }
+        const warnChannel = optWarnings as TextChannel;
         const member = interaction.options.getMember("user");
 
-        const warnEmbed = new MessageEmbed().setColor("RED")
-            .setDescription(`
+        const warnEmbed = new MessageEmbed().setColor("RED").setDescription(`
                 User: <@${member?.user.id}>
                 Reason: \`${interaction.options.getString("reason", true)}\`
                 Moderator: <@${interaction.member.user.id}>
@@ -58,12 +69,11 @@ const command: IBotCommand = {
 
         const successMessageEmbed = new MessageEmbed()
             .setColor("GREEN")
-            .setDescription(
-                `Warning successfully issued at <#${config.warnChannelId}>`
-            );
+            .setDescription(`Warning successfully issued at ${warnChannel}`);
 
-        interaction.reply({ embeds: [successMessageEmbed], ephemeral: true });
-    },
-};
-
-export default command;
+        await interaction.reply({
+            embeds: [successMessageEmbed],
+            ephemeral: true,
+        });
+    }
+}

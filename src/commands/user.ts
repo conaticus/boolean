@@ -1,29 +1,29 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed } from "discord.js";
+import { Badges, getBadge } from "database";
+import { CommandInteraction, MessageEmbed } from "discord.js";
+import { Bot, BotCommand } from "structures";
 
-import config from "../configs/config";
-import { IBotCommand } from "../types/types";
-
-const command: IBotCommand = {
-    name: "user",
-    desc: "Displays user's profile info",
-    data: new SlashCommandBuilder()
-        .setName("user")
-        .setDescription("Displays user's profile info")
-        .addUserOption((option) => {
-            option
+export default class Profile extends BotCommand {
+    constructor() {
+        super(
+            "user",
+            "Displays user's profile info.",
+            new SlashCommandBuilder()
                 .setName("user")
-                .setDescription("User's profile to display")
-                .setRequired(false);
-            return option;
-        }),
-    async execute(interaction, client) {
+                .setDescription("Displays user's profile info.")
+                .toJSON(),
+            {}
+        );
+    }
+
+    public async execute(
+        interaction: CommandInteraction<"cached">,
+        _: Bot
+    ): Promise<void> {
         const userId =
             (interaction.options.get("user")?.value as string) ||
             interaction.user.id;
-        const member = await interaction.guild.members
-            .fetch(userId)
-            .catch((e) => undefined);
+        const member = await interaction.guild.members.fetch(userId).catch();
         if (!member)
             return interaction.reply({
                 embeds: [
@@ -33,21 +33,17 @@ const command: IBotCommand = {
                 ],
                 ephemeral: true,
             });
-        await member.user.fetch().catch((e) => undefined); //Fetching user to get their banner
-        const userBadges = member.user.flags
-            ? member.user.flags
-                  .toArray()
-                  .map((el) => {
-                      if (
-                          el === "BOT_HTTP_INTERACTIONS" ||
-                          el === "VERIFIED_BOT" ||
-                          el === "TEAM_USER"
-                      )
-                          return undefined; //filter bot badges
-                      return config.badges[el] !== "" ? config.badges[el] : el;
-                  })
-                  .filter((el) => el)
-            : [];
+        // NOTE(Kall7): Fetching user to get their banner
+        await member.user.fetch().catch();
+        const userBadges: string[] = [];
+        const tasks: Promise<any>[] = [];
+        member.user.flags?.toArray().forEach((flag) => {
+            const task = getBadge(interaction.guildId, flag as Badges)
+                .then((emoji) => userBadges.push(emoji))
+                .catch(console.log);
+            tasks.push(task);
+        });
+        await Promise.all(tasks);
         const embed = new MessageEmbed()
             .setTitle(`${member.user.username}'s profile`)
             .addFields(
@@ -73,7 +69,12 @@ const command: IBotCommand = {
                     }`,
                 }
             )
-            .setThumbnail(member.user.avatarURL({ dynamic: true, size: 4096 })!)
+            .setThumbnail(
+                member.user.avatarURL({
+                    dynamic: true,
+                    size: 4096,
+                })!
+            )
             .setImage(member.user.bannerURL({ dynamic: true, size: 4096 })!)
             .setTimestamp(Date.now())
             .setColor(
@@ -81,8 +82,6 @@ const command: IBotCommand = {
                     ? member.roles.highest.color
                     : "BLUE"
             );
-        interaction.reply({ embeds: [embed] });
-    },
-};
-
-export default command;
+        await interaction.reply({ embeds: [embed] });
+    }
+}
