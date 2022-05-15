@@ -12,6 +12,7 @@ export default TypedEvent({
     eventName: "guildMemberAdd",
     run: async (client: Bot, member: GuildMember | PartialGuildMember) => {
         if (member.partial) return;
+        member.roles.add(config.memberRoleId);
 
         const welcomeMessageEmbed = new MessageEmbed()
             .setColor("ORANGE")
