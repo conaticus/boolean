@@ -87,40 +87,6 @@ class SelfRole extends BotCommand {
         );
     }
 
-    public async execute(
-        interaction: CommandInteraction,
-        client: Bot
-    ): Promise<void> {
-        const subCommand = interaction.options.getSubcommand();
-        const { guildId } = interaction;
-        if (guildId === null) {
-            await interaction.reply("This command belongs in a server.");
-            return;
-        }
-        switch (subCommand) {
-            case "createlist":
-                await SelfRole.createRoleList(guildId, interaction);
-                break;
-            case "deletelist":
-                await SelfRole.deleteRoleList(guildId, interaction);
-                break;
-            case "addchoice":
-                await SelfRole.addChoice(guildId, interaction);
-                break;
-            case "remchoice":
-                await SelfRole.remChoice(guildId, interaction);
-                break;
-            case "list":
-                await SelfRole.showLists(guildId, interaction);
-                return;
-            default:
-                await interaction.reply("How did we get here?");
-                return;
-        }
-
-        await interaction.reply("Done.");
-    }
-
     private static async showLists(guildId: string, inter: CommandInteraction) {
         const lists = await getRoleLists(guildId);
         let content = "**Here are the Role Lists**";
@@ -160,6 +126,40 @@ class SelfRole extends BotCommand {
         const label = inter.options.getString("label", true);
         const role = inter.options.getRole("role", true);
         await removeRoleChoice(guildId, label, role.id);
+    }
+
+    public async execute(
+        interaction: CommandInteraction,
+        client: Bot
+    ): Promise<void> {
+        const subCommand = interaction.options.getSubcommand();
+        const { guildId } = interaction;
+        if (guildId === null) {
+            await interaction.reply("This command belongs in a server.");
+            return;
+        }
+        switch (subCommand) {
+            case "createlist":
+                await SelfRole.createRoleList(guildId, interaction);
+                break;
+            case "deletelist":
+                await SelfRole.deleteRoleList(guildId, interaction);
+                break;
+            case "addchoice":
+                await SelfRole.addChoice(guildId, interaction);
+                break;
+            case "remchoice":
+                await SelfRole.remChoice(guildId, interaction);
+                break;
+            case "list":
+                await SelfRole.showLists(guildId, interaction);
+                return;
+            default:
+                await interaction.reply("How did we get here?");
+                return;
+        }
+
+        await interaction.reply("Done.");
     }
 }
 
