@@ -68,5 +68,4 @@ class Clear extends BotCommand {
     }
 }
 
-const cmd = new Clear();
-export default cmd;
+export default new Clear();

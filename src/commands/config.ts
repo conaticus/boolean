@@ -147,5 +147,4 @@ class Config extends BotCommand {
     }
 }
 
-const cmd = new Config();
-export default cmd;
+export default new Config();

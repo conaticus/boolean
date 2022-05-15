@@ -163,5 +163,4 @@ class SelfRole extends BotCommand {
     }
 }
 
-const cmd = new SelfRole();
-export default cmd;
+export default new SelfRole();

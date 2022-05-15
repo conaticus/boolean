@@ -41,5 +41,4 @@ class Ping extends BotCommand {
     }
 }
 
-const cmd = new Ping();
-export default cmd;
+export default new Ping();

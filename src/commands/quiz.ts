@@ -336,5 +336,4 @@ class Quiz extends BotCommand {
     }
 }
 
-const cmd = new Quiz();
-export default cmd;
+export default new Quiz();
