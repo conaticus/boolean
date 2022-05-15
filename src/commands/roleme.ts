@@ -42,7 +42,7 @@ class RoleMe extends BotCommand {
             });
             return;
         }
-        const row = new MessageActionRow();
+        const components = [];
         roleLists.forEach((list) => {
             if (list.choices.length === 0) {
                 return;
