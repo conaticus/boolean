@@ -32,7 +32,7 @@ This will automatically be ignored from the [.gitignore](https://github.com/cona
 For Docker users, simply run
 
 -   `docker build --tag boolean:latest .`
--   `docker run boolean:latest`
+-   `docker run -d --restart unless-stopped boolean:latest`
 
 #### Running the bot
 
