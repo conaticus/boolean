@@ -61,7 +61,9 @@ class RoleMe extends BotCommand {
                 placeholder: list.title,
             });
             component.addOptions(options);
-            row.addComponents(component);
+        const row = new MessageActionRow();
+        row.addComponents(component);
+        components.push(row);
         });
 
         await inter.reply({
