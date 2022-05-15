@@ -1,4 +1,3 @@
-// noinspection JSUnusedGlobalSymbols
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { getSpecialChannel } from "database";
 import { getSpecialRole } from "database";
