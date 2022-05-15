@@ -12,6 +12,12 @@ class DeleteSuggestion extends BotCommand {
             new SlashCommandBuilder()
                 .setName("delsug")
                 .setDescription("Delete the current suggestion.")
+                .addStringOption((opt) =>
+                    opt
+                        .setName("reason")
+                        .setDescription("The reason for deleting")
+                        .setRequired(true)
+                )
                 .toJSON(),
             { requiredPerms: ["MANAGE_MESSAGES"] }
         );
