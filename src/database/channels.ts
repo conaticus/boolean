@@ -70,7 +70,7 @@ export async function setSpecialChannel(
 ): Promise<void> {
     const client = getClient();
     const res = await getChannelId(guildId, label);
-    if (res !== null) {
+    if (res === null) {
         await client.specialChannel.create({
             data: {
                 channelId,
