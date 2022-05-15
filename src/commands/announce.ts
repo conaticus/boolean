@@ -1,12 +1,11 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { getSpecialChannel } from "database";
-import { getSpecialRole } from "database";
 import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
-import { Bot, BotCommand } from "structures";
 
+import { getSpecialChannel, getSpecialRole } from "../database";
+import { Bot, BotCommand } from "../structures";
 import utils from "../utils";
 
-export default class Announce extends BotCommand {
+class Announce extends BotCommand {
     constructor() {
         super(
             "Announce",
@@ -39,7 +38,7 @@ export default class Announce extends BotCommand {
             const errorEmbed = new MessageEmbed()
                 .setColor("RED")
                 .setDescription("Announcement cancelled.");
-            interaction.channel?.send({ embeds: [errorEmbed] });
+            await interaction.reply({ embeds: [errorEmbed] });
             return;
         }
 
@@ -75,8 +74,11 @@ export default class Announce extends BotCommand {
                 `Successfully created announcement in ${announcementsChannel}`
             );
 
-        interaction.channel?.send({
+        await interaction.reply({
             embeds: [successEmbed],
         });
     }
 }
+
+const cmd = new Announce();
+export default cmd;

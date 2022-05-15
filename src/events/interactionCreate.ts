@@ -1,7 +1,8 @@
-import { getRoleLists } from "database";
 import { Interaction, MessageEmbed } from "discord.js";
-import { Bot } from "structures";
-import { TypedEvent } from "types";
+
+import { getRoleLists } from "../database";
+import { Bot } from "../structures";
+import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "interactionCreate",

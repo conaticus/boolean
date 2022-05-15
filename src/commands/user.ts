@@ -1,9 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { Badges, getBadge } from "database";
 import { CommandInteraction, MessageEmbed } from "discord.js";
-import { Bot, BotCommand } from "structures";
 
-export default class Profile extends BotCommand {
+import { Badges, getBadge } from "../database";
+import { Bot, BotCommand } from "../structures";
+
+class Profile extends BotCommand {
     constructor() {
         super(
             "user",
@@ -85,3 +86,6 @@ export default class Profile extends BotCommand {
         await interaction.reply({ embeds: [embed] });
     }
 }
+
+const cmd = new Profile();
+export default cmd;

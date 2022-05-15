@@ -1,9 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { getSpecialChannel } from "database";
 import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
-import { Bot, BotCommand } from "structures";
 
-export default class Suggest extends BotCommand {
+import { getSpecialChannel } from "../database";
+import { Bot, BotCommand } from "../structures";
+
+class Suggest extends BotCommand {
     constructor() {
         super(
             "suggest",
@@ -72,3 +73,6 @@ export default class Suggest extends BotCommand {
         await interaction.editReply({ embeds: [successMessageEmbed] });
     }
 }
+
+const cmd = new Suggest();
+export default cmd;

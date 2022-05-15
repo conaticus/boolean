@@ -1,6 +1,7 @@
-import { getSpecialChannel } from "database";
 import { MessageEmbed } from "discord.js";
 import pino, { LoggerOptions, Logger as PinoLogger } from "pino";
+
+import { getSpecialChannel } from "../database";
 
 export class Logger {
     console: PinoLogger;

@@ -7,7 +7,8 @@ import {
     TextChannel,
     User,
 } from "discord.js";
-import { Bot, BotCommand } from "structures";
+
+import { Bot, BotCommand } from "../structures";
 
 interface IQuestion {
     question: string;
@@ -170,7 +171,7 @@ const constructQuestions = async (
     return constructQuestions(user, channel, questions);
 };
 
-export default class Quiz extends BotCommand {
+class Quiz extends BotCommand {
     constructor() {
         super(
             "quiz",
@@ -334,3 +335,6 @@ export default class Quiz extends BotCommand {
         await quizChannel.send({ embeds: [finishEmbed] });
     }
 }
+
+const cmd = new Quiz();
+export default cmd;

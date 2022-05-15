@@ -1,8 +1,9 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
-import { Bot, BotCommand } from "structures";
 
-export default class Members extends BotCommand {
+import { Bot, BotCommand } from "../structures";
+
+class Members extends BotCommand {
     constructor() {
         super(
             "members",
@@ -32,3 +33,6 @@ export default class Members extends BotCommand {
         });
     }
 }
+
+const cmd = new Members();
+export default cmd;

@@ -1,6 +1,7 @@
 import { GuildMember, MessageEmbed, PartialGuildMember } from "discord.js";
-import { Bot } from "structures";
-import { TypedEvent } from "types";
+
+import { Bot } from "../structures";
+import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "guildMemberRemove",

@@ -1,7 +1,7 @@
 import { Message, MessageEmbed, PartialMessage } from "discord.js";
-import { Bot } from "structures";
-import { TypedEvent } from "types";
 
+import { Bot } from "../structures";
+import { TypedEvent } from "../types";
 import utils from "../utils";
 
 export default TypedEvent({

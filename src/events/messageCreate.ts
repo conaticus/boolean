@@ -1,8 +1,9 @@
 import { Message } from "discord.js";
 import { stringSimilarity } from "string-similarity-js";
-import { Bot } from "structures";
-import { TypedEvent } from "types";
 import { weirdToNormalChars } from "weird-to-normal-chars";
+
+import { Bot } from "../structures";
+import { TypedEvent } from "../types";
 
 const forbiddenPhrases: string[] = [
     "discord.gg",

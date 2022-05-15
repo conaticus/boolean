@@ -1,6 +1,6 @@
 import { Role } from "discord.js";
-import { Bot } from "structures";
 
+import { Bot } from "../structures";
 import { getClient } from "./index";
 
 export type SpecialRole = "announcements" | "members";

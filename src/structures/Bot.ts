@@ -1,8 +1,8 @@
 import { Client, Collection, GuildAuditLogsEntry, Intents } from "discord.js";
-import { BotCommand, Logger } from "structures";
-import { IBotEvent } from "types";
 
 import { eventFiles } from "../files";
+import { BotCommand, Logger } from "../structures";
+import { IBotEvent } from "../types";
 
 export class Bot extends Client<true> {
     private static bot: Bot;

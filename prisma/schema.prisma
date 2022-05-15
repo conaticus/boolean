@@ -32,11 +32,13 @@ model Badge {
 model SpecialChannel {
   guildId   String
   label     String
-  channelId String @id
+  channelId String
+  id        String @id @default(uuid())
 }
 
 model SpecialRole {
   guildId String
   label   String
-  roleId  String @id
+  roleId  String
+  id      String @id @default(uuid())
 }

@@ -1,6 +1,10 @@
 import { RoleChoice, SelfRoleList } from "@prisma/client";
+import { Role } from "discord.js";
 
+import { Bot } from "../structures";
 import { getClient } from "./index";
+
+type FullRoleChoice = Role;
 
 /**
  * These are the self-role drop down menus that appear in Discord.
@@ -13,7 +17,7 @@ import { getClient } from "./index";
  └───────────────────────┘
  */
 interface FullSelfRoleList extends SelfRoleList {
-    choices: RoleChoice[];
+    choices: FullRoleChoice[];
 }
 
 /**
@@ -45,11 +49,31 @@ export async function getRoleList(
     if (roleList === null) {
         return null;
     }
-    const choices = await getChoices(roleList.id);
+    const partChoices = await getChoices(roleList.id);
+    const choices: FullRoleChoice[] = [];
+    const bot = Bot.getInstance();
+    const tasks: Promise<any>[] = [];
+    partChoices.forEach((choice) => {
+        const task = bot.guilds
+            .fetch(guildId)
+            .then((guild) => {
+                const task = guild.roles.fetch(choice.roleId);
+                tasks.push(task);
+                return task;
+            })
+            .then((role) => {
+                if (role !== null) {
+                    choices.push(role);
+                }
+            });
+        tasks.push(task);
+    });
+
+    await Promise.all(tasks);
 
     return {
-        choices,
         guildId,
+        choices,
         title: roleList.title,
         id: roleList.id,
     };
@@ -69,7 +93,12 @@ export async function getRoleLists(
     const roleLists = await client.selfRoleList.findMany({
         where: { guildId },
     });
-    const tasks: Promise<RoleChoice[]>[] = [];
+    const tasks: Promise<any>[] = [];
+    const bot = Bot.getInstance();
+    const guild = await bot.guilds.fetch(guildId);
+    if (guild === null) {
+        throw new Error("Guild unresolvable, how did we get here?");
+    }
 
     for (let i = 0; i < roleLists.length; i += 1) {
         const roleList = roleLists[i];
@@ -78,7 +107,18 @@ export async function getRoleLists(
             choices: [],
         };
         const task = getChoices(roleList.id);
-        task.then((choices) => fullList.choices.push(...choices));
+        task.then((choices) => {
+            choices.forEach((choice) => {
+                const task = guild.roles.fetch(choice.roleId);
+                task.then((role) => {
+                    if (role !== null) {
+                        fullList.choices.push(role);
+                    }
+                });
+                tasks.push(task);
+            });
+        });
+        result.push(fullList);
         tasks.push(task);
     }
 
@@ -103,9 +143,9 @@ export async function addRoleChoice(
     if (roleList === null) {
         throw new Error("That role list doesn't exist.");
     }
-    client.roleChoice.create({
+    await client.roleChoice.create({
         data: {
-            roleId,
+            roleId: roleId,
             listId: roleList.id,
         },
     });
@@ -151,10 +191,18 @@ export async function createRoleList(
     label: string
 ): Promise<void> {
     const client = getClient();
-    await client.selfRoleList.create({
-        data: {
+    const res = await client.selfRoleList.findFirst({
+        where: {
             guildId,
             title: label,
         },
     });
+    if (res === null) {
+        await client.selfRoleList.create({
+            data: {
+                guildId,
+                title: label,
+            },
+        });
+    }
 }

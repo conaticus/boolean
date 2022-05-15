@@ -1,5 +1,6 @@
 import { ClientEvents } from "discord.js";
-import { Bot } from "structures";
+
+import { Bot } from "./structures";
 
 export interface IDataObject {
     reactionMessages: Record<string, string>;

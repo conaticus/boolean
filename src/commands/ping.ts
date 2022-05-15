@@ -1,8 +1,9 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
-import { Bot, BotCommand } from "structures";
 
-export default class Ping extends BotCommand {
+import { Bot, BotCommand } from "../structures";
+
+class Ping extends BotCommand {
     constructor() {
         super(
             "ping",
@@ -39,3 +40,6 @@ export default class Ping extends BotCommand {
         return new Promise((resolve) => setTimeout(resolve, sec * 1000));
     }
 }
+
+const cmd = new Ping();
+export default cmd;

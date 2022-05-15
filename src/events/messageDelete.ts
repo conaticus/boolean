@@ -1,7 +1,7 @@
 import { GuildAuditLogs, Message, PartialMessage } from "discord.js";
-import { Bot } from "structures";
-import { TypedEvent } from "types";
 
+import { Bot } from "../structures";
+import { TypedEvent } from "../types";
 import { handleAssets, newEmbed } from "../utils";
 
 export default TypedEvent({

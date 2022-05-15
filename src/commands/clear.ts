@@ -1,10 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
-import { Bot, BotCommand } from "structures";
 
+import { Bot, BotCommand } from "../structures";
 import { handleAssets, newEmbed } from "../utils";
 
-export default class Clear extends BotCommand {
+class Clear extends BotCommand {
     constructor() {
         super(
             "Clear",
@@ -67,3 +67,6 @@ export default class Clear extends BotCommand {
         await Promise.all(tasks);
     }
 }
+
+const cmd = new Clear();
+export default cmd;

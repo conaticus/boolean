@@ -1,9 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { getSpecialChannel } from "database";
 import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
-import { Bot, BotCommand } from "structures";
 
-export default class Verbal extends BotCommand {
+import { getSpecialChannel } from "../database";
+import { Bot, BotCommand } from "../structures";
+
+class Verbal extends BotCommand {
     constructor() {
         super(
             "verbal",
@@ -65,8 +66,6 @@ export default class Verbal extends BotCommand {
             embeds: [warnEmbed],
         });
 
-        await interaction;
-
         const successMessageEmbed = new MessageEmbed()
             .setColor("GREEN")
             .setDescription(`Warning successfully issued at ${warnChannel}`);
@@ -77,3 +76,6 @@ export default class Verbal extends BotCommand {
         });
     }
 }
+
+const cmd = new Verbal();
+export default cmd;

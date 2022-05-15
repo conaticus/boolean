@@ -1,14 +1,16 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import { CommandInteraction } from "discord.js";
+
 import {
     addRoleChoice,
     createRoleList,
+    getRoleLists,
     removeRoleChoice,
     removeRoleList,
-} from "database";
-import { CommandInteraction } from "discord.js";
-import { Bot, BotCommand } from "structures";
+} from "../database";
+import { Bot, BotCommand } from "../structures";
 
-export default class SelfRole extends BotCommand {
+class SelfRole extends BotCommand {
     constructor() {
         super(
             "selfrole",
@@ -25,7 +27,7 @@ export default class SelfRole extends BotCommand {
                         )
                         .addStringOption((opt) =>
                             opt
-                                .setName("listname")
+                                .setName("label")
                                 .setDescription("A name for the list.")
                                 .setRequired(true)
                         );
@@ -36,7 +38,7 @@ export default class SelfRole extends BotCommand {
                         .setDescription("Delete a role list.")
                         .addStringOption((opt) =>
                             opt
-                                .setName("listname")
+                                .setName("label")
                                 .setDescription("A name for the list.")
                                 .setRequired(true)
                         );
@@ -57,6 +59,11 @@ export default class SelfRole extends BotCommand {
                                 .setDescription("The role to add")
                                 .setRequired(true)
                         );
+                })
+                .addSubcommand((sub) => {
+                    return sub
+                        .setName("list")
+                        .setDescription("Show all of the lists.");
                 })
                 .addSubcommand((sub) => {
                     return sub
@@ -103,8 +110,28 @@ export default class SelfRole extends BotCommand {
             case "remchoice":
                 await SelfRole.remChoice(guildId, interaction);
                 break;
+            case "list":
+                await SelfRole.showLists(guildId, interaction);
+                return;
+            default:
+                await interaction.reply("How did we get here?");
+                return;
         }
+
         await interaction.reply("Done.");
+    }
+
+    private static async showLists(guildId: string, inter: CommandInteraction) {
+        const lists = await getRoleLists(guildId);
+        let content = "**Here are the Role Lists**";
+        if (lists.length > 0) {
+            content += "\n";
+        }
+        lists.forEach((list) => {
+            content += ` - "${list.title}"\n`;
+        });
+
+        await inter.reply({ content, ephemeral: true });
     }
 
     private static async createRoleList(
@@ -135,3 +162,6 @@ export default class SelfRole extends BotCommand {
         await removeRoleChoice(guildId, label, role.id);
     }
 }
+
+const cmd = new SelfRole();
+export default cmd;

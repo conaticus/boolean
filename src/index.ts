@@ -1,6 +1,7 @@
-import { start } from "database";
 import "dotenv/config";
-import { Bot } from "structures";
+
+import { start } from "./database";
+import { Bot } from "./structures";
 
 const bot = new Bot();
 

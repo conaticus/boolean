@@ -1,4 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
+import { CommandInteraction } from "discord.js";
+
 import {
     Badges,
     DEFAULT_BADGES,
@@ -7,9 +9,8 @@ import {
     setBadge,
     setSpecialChannel,
     setSpecialRole,
-} from "database";
-import { CommandInteraction } from "discord.js";
-import { Bot, BotCommand } from "structures";
+} from "../database";
+import { Bot, BotCommand } from "../structures";
 
 const badges: [string, string][] = Object.keys(DEFAULT_BADGES).map((v) => [
     v,
@@ -29,7 +30,7 @@ const specChannels: [string, string][] = [
     "roles",
 ].map((v) => [v, v]);
 
-export default class Config extends BotCommand {
+class Config extends BotCommand {
     constructor() {
         super(
             "config",
@@ -44,12 +45,14 @@ export default class Config extends BotCommand {
                         .addStringOption((opt) =>
                             opt
                                 .setName("label")
+                                .setDescription("The special channel name.")
                                 .addChoices(specChannels)
                                 .setRequired(true)
                         )
                         .addChannelOption((opt) =>
                             opt
                                 .setName("channel")
+                                .setDescription("The channel to associate.")
                                 .addChannelType(0)
                                 .setRequired(true)
                         );
@@ -61,11 +64,15 @@ export default class Config extends BotCommand {
                         .addStringOption((opt) =>
                             opt
                                 .setName("label")
+                                .setDescription("The badge to set.")
                                 .addChoices(badges)
                                 .setRequired(true)
                         )
                         .addStringOption((opt) =>
-                            opt.setName("emoji").setRequired(true)
+                            opt
+                                .setName("emoji")
+                                .setDescription("The emoji to associate.")
+                                .setRequired(true)
                         );
                 })
                 .addSubcommand((sub) => {
@@ -75,11 +82,15 @@ export default class Config extends BotCommand {
                         .addStringOption((opt) =>
                             opt
                                 .setName("label")
+                                .setDescription("The special role name.")
                                 .addChoices(specRoles)
                                 .setRequired(true)
                         )
                         .addRoleOption((opt) =>
-                            opt.setName("role").setRequired(true)
+                            opt
+                                .setName("role")
+                                .setDescription("The role to associate.")
+                                .setRequired(true)
                         );
                 })
                 .toJSON(),
@@ -107,6 +118,9 @@ export default class Config extends BotCommand {
             case "setrole":
                 await Config.setRole(guildId, interaction);
                 break;
+            default:
+                await interaction.reply("How did we get here?");
+                return;
         }
         await interaction.reply("Done.");
     }
@@ -132,3 +146,6 @@ export default class Config extends BotCommand {
         await setSpecialRole(guildId, label as SpecialRole, role.id);
     }
 }
+
+const cmd = new Config();
+export default cmd;

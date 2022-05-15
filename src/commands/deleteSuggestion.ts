@@ -1,9 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { getSpecialChannel } from "database";
 import { CommandInteraction, MessageEmbed } from "discord.js";
-import { Bot, BotCommand } from "structures";
 
-export default class DeleteSuggestion extends BotCommand {
+import { getSpecialChannel } from "../database";
+import { Bot, BotCommand } from "../structures";
+
+class DeleteSuggestion extends BotCommand {
     constructor() {
         super(
             "delsug",
@@ -101,3 +102,6 @@ export default class DeleteSuggestion extends BotCommand {
         } catch {}
     }
 }
+
+const cmd = new DeleteSuggestion();
+export default cmd;

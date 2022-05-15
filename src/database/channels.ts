@@ -1,6 +1,6 @@
 import { AnyChannel } from "discord.js";
-import { Bot } from "structures";
 
+import { Bot } from "../structures";
 import { getClient } from "./index";
 
 /**
@@ -69,11 +69,14 @@ export async function setSpecialChannel(
     channelId: string
 ): Promise<void> {
     const client = getClient();
-    await client.specialChannel.create({
-        data: {
-            channelId,
-            guildId,
-            label,
-        },
-    });
+    const res = await getChannelId(guildId, label);
+    if (res !== null) {
+        await client.specialChannel.create({
+            data: {
+                channelId,
+                guildId,
+                label,
+            },
+        });
+    }
 }

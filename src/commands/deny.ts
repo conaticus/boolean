@@ -1,8 +1,9 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
-import { Bot, BotCommand } from "structures";
 
-export default class Deny extends BotCommand {
+import { Bot, BotCommand } from "../structures";
+
+class Deny extends BotCommand {
     private static tooYoung =
         "Hello %s, thank you for applying to be a" +
         " moderator in the conaticus server. Unfortunately, your application has" +
@@ -97,3 +98,6 @@ export default class Deny extends BotCommand {
         });
     }
 }
+
+const cmd = new Deny();
+export default cmd;

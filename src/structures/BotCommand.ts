@@ -1,6 +1,7 @@
 import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v9";
 import { CommandInteraction, PermissionResolvable } from "discord.js";
-import { Bot } from "structures";
+
+import { Bot } from "./Bot";
 
 export type BotCommandOpt = {
     requiredPerms?: PermissionResolvable;

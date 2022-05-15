@@ -1,8 +1,9 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
-import { Bot, BotCommand } from "structures";
 
-export default class Repeat extends BotCommand {
+import { Bot, BotCommand } from "../structures";
+
+class Repeat extends BotCommand {
     constructor() {
         super(
             "repeat",
@@ -35,3 +36,6 @@ export default class Repeat extends BotCommand {
         await interaction.reply({ embeds: [successEmbed], ephemeral: true });
     }
 }
+
+const cmd = new Repeat();
+export default cmd;

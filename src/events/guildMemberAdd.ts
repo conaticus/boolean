@@ -1,18 +1,18 @@
-import { getSpecialChannel } from "database";
 import {
     GuildMember,
     MessageEmbed,
     PartialGuildMember,
     TextChannel,
 } from "discord.js";
-import { Bot } from "structures";
-import { TypedEvent } from "types";
+
+import { getSpecialChannel } from "../database";
+import { Bot } from "../structures";
+import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "guildMemberAdd",
     run: async (client: Bot, member: GuildMember | PartialGuildMember) => {
         if (member.partial) return;
-        member.roles.add(config.memberRoleId);
 
         const welcomeMessageEmbed = new MessageEmbed()
             .setColor("ORANGE")
