@@ -31,8 +31,8 @@ This will automatically be ignored from the [.gitignore](https://github.com/cona
 
 For Docker users, simply run
 
--   `docker build --tag boolean:latest .`
--   `docker run boolean:latest`
+-   `docker-compose build`
+-   `docker-compose up -d`
 
 #### Running the bot
 
