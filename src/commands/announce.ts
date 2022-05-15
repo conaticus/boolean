@@ -8,7 +8,7 @@ import utils from "../utils";
 class Announce extends BotCommand {
     constructor() {
         super(
-            "Announce",
+            "announce",
             "Write an announcement for the server.",
             new SlashCommandBuilder()
                 .setName("announce")
@@ -47,7 +47,7 @@ class Announce extends BotCommand {
             .setTitle(interaction.options.getString("title", true))
             .setDescription(announcement);
 
-        let optAnnounce = await getSpecialChannel(
+        const optAnnounce = await getSpecialChannel(
             interaction.guildId,
             "announcements"
         );
@@ -63,11 +63,6 @@ class Announce extends BotCommand {
             throw new Error("There is not an announcements role yet.");
         }
 
-        await announcementsChannel.send({
-            content: announcementRole.toString(),
-            embeds: [announcementEmbed],
-        });
-
         const successEmbed = new MessageEmbed()
             .setColor("GREEN")
             .setDescription(
@@ -76,6 +71,11 @@ class Announce extends BotCommand {
 
         await interaction.reply({
             embeds: [successEmbed],
+        });
+
+        await announcementsChannel.send({
+            content: announcementRole.toString(),
+            embeds: [announcementEmbed],
         });
     }
 }
