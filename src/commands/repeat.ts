@@ -37,5 +37,4 @@ class Repeat extends BotCommand {
     }
 }
 
-const cmd = new Repeat();
-export default cmd;
+export default new Repeat();

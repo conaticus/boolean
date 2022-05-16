@@ -109,5 +109,4 @@ class DeleteSuggestion extends BotCommand {
     }
 }
 
-const cmd = new DeleteSuggestion();
-export default cmd;
+export default new DeleteSuggestion();

@@ -80,5 +80,4 @@ class Announce extends BotCommand {
     }
 }
 
-const cmd = new Announce();
-export default cmd;
+export default new Announce();

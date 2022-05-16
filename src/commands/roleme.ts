@@ -42,7 +42,7 @@ class RoleMe extends BotCommand {
             });
             return;
         }
-        const row = new MessageActionRow();
+        const components = [];
         roleLists.forEach((list) => {
             if (list.choices.length === 0) {
                 return;
@@ -61,15 +61,16 @@ class RoleMe extends BotCommand {
                 placeholder: list.title,
             });
             component.addOptions(options);
-            row.addComponents(component);
+        const row = new MessageActionRow();
+        row.addComponents(component);
+        components.push(row);
         });
 
         await inter.reply({
             ephemeral: true,
-            components: [row],
+            components,
         });
     }
 }
 
-const cmd = new RoleMe();
-export default cmd;
+export default new RoleMe();

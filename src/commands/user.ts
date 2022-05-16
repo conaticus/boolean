@@ -24,7 +24,7 @@ class Profile extends BotCommand {
         const userId =
             (interaction.options.get("user")?.value as string) ||
             interaction.user.id;
-        const member = await interaction.guild.members.fetch(userId).catch();
+        const member = await interaction.guild.members.fetch(userId).catch(() => null);
         if (!member)
             return interaction.reply({
                 embeds: [
@@ -35,7 +35,7 @@ class Profile extends BotCommand {
                 ephemeral: true,
             });
         // NOTE(Kall7): Fetching user to get their banner
-        await member.user.fetch().catch();
+        await member.user.fetch();
         const userBadges: string[] = [];
         const tasks: Promise<any>[] = [];
         member.user.flags?.toArray().forEach((flag) => {
@@ -87,5 +87,4 @@ class Profile extends BotCommand {
     }
 }
 
-const cmd = new Profile();
-export default cmd;
+export default new Profile();

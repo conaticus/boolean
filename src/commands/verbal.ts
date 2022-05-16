@@ -77,5 +77,4 @@ class Verbal extends BotCommand {
     }
 }
 
-const cmd = new Verbal();
-export default cmd;
+export default new Verbal();
