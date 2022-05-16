@@ -1,2 +1,2 @@
-npm exec prisma db push
+npm exec prisma migrate dev
 npm start
