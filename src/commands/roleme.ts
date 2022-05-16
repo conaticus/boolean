@@ -42,8 +42,9 @@ class RoleMe extends BotCommand {
             });
             return;
         }
-        const components = [];
+        const components: MessageActionRow[] = [];
         roleLists.forEach((list) => {
+            const row = new MessageActionRow();
             if (list.choices.length === 0) {
                 return;
             }
@@ -61,9 +62,8 @@ class RoleMe extends BotCommand {
                 placeholder: list.title,
             });
             component.addOptions(options);
-        const row = new MessageActionRow();
-        row.addComponents(component);
-        components.push(row);
+            row.addComponents(component);
+            components.push(row);
         });
 
         await inter.reply({
