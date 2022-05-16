@@ -14,6 +14,7 @@ src/configs/config.ts
 /dist
 .env
 package-lock.json
+pnpm-lock.yaml
 yarn.lock
 .vscode
 .idea
