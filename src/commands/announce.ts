@@ -3,7 +3,7 @@ import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 
 import { getSpecialChannel, getSpecialRole } from "../database";
 import { Bot, BotCommand } from "../structures";
-import utils from "../utils";
+import * as utils from "../utils";
 
 class Announce extends BotCommand {
     constructor() {

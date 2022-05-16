@@ -13,17 +13,17 @@ interface QuestionOptions {
     ephemeral: boolean;
 }
 
-function askQuestion(
+export function askQuestion(
     interaction: CommandInteraction<"cached">,
     question: string
 ): Promise<string>;
-function askQuestion(
+export function askQuestion(
     interaction: CommandInteraction<"cached">,
     question: string,
     options: Exclude<QuestionOptions, "noErr"> & { noErr: true }
 ): Promise<string | null>;
 
-async function askQuestion(
+export async function askQuestion(
     interaction: CommandInteraction<"cached">,
     question: string,
     { ephemeral }: QuestionOptions = { ephemeral: false }
@@ -95,7 +95,7 @@ export function handleAssets(message: Message, embed: MessageEmbed) {
     }
 }
 
-function formatAttachmentsURL(
+export function formatAttachmentsURL(
     attachments: Collection<String, MessageAttachment>
 ) {
     return [...attachments.values()]
@@ -113,7 +113,7 @@ function formatAttachmentsURL(
 }
 
 const forbiddenPhrases: string[] = ["porn", "orange youtube", "faggot", "kys"];
-const badContent = async (message: Message) => {
+export const badContent = async (message: Message) => {
     const messageWords = weirdToNormalChars(
         message.content.toLowerCase()
     ).split(" ");
@@ -125,7 +125,7 @@ const badContent = async (message: Message) => {
     );
     if (foundPhrase) return true;
 
-    if(!message.inGuild()) return false;
+    if (!message.inGuild()) return false;
     const inviteURLs = message.content.match(Invite.INVITES_PATTERN) ?? [];
     for (const inviteURL of inviteURLs) {
         const invite = await message.client
@@ -134,5 +134,3 @@ const badContent = async (message: Message) => {
         if (invite && invite.guild?.id !== message.guild.id) return true;
     }
 };
-
-export default { askQuestion, formatAttachmentsURL, badContent };

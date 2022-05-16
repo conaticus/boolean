@@ -1,7 +1,5 @@
 import { Message } from "discord.js";
-import { stringSimilarity } from "string-similarity-js";
-import { weirdToNormalChars } from "weird-to-normal-chars";
-
+import * as utils from "../utils";
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
 
