@@ -37,12 +37,18 @@ export default TypedEvent({
             try {
                 await command.execute(interaction, client);
             } catch (e) {
-                console.error(e);
+                let msg = "NULL";
+                if (e instanceof Error) {
+                    msg = e.message;
+                } else if (typeof e === "object" && e !== null) {
+                    msg = e.toString();
+                }
 
                 const errorEmbed = new MessageEmbed()
                     .setColor("RED")
                     .setDescription(
-                        "❌ An error occurred while executing the command."
+                        "❌ An error occurred while executing the command." +
+                            `\`\`\`\n${msg}\`\`\``
                     );
 
                 if (interaction.deferred || interaction.replied) {
