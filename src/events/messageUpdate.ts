@@ -1,8 +1,7 @@
-import { Message, MessageEmbed, PartialMessage, TextChannel } from "discord.js";
+import { Message, MessageEmbed, PartialMessage } from "discord.js";
 
-import { config_ as config } from "../configs/config-handler";
-import { Bot } from "../structures/Bot";
-import { TypedEvent } from "../types/types";
+import { Bot } from "../structures";
+import { TypedEvent } from "../types";
 import utils from "../utils";
 
 export default TypedEvent({
@@ -26,20 +25,20 @@ export default TypedEvent({
         if (newMessage.author.bot || oldMessage.content === newMessage.content)
             return;
 
-        log(oldMessage, newMessage, client);
+        await log(oldMessage, newMessage, client);
     },
 });
 
-function log(oldMessage: Message, newMessage: Message, client: Bot) {
-    const embed = new MessageEmbed();
-    embed.setAuthor({
-        name: newMessage.author.tag,
-        iconURL: newMessage.author.displayAvatarURL(),
-    });
-    embed.setDescription(
-        `Message sent in <#${newMessage.channelId}> [Jump to Message](${newMessage.url})`
-    );
-    embed.setColor("ORANGE");
+async function log(oldMessage: Message, newMessage: Message, client: Bot) {
+    const embed = new MessageEmbed()
+        .setAuthor({
+            name: newMessage.author.tag,
+            iconURL: newMessage.author.displayAvatarURL(),
+        })
+        .setDescription(
+            `Message sent in <#${newMessage.channelId}> [Jump to Message](${newMessage.url})`
+        )
+        .setColor("ORANGE");
 
     // Old Message
     if (oldMessage.content !== "") {
@@ -61,7 +60,6 @@ function log(oldMessage: Message, newMessage: Message, client: Bot) {
     }
 
     // New Message
-
     if (newMessage.content !== "") {
         if (newMessage.attachments.size >= 1)
             embed.addField(
@@ -87,11 +85,8 @@ function log(oldMessage: Message, newMessage: Message, client: Bot) {
     });
     embed.setThumbnail(newMessage.guild?.iconURL()!);
 
-    client.logger.channel(
-        embed,
-        client.channels.cache.get(config.logChannelId) as TextChannel
-    );
     client.logger.console.info(
         `${oldMessage.author.tag} has edited the message \"${oldMessage.content}\" to \"${newMessage.content}\"`
     );
+    await client.logger.channel(newMessage?.guildId || "", embed);
 }

@@ -6,18 +6,8 @@ import {
     MessageAttachment,
     MessageEmbed,
 } from "discord.js";
-import fs from "fs/promises";
 import stringSimilarity from "string-similarity-js";
 import { weirdToNormalChars } from "weird-to-normal-chars";
-
-import { config_ as config } from "./configs/config-handler";
-import { IDataObject } from "./types/types";
-
-export const getData = async (): Promise<IDataObject> =>
-    JSON.parse(await fs.readFile("./data.json", "utf8"));
-
-export const writeData = (data: IDataObject) =>
-    fs.writeFile("./data.json", JSON.stringify(data));
 
 interface QuestionOptions {
     ephemeral: boolean;
@@ -66,6 +56,45 @@ async function askQuestion(
         return null;
     }
 }
+
+export function newEmbed(msg: Message): MessageEmbed {
+    return new MessageEmbed()
+        .setAuthor({
+            name: "Deleted message",
+            iconURL: msg.author.displayAvatarURL(),
+            url: msg.url,
+        })
+        .setDescription(msg.content)
+        .setColor("RED")
+        .setTimestamp()
+        .setFooter({
+            text: "Boolean",
+            iconURL: msg.client.user?.displayAvatarURL(),
+        })
+        .addField("Author", msg.author.toString(), true)
+        .addField("Channel", msg.channel.toString(), true);
+}
+
+export function handleAssets(message: Message, embed: MessageEmbed) {
+    // Add stickers
+    const sticker = message.stickers.first();
+    if (sticker) {
+        if (sticker.format === "LOTTIE") {
+            embed.addField("Sticker", `[${sticker.name}](${sticker.url})`);
+        } else {
+            embed.setThumbnail(sticker.url);
+        }
+    }
+
+    // Add attachments
+    if (message.attachments.size) {
+        embed.addField(
+            "Attachments",
+            formatAttachmentsURL(message.attachments)
+        );
+    }
+}
+
 function formatAttachmentsURL(
     attachments: Collection<String, MessageAttachment>
 ) {
@@ -96,12 +125,13 @@ const badContent = async (message: Message) => {
     );
     if (foundPhrase) return true;
 
+    if(!message.inGuild()) return false;
     const inviteURLs = message.content.match(Invite.INVITES_PATTERN) ?? [];
     for (const inviteURL of inviteURLs) {
         const invite = await message.client
             .fetchInvite(inviteURL)
             .catch(() => null);
-        if (invite && invite.guild?.id !== config.guildId) return true;
+        if (invite && invite.guild?.id !== message.guild.id) return true;
     }
 };
 

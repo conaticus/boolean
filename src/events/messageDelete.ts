@@ -1,15 +1,8 @@
-import {
-    GuildAuditLogs,
-    Message,
-    MessageEmbed,
-    PartialMessage,
-    TextChannel,
-} from "discord.js";
+import { GuildAuditLogs, Message, PartialMessage } from "discord.js";
 
-import { config_ as config } from "../configs/config-handler";
-import { Bot } from "../structures/Bot";
-import { TypedEvent } from "../types/types";
-import utils from "../utils";
+import { Bot } from "../structures";
+import { TypedEvent } from "../types";
+import { handleAssets, newEmbed } from "../utils";
 
 export default TypedEvent({
     eventName: "messageDelete",
@@ -27,35 +20,25 @@ export default TypedEvent({
 });
 
 async function log(message: Message, client: Bot) {
-    const audits = await message.guild?.fetchAuditLogs({
+    if (message.guild === null) {
+        return;
+    }
+    const audits = await message.guild.fetchAuditLogs({
         type: GuildAuditLogs.Actions.MESSAGE_DELETE,
         limit: 1,
     });
     const lastEntry = audits?.entries.first();
     let executor;
+    const lastLoggedDeletion = client.getLastLoggedDeletion(message.guild.id);
     if (
         lastEntry &&
-        client.lastLoggedDeletion &&
-        (lastEntry.id != client.lastLoggedDeletion.id ||
-            lastEntry.extra.count != client.lastLoggedDeletion.extra.count)
+        lastLoggedDeletion &&
+        (lastEntry.id != lastLoggedDeletion.id ||
+            lastEntry.extra.count != lastLoggedDeletion.extra.count)
     )
         executor = lastEntry.executor;
-    client.lastLoggedDeletion = lastEntry;
-    const embed = new MessageEmbed()
-        .setAuthor({
-            name: "Deleted message",
-            iconURL: message.author.displayAvatarURL(),
-            url: message.url,
-        })
-        .setDescription(message.content)
-        .setColor("RED")
-        .setTimestamp()
-        .setFooter({
-            text: "Boolean",
-            iconURL: client.user?.displayAvatarURL(),
-        })
-        .addField("Author", message.author.toString(), true)
-        .addField("Channel", message.channel.toString(), true);
+    client.setLastLoggedDeletion(message.guild.id, lastEntry);
+    const embed = newEmbed(message);
     if (executor) {
         embed
             .addField("\u200B", "\u200B", true)
@@ -73,23 +56,9 @@ async function log(message: Message, client: Bot) {
             true
         );
     }
-    const sticker = message.stickers.first();
-    if (sticker) {
-        if (sticker.format === "LOTTIE") {
-            embed.addField("Sticker", `[${sticker.name}](${sticker.url})`);
-        } else {
-            embed.setThumbnail(sticker.url);
-        }
-    }
-    if (message.attachments.size)
-        embed.addField(
-            "Attachments",
-            utils.formatAttachmentsURL(message.attachments)
-        );
-    await client.logger.channel(
-        embed,
-        client.channels.cache.get(config.logChannelId) as TextChannel
-    );
+    handleAssets(message, embed);
+
+    await client.logger.channel(message?.guildId || "", embed);
     client.logger.console.info(
         `${message.author.tag} has deleted the message \"${message.content}\"`
     );

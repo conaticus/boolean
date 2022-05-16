@@ -3,7 +3,6 @@
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-!.vscode/*.code-snippets
 .history/
 *.vsix
 .history
@@ -15,6 +14,7 @@ src/configs/config.ts
 /dist
 .env
 package-lock.json
+pnpm-lock.yaml
 yarn.lock
 .vscode
 .idea

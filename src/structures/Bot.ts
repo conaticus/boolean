@@ -1,14 +1,16 @@
 import { Client, Collection, GuildAuditLogsEntry, Intents } from "discord.js";
 
-import { config_ as config } from "../configs/config-handler";
 import { eventFiles } from "../files";
-import { IBotCommand, IBotEvent } from "../types/types";
-import Logger from "./Logger";
+import { BotCommand, Logger } from "../structures";
+import { IBotEvent } from "../types";
 
 export class Bot extends Client<true> {
-    commands = new Collection<string, IBotCommand>();
-    logger = new Logger({ level: config.logLevel || "info" });
-    lastLoggedDeletion: GuildAuditLogsEntry<72> | undefined; // This feels wrong but I don't know TS and I need to use this property
+    private static bot: Bot;
+    public commands = new Collection<string, BotCommand>();
+    public logger = new Logger({ level: process.env.LOG_LEVEL || "info" });
+    // NOTE(HordLawk): This feels wrong, but I don't know TS and I need to
+    //                 use this property
+    private lastLoggedDeletion: Map<string, GuildAuditLogsEntry<72>>;
 
     constructor() {
         super({
@@ -21,11 +23,33 @@ export class Bot extends Client<true> {
             ],
             partials: ["MESSAGE", "CHANNEL", "REACTION"],
         });
+        Bot.bot = this;
+        this.lastLoggedDeletion = new Map();
     }
 
-    async start() {
+    public static getInstance(): Bot {
+        return Bot.bot;
+    }
+
+    public getLastLoggedDeletion(
+        guildId: string
+    ): GuildAuditLogsEntry<72> | null {
+        return this.lastLoggedDeletion.get(guildId) || null;
+    }
+
+    public setLastLoggedDeletion(
+        guildId: string,
+        value?: GuildAuditLogsEntry<72>
+    ) {
+        // NOTE(dylhack): this allows for shorter syntax from outside usage.
+        if (value !== undefined) {
+            this.lastLoggedDeletion.set(guildId, value);
+        }
+    }
+
+    public async start() {
         await this.initModules();
-        await this.login(config.token!);
+        await this.login(process.env.TOKEN!);
     }
 
     private async initModules() {

@@ -1,0 +1,44 @@
+// Checkout Prisma's documentation
+// https://www.prisma.io/docs/getting-started
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model SelfRoleList {
+  guildId String
+  title   String
+  id      String       @id @default(uuid())
+  choices RoleChoice[]
+}
+
+model RoleChoice {
+  roleId          String        @id
+  ReactionMessage SelfRoleList? @relation(fields: [listId], references: [id])
+  listId          String
+}
+
+model Badge {
+  guildId   String
+  badgeName String
+  emoji     String
+  id        String @id @default(uuid())
+}
+
+model SpecialChannel {
+  guildId   String
+  label     String
+  channelId String
+  id        String @id @default(uuid())
+}
+
+model SpecialRole {
+  guildId String
+  label   String
+  roleId  String
+  id      String @id @default(uuid())
+}
