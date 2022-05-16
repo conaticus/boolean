@@ -27,6 +27,10 @@ export class Bot extends Client<true> {
         this.lastLoggedDeletion = new Map();
     }
 
+    public static getInstance(): Bot {
+        return Bot.bot;
+    }
+
     public getLastLoggedDeletion(
         guildId: string
     ): GuildAuditLogsEntry<72> | null {
@@ -46,10 +50,6 @@ export class Bot extends Client<true> {
     public async start() {
         await this.initModules();
         await this.login(process.env.TOKEN!);
-    }
-
-    public static getInstance(): Bot {
-        return Bot.bot;
     }
 
     private async initModules() {

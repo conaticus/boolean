@@ -24,7 +24,9 @@ class Profile extends BotCommand {
         const userId =
             (interaction.options.get("user")?.value as string) ||
             interaction.user.id;
-        const member = await interaction.guild.members.fetch(userId).catch(() => null);
+        const member = await interaction.guild.members
+            .fetch(userId)
+            .catch(() => null);
         if (!member)
             return interaction.reply({
                 embeds: [

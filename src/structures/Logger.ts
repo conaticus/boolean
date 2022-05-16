@@ -1,5 +1,5 @@
 import { MessageEmbed, TextChannel } from "discord.js";
-import pino, { LoggerOptions, Logger as PinoLogger } from "pino";
+import pino, { Logger as PinoLogger, LoggerOptions } from "pino";
 
 import { getSpecialChannel } from "../database";
 

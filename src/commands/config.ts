@@ -4,11 +4,11 @@ import { CommandInteraction } from "discord.js";
 import {
     Badges,
     DEFAULT_BADGES,
-    SpecialChannel,
-    SpecialRole,
     setBadge,
     setSpecialChannel,
     setSpecialRole,
+    SpecialChannel,
+    SpecialRole,
 } from "../database";
 import { Bot, BotCommand } from "../structures";
 
