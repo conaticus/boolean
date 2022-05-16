@@ -44,6 +44,7 @@ export default TypedEvent({
                     msg = e.toString();
                 }
 
+                console.error(e);
                 const errorEmbed = new MessageEmbed()
                     .setColor("RED")
                     .setDescription(
