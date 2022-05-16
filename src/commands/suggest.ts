@@ -42,13 +42,14 @@ class Suggest extends BotCommand {
         }
         const suggestionsChannel = optSuggest as TextChannel;
 
+        const title = Util.cleanContent(
+            interaction.options.getString("title", true),
+            interaction.channel!
+        );
+
         const suggestionEmbed = new MessageEmbed()
             .setColor("ORANGE")
-            .setTitle(
-                `${interaction.options.getString("title")} - ${
-                    interaction.member?.user.tag
-                }`
-            )
+            .setTitle(`${title} - ${interaction.member?.user.tag}`)
             .setDescription(interaction.options.getString("description", true));
 
         await interaction.deferReply({ ephemeral: true });
@@ -59,7 +60,7 @@ class Suggest extends BotCommand {
         await message.react("✅");
         await message.react("❌");
         const thread = await message.startThread({
-            name: interaction.options.getString("title", true),
+            name: title,
             autoArchiveDuration: "MAX",
         });
         await thread.members.add(interaction.user);

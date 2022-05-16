@@ -11,8 +11,12 @@ export default TypedEvent({
         oldMessage: Message | PartialMessage,
         newMessage: Message | PartialMessage
     ) => {
-        // Check if oldMessage OR newMessage is partial
-        if (oldMessage.partial || newMessage.partial) return;
+        if (newMessage.partial) return;
+
+        if (await utils.badContent(newMessage))
+            return await newMessage.delete();
+
+        if (oldMessage.partial) return;
 
         // Check if the old message is present in the cache
         // Throws an exception if the author is null
