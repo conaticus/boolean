@@ -10,7 +10,7 @@ export class Bot extends Client<true> {
     public logger = new Logger({ level: process.env.LOG_LEVEL || "info" });
     // NOTE(HordLawk): This feels wrong, but I don't know TS and I need to
     //                 use this property
-    public lastLoggedDeletion?: GuildAuditLogsEntry<72>;
+    private lastLoggedDeletion: Map<string, GuildAuditLogsEntry<72>>;
 
     constructor() {
         super({
@@ -24,15 +24,29 @@ export class Bot extends Client<true> {
             partials: ["MESSAGE", "CHANNEL", "REACTION"],
         });
         Bot.bot = this;
+        this.lastLoggedDeletion = new Map();
+    }
+
+    public getLastLoggedDeletion(
+        guildId: string
+    ): GuildAuditLogsEntry<72> | null {
+        return this.lastLoggedDeletion.get(guildId) || null;
+    }
+
+    public setLastLoggedDeletion(
+        guildId: string,
+        value?: GuildAuditLogsEntry<72>
+    ) {
+        this.lastLoggedDeletion.set(guildId, value);
+    }
+
+    public async start() {
+        await this.initModules();
+        await this.login(process.env.TOKEN!);
     }
 
     public static getInstance(): Bot {
         return Bot.bot;
-    }
-
-    async start() {
-        await this.initModules();
-        await this.login(process.env.TOKEN!);
     }
 
     private async initModules() {

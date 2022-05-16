@@ -4,6 +4,7 @@ import { Routes } from "discord-api-types/rest/v9";
 import { commandFiles } from "../files";
 import { Bot, BotCommand } from "../structures";
 import { TypedEvent } from "../types";
+import { GuildAuditLogs } from "discord.js";
 
 export default TypedEvent({
     eventName: "ready",
@@ -28,6 +29,23 @@ export default TypedEvent({
         }
 
         const payload = commandArr.map((cmd) => cmd.data);
+
+        const tasks: Promise<any>[] = [];
+        client.guilds.cache.forEach((guild) => {
+            const task = guild
+                .fetchAuditLogs({
+                    type: GuildAuditLogs.Actions.MESSAGE_DELETE,
+                    limit: 1,
+                })
+                .then((audits) => {
+                    client.setLastLoggedDeletion(
+                        guild.id,
+                        audits?.entries.first()
+                    );
+                });
+            tasks.push(task);
+        });
+        await Promise.all(tasks);
 
         const rest = new REST({ version: "9" }).setToken(
             process.env.TOKEN || ""

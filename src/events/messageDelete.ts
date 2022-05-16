@@ -29,14 +29,15 @@ async function log(message: Message, client: Bot) {
     });
     const lastEntry = audits?.entries.first();
     let executor;
+    const lastLoggedDeletion = client.getLastLoggedDeletion(message.guild.id);
     if (
         lastEntry &&
-        client.lastLoggedDeletion &&
-        (lastEntry.id != client.lastLoggedDeletion.id ||
-            lastEntry.extra.count != client.lastLoggedDeletion.extra.count)
+        lastLoggedDeletion &&
+        (lastEntry.id != lastLoggedDeletion.id ||
+            lastEntry.extra.count != lastLoggedDeletion.extra.count)
     )
         executor = lastEntry.executor;
-    client.lastLoggedDeletion = lastEntry;
+    client.setLastLoggedDeletion(message.guild.id, lastEntry);
     const embed = newEmbed(message);
     if (executor) {
         embed
