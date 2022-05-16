@@ -37,7 +37,10 @@ export class Bot extends Client<true> {
         guildId: string,
         value?: GuildAuditLogsEntry<72>
     ) {
-        this.lastLoggedDeletion.set(guildId, value);
+        // NOTE(dylhack): this allows for shorter syntax from outside usage.
+        if (value !== undefined) {
+            this.lastLoggedDeletion.set(guildId, value);
+        }
     }
 
     public async start() {
