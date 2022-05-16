@@ -48,12 +48,23 @@ class RoleMe extends BotCommand {
             if (list.choices.length === 0) {
                 return;
             }
-            const options: MessageSelectOptionData[] = list.choices.map((c) => {
-                return {
-                    value: c.id,
-                    label: c.name,
-                };
-            });
+            const options: MessageSelectOptionData[] = list.choices
+                .sort((cA, cB) => {
+                    if (cA > cB) {
+                        return 1;
+                    } else if (cA < cB) {
+                        return -1;
+                    }
+                    return 0;
+                })
+                .map((c) => {
+                    const isDefault = inter.member.roles.cache.has(c.id);
+                    return {
+                        value: c.id,
+                        label: c.name,
+                        default: isDefault,
+                    };
+                });
             const component = new MessageSelectMenu({
                 type: "SELECT_MENU",
                 customId: list.title,
