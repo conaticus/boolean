@@ -20,6 +20,16 @@ interface FullSelfRoleList extends SelfRoleList {
     choices: FullRoleChoice[];
 }
 
+class ListNotFoundError extends Error {
+    public static async newError(guildId: string): Promise<ListNotFoundError> {
+        const lists = await listAll(guildId);
+        let message = "That role list doesn't exist.";
+        message += `${lists}`;
+
+        return new ListNotFoundError(message);
+    }
+}
+
 /**
  * Utility function for getRolelist
  * @param {string} listId
@@ -30,6 +40,16 @@ async function getChoices(listId: string): Promise<RoleChoice[]> {
     return await client.roleChoice.findMany({
         where: { listId },
     });
+}
+
+async function listAll(guildId: string): Promise<string> {
+    const client = getClient();
+    const lists = await client.selfRoleList.findMany({
+        where: { guildId },
+    });
+    let result = lists.length > 0 ? "Here are your options:\n" : "";
+    lists.forEach((list) => (result += ` - "${list.title}"\n`));
+    return result;
 }
 
 /**
@@ -141,7 +161,7 @@ export async function addRoleChoice(
     const client = getClient();
     const roleList = await getRoleList(guildId, label);
     if (roleList === null) {
-        throw new Error("That role list doesn't exist.");
+        throw await ListNotFoundError.newError(guildId);
     }
     await client.roleChoice.create({
         data: {
@@ -167,7 +187,7 @@ export async function removeRoleChoice(
     //                with a role list of another server.
     const roleList = await getRoleList(guildId, label);
     if (roleList === null) {
-        throw new Error("That role list doesn't exist.");
+        throw await ListNotFoundError.newError(guildId);
     }
 
     await client.roleChoice.delete({ where: { roleId } });
@@ -180,7 +200,7 @@ export async function removeRoleList(
     const client = getClient();
     const roleList = await getRoleList(guildId, label);
     if (roleList === null) {
-        throw new Error("That role list doesn't exist.");
+        throw await ListNotFoundError.newError(guildId);
     }
 
     await client.selfRoleList.delete({ where: { id: roleList.id } });
