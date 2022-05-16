@@ -26,15 +26,15 @@ export default TypedEvent({
 });
 
 async function log(oldMessage: Message, newMessage: Message, client: Bot) {
-    const embed = new MessageEmbed();
-    embed.setAuthor({
-        name: newMessage.author.tag,
-        iconURL: newMessage.author.displayAvatarURL(),
-    });
-    embed.setDescription(
-        `Message sent in <#${newMessage.channelId}> [Jump to Message](${newMessage.url})`
-    );
-    embed.setColor("ORANGE");
+    const embed = new MessageEmbed()
+        .setAuthor({
+            name: newMessage.author.tag,
+            iconURL: newMessage.author.displayAvatarURL(),
+        })
+        .setDescription(
+            `Message sent in <#${newMessage.channelId}> [Jump to Message](${newMessage.url})`
+        )
+        .setColor("ORANGE");
 
     // Old Message
     if (oldMessage.content !== "") {
@@ -56,7 +56,6 @@ async function log(oldMessage: Message, newMessage: Message, client: Bot) {
     }
 
     // New Message
-
     if (newMessage.content !== "") {
         if (newMessage.attachments.size >= 1)
             embed.addField(

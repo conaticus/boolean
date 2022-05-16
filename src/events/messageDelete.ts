@@ -20,7 +20,10 @@ export default TypedEvent({
 });
 
 async function log(message: Message, client: Bot) {
-    const audits = await message.guild?.fetchAuditLogs({
+    if (message.guild === null) {
+        return;
+    }
+    const audits = await message.guild.fetchAuditLogs({
         type: GuildAuditLogs.Actions.MESSAGE_DELETE,
         limit: 1,
     });

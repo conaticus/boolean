@@ -39,12 +39,12 @@ export default TypedEvent({
                 Routes.applicationGuildCommands(client.user.id, devServer),
                 { body: payload }
             );
-            client.logger.console.debug(`Registered commands to ${devServer}`);
-            client.logger.console.debug(payload);
+            client.logger.console.info(`Registered commands to ${devServer}`);
         } else {
             await rest.put(Routes.applicationCommands(client.user.id), {
                 body: payload,
             });
+            client.logger.console.info(`Registered commands globally`);
         }
     },
 });

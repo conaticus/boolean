@@ -86,8 +86,6 @@ class Deny extends BotCommand {
         dmEmbed.setDescription(reason);
         await member?.send({ embeds: [dmEmbed] });
 
-        await interaction;
-
         const successMessageEmbed = new MessageEmbed()
             .setColor("GREEN")
             .setDescription(`Successfully denied!`);
