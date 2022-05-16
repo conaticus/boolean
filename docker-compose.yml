@@ -5,9 +5,11 @@ services:
             - POSTGRES_PASSWORD=supersecurepassword
             - PGDATA=/var/lib/postgresql/data/pgdata
         volumes:
-            - /var/lib/postgresql/data/pgdata
+            - "boolean-data:/var/lib/postgresql/data/pgdata"
     boolean:
         build: .
         restart: always
         links:
             - postgres
+volumes:
+    boolean-data: {}
