@@ -1,23 +1,21 @@
-import {
-    CommandInteraction,
-    Interaction,
-    MessageEmbed,
-    Role,
-} from "discord.js";
-import { type } from "os";
+import { Interaction, MessageEmbed } from "discord.js";
 
-import { config_ as config } from "../configs/config-handler";
-import { Bot } from "../structures/Bot";
-import { ReactionMessage } from "../types/configtypes";
-import { TypedEvent } from "../types/types";
+import { getRoleLists } from "../database";
+import { Bot } from "../structures";
+import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "interactionCreate",
     run: async (client: Bot, interaction: Interaction) => {
-        if (!interaction.inCachedGuild()) return;
+        if (!interaction.inCachedGuild()) {
+            return;
+        }
+
         if (interaction.isCommand()) {
             const command = client.commands.get(interaction.commandName);
-            if (!command) return;
+            if (!command) {
+                return;
+            }
 
             if (
                 command.requiredPerms &&
@@ -29,7 +27,7 @@ export default TypedEvent({
                     .setDescription(
                         "You have insufficient permissions to use this command."
                     );
-                interaction.reply({
+                await interaction.reply({
                     embeds: [invalidPermissionsEmbed],
                     ephemeral: true,
                 });
@@ -39,12 +37,19 @@ export default TypedEvent({
             try {
                 await command.execute(interaction, client);
             } catch (e) {
-                console.error(e);
+                let msg = "NULL";
+                if (e instanceof Error) {
+                    msg = e.message;
+                } else if (typeof e === "object" && e !== null) {
+                    msg = e.toString();
+                }
 
+                console.error(e);
                 const errorEmbed = new MessageEmbed()
                     .setColor("RED")
                     .setDescription(
-                        "❌ An error occurred while executing the command."
+                        "❌ An error occurred while executing the command." +
+                            `\`\`\`\n${msg}\`\`\``
                     );
 
                 if (interaction.deferred || interaction.replied) {
@@ -61,12 +66,12 @@ export default TypedEvent({
                 }
             }
         } else if (interaction.isSelectMenu()) {
-            if (
-                config.reactionMessages.every(
-                    (e) => e.title !== interaction.customId
-                )
-            )
+            const roleLists = await getRoleLists(interaction.guildId || "");
+
+            if (roleLists.every((e) => e.title !== interaction.customId)) {
                 return;
+            }
+
             await interaction.member.roles.set(
                 interaction.member.roles.cache
                     .map((e) => e.id)

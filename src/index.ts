@@ -1,8 +1,13 @@
-
 import "dotenv/config";
 
-import { Bot } from "./structures/Bot";
+import { start } from "./database";
+import { Bot } from "./structures";
 
-export const bot = new Bot();
+const bot = new Bot();
 
-bot.start();
+async function main() {
+    await start();
+    await bot.start();
+}
+
+main().catch(console.error);

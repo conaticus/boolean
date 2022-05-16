@@ -5,15 +5,14 @@ import {
     TextChannel,
 } from "discord.js";
 
-import { config_ as config } from "../configs/config-handler";
-import { Bot } from "../structures/Bot";
-import { TypedEvent } from "../types/types";
+import { getSpecialChannel } from "../database";
+import { Bot } from "../structures";
+import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "guildMemberAdd",
     run: async (client: Bot, member: GuildMember | PartialGuildMember) => {
         if (member.partial) return;
-        member.roles.add(config.memberRoleId);
 
         const welcomeMessageEmbed = new MessageEmbed()
             .setColor("ORANGE")
@@ -22,12 +21,16 @@ export default TypedEvent({
                 `Welcome ${member.user.username} to the conaticus server, enjoy your stay!`
             );
 
-        const welcomeChannel = client.channels.cache.get(
-            config.welcomeChannelId
-        ) as TextChannel;
-        welcomeChannel.send({
-            content: `<@${member.user.id}>`,
-            embeds: [welcomeMessageEmbed],
-        });
+        const welcomeChannel = await getSpecialChannel(
+            member.guild.id,
+            "welcomes"
+        );
+        if (welcomeChannel !== null) {
+            const txt = welcomeChannel as TextChannel;
+            await txt.send({
+                content: `<@${member.user.id}>`,
+                embeds: [welcomeMessageEmbed],
+            });
+        }
     },
 });

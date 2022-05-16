@@ -2,13 +2,11 @@ import {
     GuildMember,
     MessageEmbed,
     PartialGuildMember,
-    TextChannel,
     User,
 } from "discord.js";
 
-import { config_ as config } from "../configs/config-handler";
-import { Bot } from "../structures/Bot";
-import { TypedEvent } from "../types/types";
+import { Bot } from "../structures";
+import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "guildMemberUpdate",
@@ -17,53 +15,65 @@ export default TypedEvent({
         oldMember: GuildMember | PartialGuildMember,
         newMember: GuildMember | PartialGuildMember
     ) => {
-        if (newMember.partial) await newMember.fetch();
         // Fetch the latest audit log
         const AuditLogs = await oldMember.guild.fetchAuditLogs({
             limit: 1,
         });
         const lastLog = AuditLogs.entries.first();
-
-        if (lastLog && (lastLog.action as string) === "MEMBER_ROLE_UPDATE") {
-            // Role add
-            if (lastLog.changes?.at(0)?.key === "$add")
-                if (lastLog.executor?.bot) return;
-                else
-                    memberRoleAddEvent(
-                        lastLog.target! as User,
-                        lastLog.executor!,
-                        lastLog.changes?.at(0)?.new,
-                        client
-                    );
-
-            // Role Remove
-            if (lastLog.changes?.at(0)?.key === "$remove")
-                if (lastLog.executor?.bot) return;
-                else
-                    memberRoleRemoveEvent(
-                        lastLog.target! as User,
-                        lastLog.executor!,
-                        lastLog.changes?.at(0)?.new,
-                        client
-                    );
+        if (lastLog === undefined) {
+            return;
         }
-        // Nickname
-        else if (
-            !oldMember.partial &&
-            oldMember.nickname != newMember.nickname
-        ) {
-            nicknameUpdateEvent(
+        lastLog.changes = lastLog.changes || [];
+        let embed: MessageEmbed | null = null;
+
+        // Role update events
+        if (lastLog && (lastLog.action as string) === "MEMBER_ROLE_UPDATE") {
+            if (lastLog.executor?.bot) {
+                return;
+            }
+
+            // Role add
+            if (lastLog.changes?.at(0)?.key === "$add") {
+                embed = await memberRoleAddEvent(
+                    client,
+                    lastLog.target! as User,
+                    lastLog.executor!,
+                    lastLog.changes?.at(0)?.new
+                );
+                // Role Remove
+            } else if (lastLog.changes?.at(0)?.key === "$remove") {
+                embed = await memberRoleRemoveEvent(
+                    client,
+                    lastLog.target! as User,
+                    lastLog.executor!,
+                    lastLog.changes?.at(0)?.new
+                );
+            }
+            if (embed !== null) {
+                await client.logger.channel(oldMember.guild.id, embed);
+            }
+            return;
+        }
+
+        // Nickname updates
+        if (oldMember.nickname != newMember.nickname) {
+            embed = await nicknameUpdateEvent(
                 newMember as GuildMember,
                 oldMember.nickname!,
                 newMember.nickname!,
                 client
             );
-        } else if (
-            lastLog?.changes?.some(
+            await client.logger.channel(oldMember.guild.id, embed);
+            return;
+        }
+
+        const isDisabled =
+            lastLog.changes.some(
                 (e) => e.key === "communication_disabled_until"
-            ) &&
-            newMember.isCommunicationDisabled()
-        ) {
+            ) && newMember.isCommunicationDisabled();
+
+        // Timeout event (this doesn't go-to a log channel, instead their DM's)
+        if (isDisabled) {
             const durationMinutes = Math.round(
                 (newMember.communicationDisabledUntilTimestamp -
                     lastLog.createdTimestamp) /
@@ -97,90 +107,74 @@ Duration: ${durationFormatted} (<t:${Math.floor(
 });
 
 function memberRoleAddEvent(
+    client: Bot,
     target: User,
     executor: User,
-    role: any,
-    client: Bot
-) {
-    const embed = new MessageEmbed();
-    embed.setTitle(`• Role added to ${target.tag}`);
-    embed.setDescription(
-        `${executor?.tag}(<@${executor?.id}>) added <@&${role[0].id}> to ${target.tag}(<@${target.id}>)`
-    );
-    embed.setColor("ORANGE");
-    embed.setTimestamp();
-    embed.setFooter({
-        text: "Boolean",
-        iconURL: client.user?.displayAvatarURL(),
-    });
+    role: any
+): MessageEmbed {
+    const targetTag = target.tag;
+    const execTag = executor.tag;
+    const desc = `${execTag}(<@${executor?.id}>) added <@&${role[0].id}> to ${targetTag}(<@${target.id}>)`;
+    const embed = new MessageEmbed()
+        .setTitle(`• Role added to ${targetTag}`)
+        .setDescription(desc)
+        .setColor("ORANGE")
+        .setTimestamp()
+        .setFooter({
+            text: "Boolean",
+            iconURL: client.user?.displayAvatarURL(),
+        });
 
-    client.logger.channel(
-        embed,
-        client.channels.cache.get(config.logChannelId) as TextChannel
-    );
-    client.logger.console.info(
-        `${executor?.tag}(<@${executor?.id}>) added <@&${role[0].id}> to ${target.tag}(<@${target.id}>)`
-    );
+    client.logger.console.info(desc);
+    return embed;
 }
 
 function memberRoleRemoveEvent(
+    client: Bot,
     target: User,
     executor: User,
-    role: any,
-    client: Bot
-) {
-    const embed = new MessageEmbed();
-    embed.setTitle(`• Role removed from ${target.tag}`);
-    embed.setDescription(
-        `${executor?.tag}(<@${executor?.id}>) removed <@&${role[0].id}> from ${target.tag}(<@${target.id}>)`
-    );
-    embed.setColor("RED");
-    embed.setTimestamp();
-    embed.setFooter({
-        text: "Boolean",
-        iconURL: client.user?.displayAvatarURL(),
-    });
+    role: any
+): MessageEmbed {
+    const execTag = executor.tag;
+    const targetTag = target.tag;
+    const desc = `${execTag}(<@${executor?.id}>) removed <@&${role[0].id}> from ${targetTag}(<@${target.id}>)`;
+    const embed = new MessageEmbed()
+        .setTitle(`• Role removed from ${targetTag}`)
+        .setDescription(desc)
+        .setColor("RED")
+        .setTimestamp()
+        .setFooter({
+            text: "Boolean",
+            iconURL: client.user?.displayAvatarURL(),
+        });
 
-    client.logger.channel(
-        embed,
-        client.channels.cache.get(config.logChannelId) as TextChannel
-    );
-    client.logger.console.info(
-        `${executor?.tag}(<@${executor?.id}>) removed <@&${role[0].id}> from ${target.tag}(<@${target.id}>)`
-    );
+    client.logger.console.info(embed);
+    return embed;
 }
 
 function nicknameUpdateEvent(
     member: GuildMember,
-    oldMemberNickname: string,
-    newMemberNickname: string,
+    oldMemberNickname: string | null,
+    newMemberNickname: string | null,
     client: Bot
-) {
-    const embed = new MessageEmbed();
-    embed.setAuthor({
-        name: member.user.tag,
-        iconURL: member.displayAvatarURL(),
-    });
-    embed.setDescription("Nickname was updated!");
-    embed.setColor("ORANGE");
-    if (oldMemberNickname !== null)
-        embed.addField("Old Nickname", oldMemberNickname, true);
-    else embed.addField("Old Nickname", "Null", true);
+): MessageEmbed {
+    const desc = `${member.user.tag} changed their nickname from ${oldMemberNickname} to ${newMemberNickname}`;
+    const embed = new MessageEmbed()
+        .setTitle("Nickname was updated!")
+        .setDescription(desc)
+        .setAuthor({
+            name: member.user.tag,
+            iconURL: member.displayAvatarURL(),
+        })
+        .setColor("ORANGE")
+        .addField("New Nickname", newMemberNickname || "NULL", true)
+        .addField("Old Nickname", oldMemberNickname || "NULL", true)
+        .setTimestamp()
+        .setFooter({
+            text: "Boolean",
+            iconURL: client.user?.displayAvatarURL(),
+        });
 
-    if (newMemberNickname !== null)
-        embed.addField("New Nickname", newMemberNickname, true);
-    else embed.addField("New Nickname", "Null", true);
-    embed.setTimestamp();
-    embed.setFooter({
-        text: "Boolean",
-        iconURL: client.user?.displayAvatarURL(),
-    });
-
-    client.logger.channel(
-        embed,
-        client.channels.cache.get(config.logChannelId) as TextChannel
-    );
-    client.logger.console.info(
-        `${member.user.tag} changed their nickname from ${oldMemberNickname} to ${newMemberNickname}`
-    );
+    client.logger.console.info(desc);
+    return embed;
 }

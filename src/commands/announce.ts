@@ -1,28 +1,33 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 
-
-
-import { config_ as config } from "../configs/config-handler";
-import { IBotCommand } from "../types/types";
+import { getSpecialChannel, getSpecialRole } from "../database";
+import { Bot, BotCommand } from "../structures";
 import utils from "../utils";
 
+class Announce extends BotCommand {
+    constructor() {
+        super(
+            "announce",
+            "Write an announcement for the server.",
+            new SlashCommandBuilder()
+                .setName("announce")
+                .setDescription("Write an announcement for the server.")
+                .addStringOption((option) =>
+                    option
+                        .setName("title")
+                        .setDescription("Set the title of the announcement")
+                        .setRequired(true)
+                )
+                .toJSON(),
+            { timeout: 6000, requiredPerms: ["ADMINISTRATOR"] }
+        );
+    }
 
-const command: IBotCommand = {
-    name: "Announce",
-    desc: "Write an announcement for the server.",
-    timeout: 6000,
-    data: new SlashCommandBuilder()
-        .setName("announce")
-        .setDescription("Write an announcement for the server.")
-        .addStringOption((option) =>
-            option
-                .setName("title")
-                .setDescription("Set the title of the announcement")
-                .setRequired(true)
-        ),
-    requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction, client) {
+    public async execute(
+        interaction: CommandInteraction<"cached">,
+        _: Bot
+    ): Promise<void> {
         const announcement = await utils.askQuestion(
             interaction,
             "Please now send the announcement message.",
@@ -33,7 +38,7 @@ const command: IBotCommand = {
             const errorEmbed = new MessageEmbed()
                 .setColor("RED")
                 .setDescription("Announcement cancelled.");
-            interaction.channel?.send({ embeds: [errorEmbed] });
+            await interaction.reply({ embeds: [errorEmbed] });
             return;
         }
 
@@ -42,25 +47,37 @@ const command: IBotCommand = {
             .setTitle(interaction.options.getString("title", true))
             .setDescription(announcement);
 
-        const announcementsChannel = client.channels.cache.get(
-            config.announcementsChannelId
-        ) as TextChannel;
-
-        announcementsChannel.send({
-            content: `<@&${config.announcementsRoleId}>`,
-            embeds: [announcementEmbed],
-        });
+        const optAnnounce = await getSpecialChannel(
+            interaction.guildId,
+            "announcements"
+        );
+        if (optAnnounce === null) {
+            throw new Error("There is not an announcements channel yet.");
+        }
+        const announcementsChannel = optAnnounce as TextChannel;
+        const announcementRole = await getSpecialRole(
+            interaction.guildId,
+            "announcements"
+        );
+        if (announcementRole === null) {
+            throw new Error("There is not an announcements role yet.");
+        }
 
         const successEmbed = new MessageEmbed()
             .setColor("GREEN")
             .setDescription(
-                `Successfully created announcement in <#${config.announcementsChannelId}>`
+                `Successfully created announcement in ${announcementsChannel}`
             );
 
-        interaction.channel?.send({
+        await interaction.reply({
             embeds: [successEmbed],
         });
-    },
-};
 
-export default command;
+        await announcementsChannel.send({
+            content: announcementRole.toString(),
+            embeds: [announcementEmbed],
+        });
+    }
+}
+
+export default new Announce();

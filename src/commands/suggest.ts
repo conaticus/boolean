@@ -1,32 +1,46 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 
-import { config_ as config } from "../configs/config-handler";
-import { IBotCommand } from "../types/types";
+import { getSpecialChannel } from "../database";
+import { Bot, BotCommand } from "../structures";
 
-const command: IBotCommand = {
-    name: "Suggest",
-    desc: "Write a new suggestion for the channel.",
-    timeout: 600000,
-    data: new SlashCommandBuilder()
-        .setName("suggest")
-        .setDescription("Write a new suggestion for the channel.")
-        .addStringOption((option) =>
-            option
-                .setName("title")
-                .setDescription("Suggestion's title.")
-                .setRequired(true)
-        )
-        .addStringOption((option) =>
-            option
-                .setName("description")
-                .setDescription("Set suggestion's description.")
-                .setRequired(true)
-        ),
-    async execute(interaction, client) {
-        const suggestionsChannel = client.channels.cache.get(
-            config.suggestionsChannelId
-        ) as TextChannel;
+class Suggest extends BotCommand {
+    constructor() {
+        super(
+            "suggest",
+            "Write a new suggestion.",
+            new SlashCommandBuilder()
+                .setName("suggest")
+                .setDescription("Write a new suggestion.")
+                .addStringOption((option) =>
+                    option
+                        .setName("title")
+                        .setDescription("Suggestion's title.")
+                        .setRequired(true)
+                )
+                .addStringOption((option) =>
+                    option
+                        .setName("description")
+                        .setDescription("Set suggestion's description.")
+                        .setRequired(true)
+                )
+                .toJSON(),
+            { timeout: 600_000 }
+        );
+    }
+
+    public async execute(
+        interaction: CommandInteraction<"cached">,
+        _: Bot
+    ): Promise<void> {
+        const optSuggest = await getSpecialChannel(
+            interaction.guildId,
+            "suggestions"
+        );
+        if (optSuggest === null) {
+            throw new Error("There is not a suggestions channel yet.");
+        }
+        const suggestionsChannel = optSuggest as TextChannel;
 
         const suggestionEmbed = new MessageEmbed()
             .setColor("ORANGE")
@@ -53,11 +67,11 @@ const command: IBotCommand = {
         const successMessageEmbed = new MessageEmbed()
             .setColor("GREEN")
             .setDescription(
-                `Suggestion successfully created at <#${config.suggestionsChannelId}>`
+                `Suggestion successfully created at ${suggestionsChannel}`
             );
 
-        interaction.editReply({ embeds: [successMessageEmbed] });
-    },
-};
+        await interaction.editReply({ embeds: [successMessageEmbed] });
+    }
+}
 
-export default command;
+export default new Suggest();

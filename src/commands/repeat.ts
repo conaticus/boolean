@@ -1,34 +1,40 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 
+import { Bot, BotCommand } from "../structures";
 
+class Repeat extends BotCommand {
+    constructor() {
+        super(
+            "repeat",
+            "Repeats a given message.",
+            new SlashCommandBuilder()
+                .setName("repeat")
+                .setDescription("Repeats a given message.")
+                .addStringOption((option) =>
+                    option
+                        .setName("message")
+                        .setDescription("Message to repeat.")
+                        .setRequired(true)
+                )
+                .toJSON(),
+            { timeout: 60000, requiredPerms: ["ADMINISTRATOR"] }
+        );
+    }
 
-import { IBotCommand } from "../types/types";
-
-
-const command: IBotCommand = {
-    name: "Repeat",
-    desc: "Repeats a given message",
-    timeout: 60000,
-    data: new SlashCommandBuilder()
-        .setName("repeat")
-        .setDescription("Repeats a given message")
-        .addStringOption((option) =>
-            option
-                .setName("message")
-                .setDescription("Message to repeat.")
-                .setRequired(true)
-        ),
-    requiredPerms: ["ADMINISTRATOR"],
-    async execute(interaction) {
-        interaction.channel?.send(
+    public async execute(
+        interaction: CommandInteraction<"cached">,
+        _: Bot
+    ): Promise<void> {
+        await interaction.channel?.send(
             interaction.options.getString("message", true)
         );
 
         const successEmbed = new MessageEmbed()
             .setColor("GREEN")
             .setDescription("Repeated your message.");
-        interaction.reply({ embeds: [successEmbed], ephemeral: true });
-    },
-};
-export default command;
+        await interaction.reply({ embeds: [successEmbed], ephemeral: true });
+    }
+}
+
+export default new Repeat();

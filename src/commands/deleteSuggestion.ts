@@ -1,23 +1,32 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { MessageEmbed, TextChannel } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 
-import { config_ as config } from "../configs/config-handler";
-import { IBotCommand } from "../types/types";
+import { getSpecialChannel } from "../database";
+import { Bot, BotCommand } from "../structures";
 
-const command: IBotCommand = {
-    name: "Delete Suggestion",
-    desc: "Delete the current suggestion.",
-    data: new SlashCommandBuilder()
-        .setName("delsug")
-        .setDescription("Delete the current suggestion.")
-        .addStringOption((reason) =>
-            reason
-                .setName("reason")
-                .setDescription("Reason for the deletion")
-                .setRequired(true)
-        ),
-    requiredPerms: ["MANAGE_MESSAGES"],
-    async execute(interaction, client) {
+class DeleteSuggestion extends BotCommand {
+    constructor() {
+        super(
+            "delsug",
+            "Delete the current suggestion.",
+            new SlashCommandBuilder()
+                .setName("delsug")
+                .setDescription("Delete the current suggestion.")
+                .addStringOption((opt) =>
+                    opt
+                        .setName("reason")
+                        .setDescription("The reason for deleting")
+                        .setRequired(true)
+                )
+                .toJSON(),
+            { requiredPerms: ["MANAGE_MESSAGES"] }
+        );
+    }
+
+    public async execute(
+        interaction: CommandInteraction<"cached">,
+        client: Bot
+    ): Promise<void> {
         await interaction.deferReply({ ephemeral: true });
 
         const reply = await interaction.fetchReply();
@@ -30,7 +39,8 @@ const command: IBotCommand = {
                     "You can only delete a suggestion in a thread."
                 );
 
-            return interaction.editReply({ embeds: [errorMessageEmbed] });
+            await interaction.editReply({ embeds: [errorMessageEmbed] });
+            return;
         }
 
         const suggestionMessage = await reply.channel?.fetchStarterMessage();
@@ -39,23 +49,27 @@ const command: IBotCommand = {
         const suggestionAuthor = suggestionTitleSplit
             ? client.users.cache.find((u) => u.tag === suggestionTitleSplit[1])
             : undefined;
+        const suggestionsChannel = await getSpecialChannel(
+            interaction.guildId,
+            "suggestions"
+        );
+
+        if (suggestionsChannel === null) {
+            throw new Error("There is not a suggestions channel yet.");
+        }
 
         if (
             !suggestionMessage ||
-            suggestionMessage.channelId !== config.suggestionsChannelId
+            suggestionMessage.channelId !== suggestionsChannel.id
         ) {
             const errorMessageEmbed = new MessageEmbed()
                 .setColor("RED")
                 .setDescription(
-                    `You can only delete a suggestion in <#${config.suggestionsChannelId}>.`
+                    `You can only delete a suggestion in ${suggestionsChannel}.`
                 );
 
-            return interaction.editReply({ embeds: [errorMessageEmbed] });
+            await interaction.editReply({ embeds: [errorMessageEmbed] });
         }
-
-        const logChannel = client.channels.cache.get(
-            config.logChannelId
-        ) as TextChannel;
 
         const dmEmbed = new MessageEmbed()
             .setColor("RED")
@@ -83,17 +97,16 @@ const command: IBotCommand = {
             .addField("• Reason", reason);
 
         suggestionMessage.delete();
-        reply.channel.delete();
+        await reply.channel.delete();
 
-        await logChannel.send({
-            embeds: [logEmbed],
-        });
+        await client.logger.channel(interaction.guildId, logEmbed);
 
         try {
             await suggestionAuthor?.send({
                 embeds: [dmEmbed],
             });
         } catch {}
-    },
-};
-export default command;
+    }
+}
+
+export default new DeleteSuggestion();

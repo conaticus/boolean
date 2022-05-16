@@ -1,6 +1,8 @@
 .github
 .husky
 __tests__
+node_modules
+dist
 .editorconfig
 .env.example
 .eslintignore

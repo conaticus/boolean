@@ -1,7 +1,9 @@
-import { Channel, MessageEmbed } from "discord.js";
-import pino, { LoggerOptions, Logger as PinoLogger } from "pino";
+import { MessageEmbed, TextChannel } from "discord.js";
+import pino, { Logger as PinoLogger, LoggerOptions } from "pino";
 
-export default class Logger {
+import { getSpecialChannel } from "../database";
+
+export class Logger {
     console: PinoLogger;
 
     constructor(options: LoggerOptions) {
@@ -11,7 +13,12 @@ export default class Logger {
         });
     }
 
-    async channel(embed: MessageEmbed, channel: Channel) {
-        if (channel.isText()) await channel.send({ embeds: [embed] });
+    async channel(guildId: string, embed: MessageEmbed | MessageEmbed[]) {
+        const embeds = embed instanceof Array ? embed : [embed];
+        const logOpt = await getSpecialChannel(guildId, "logs");
+        if (logOpt !== null) {
+            const logChannel = logOpt as TextChannel;
+            await logChannel.send({ embeds });
+        }
     }
 }
