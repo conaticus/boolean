@@ -42,7 +42,7 @@ const constructEmbedMessage = (message: string): { embeds: MessageEmbed[] } => {
 const collectMessage = async (
     user: User,
     channel: TextChannel,
-    time: number = 120_000
+    time = 120_000
 ): Promise<Message | null> => {
     const collector = channel.createMessageCollector({
         filter: (msg: Message) => msg.author.id === user.id,
