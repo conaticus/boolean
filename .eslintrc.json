@@ -17,7 +17,7 @@
     },
     "plugins": ["@typescript-eslint"],
     "rules": {
-        "quotes": ["error", "single"],
+        "quotes": ["error", "double"],
         "semi": ["error", "always"],
         "camelcase": "warn"
     }
