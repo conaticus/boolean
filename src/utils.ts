@@ -96,7 +96,7 @@ export function handleAssets(message: Message, embed: MessageEmbed) {
 }
 
 export function formatAttachmentsURL(
-    attachments: Collection<String, MessageAttachment>
+    attachments: Collection<string, MessageAttachment>
 ) {
     return [...attachments.values()]
         .map((e, i) =>
