@@ -22,6 +22,7 @@
         "discord-api-types": "^0.26.1",
         "discord.js": "^13.7.0",
         "filehound": "^1.17.6",
+        "captcha-canvas": "^3.1.0",
         "pg": "^8.7.3",
         "pino": "^7.11.0",
         "pino-pretty": "^7.6.1",

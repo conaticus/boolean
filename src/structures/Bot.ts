@@ -20,6 +20,7 @@ export class Bot extends Client<true> {
                 Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
                 Intents.FLAGS.GUILD_MEMBERS,
                 Intents.FLAGS.GUILD_PRESENCES,
+                Intents.FLAGS.DIRECT_MESSAGES,
             ],
             partials: ["MESSAGE", "CHANNEL", "REACTION"],
         });
