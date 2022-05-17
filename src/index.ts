@@ -5,10 +5,9 @@ import { Bot } from "./structures";
 
 const bot = new Bot();
 
-(async () => {
-    connectToDatabase()
-        .then(async () => {
-            await bot.start();
-        })
-        .catch(console.error);
-})().catch(console.error);
+async function main() {
+  await connectToDatabase();
+  await bot.start();
+}
+
+main().catch(console.error);
