@@ -6,18 +6,19 @@
     },
     "extends": [
         "airbnb-base",
-        "sonarqube",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
         "prettier"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest"
     },
-    "plugins": [
-        "@typescript-eslint",
-        "prettier"
-    ],
+    "plugins": ["@typescript-eslint"],
     "rules": {
-        "quotes":"off"
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"],
+        "camelcase": "warn"
     }
 }

@@ -10,10 +10,7 @@ export function getClient(): PrismaClient {
     return client;
 }
 
-export async function start() {
-    // test our connection
-    await client.$connect();
-}
+export const connectToDatabase = async () => await client.$connect();
 
 export * from "./channels";
 export * from "./selfroles";
