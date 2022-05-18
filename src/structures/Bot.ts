@@ -27,13 +27,10 @@ export class Bot extends Client<true> {
             partials: ["MESSAGE", "CHANNEL", "REACTION"],
         });
         this.lastLoggedDeletion = new Map();
+        Bot.instance = this;
     }
 
     static getInstance(): Bot {
-        if (!Bot.instance) {
-            Bot.instance = new Bot();
-        }
-
         return Bot.instance;
     }
 
