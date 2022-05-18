@@ -5,7 +5,7 @@ import {
     TextChannel,
 } from "discord.js";
 
-import { getSpecialChannel, getSpecialRole } from "../database";
+import { getSpecialChannel } from "../database";
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
 
@@ -25,16 +25,12 @@ export default TypedEvent({
             member.guild.id,
             "welcomes"
         );
-        const memberRole = await getSpecialRole(member.guild.id, "members");
         if (welcomeChannel !== null) {
             const txt = welcomeChannel as TextChannel;
             await txt.send({
                 content: `<@${member.user.id}>`,
                 embeds: [welcomeMessageEmbed],
             });
-            if (memberRole !== null) {
-                await member.roles.add(memberRole);
-            }
         }
     },
 });
