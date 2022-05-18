@@ -30,7 +30,7 @@ export default TypedEvent({
 
         const payload = commandArr.map((cmd) => cmd.data);
 
-        const tasks: Promise<any>[] = [];
+        let tasks: Promise<any>[] = [];
         client.guilds.cache.forEach((guild) => {
             const task = guild
                 .fetchAuditLogs({
@@ -51,6 +51,7 @@ export default TypedEvent({
             process.env.TOKEN || ""
         );
 
+        // Register to a testing server
         const devServer = process.env.DEV_SERVER;
         if (devServer !== undefined) {
             await rest.put(
@@ -58,11 +59,21 @@ export default TypedEvent({
                 { body: payload }
             );
             client.logger.console.info(`Registered commands to ${devServer}`);
-        } else {
-            await rest.put(Routes.applicationCommands(client.user.id), {
-                body: payload,
-            });
-            client.logger.console.info(`Registered commands globally`);
+            return;
         }
+        // else... register globally
+
+        // clear dev commands
+        tasks = [];
+        client.guilds.cache.forEach((guild) => {
+            const task = guild.commands.set([]);
+            tasks.push(task);
+        });
+        await Promise.all(tasks).catch(() => null);
+        // register global commands
+        await rest.put(Routes.applicationCommands(client.user.id), {
+            body: payload,
+        });
+        client.logger.console.info(`Registered commands globally`);
     },
 });
