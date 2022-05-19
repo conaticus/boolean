@@ -3,7 +3,7 @@ import { formatAttachmentsURL } from "../src/utils";
 
 it("should format attachment url", () => {
     const attachmentWithUrl = (url: string): MessageAttachment => {
-        const mockMessageAtatchment = new MessageAttachment(new Buffer(0));
+        const mockMessageAtatchment = new MessageAttachment(Buffer.alloc(0));
         mockMessageAtatchment.url = url;
         return mockMessageAtatchment;
     };
