@@ -1,2 +1,2 @@
 git pull origin master
-docker build --tag boolean:latest
+docker build --tag boolean:latest .
