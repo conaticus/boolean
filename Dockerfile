@@ -15,7 +15,6 @@ FROM base as production
 COPY --from=build /opt/app/package.json /opt/app/package.json
 COPY --from=build /opt/app/node_modules /opt/app/node_modules
 COPY --from=build /opt/app/dist /opt/app/dist
-COPY --from=build /opt/app/.env /opt/app/.env
 COPY --from=build /opt/app/scripts /opt/app/scripts
 COPY --from=build /opt/app/prisma /opt/app/prisma
 

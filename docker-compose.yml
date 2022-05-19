@@ -8,6 +8,8 @@ services:
             - "boolean-data:/var/lib/postgresql/data/pgdata"
     boolean:
         build: .
+        env_file:
+            - .env
         restart: always
         links:
             - postgres
