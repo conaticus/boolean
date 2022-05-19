@@ -29,10 +29,13 @@ This will automatically be ignored from the [.gitignore](https://github.com/cona
 
 #### Docker
 
-For Docker users, simply run
+For Docker users, simply run `docker-compose up` _after_ configuring the
+env file.
 
--   `docker build --tag boolean:latest .`
--   `docker run -d --restart unless-stopped boolean:latest`
+To update your install of Boolean run `docker-compose down` to bring
+Boolean down and build again using `docker-compose up --build`. Make sure
+to pull down latest changes from git using `git pull origin master` or use
+the built-in script `scripts/update.sh`.
 
 #### Running the bot
 
