@@ -1,3 +1,4 @@
+import { APIApplicationCommandOptionChoice } from "discord-api-types/v10";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 
@@ -12,15 +13,20 @@ import {
 } from "../database";
 import { Bot, BotCommand } from "../structures";
 
-const badges: [string, string][] = Object.keys(DEFAULT_BADGES).map((v) => [
-    v,
-    v,
-]);
-const specRoles: [string, string][] = ["announcements", "members"].map((v) => [
-    v,
-    v,
-]);
-const specChannels: [string, string][] = [
+const badges: APIApplicationCommandOptionChoice<string>[] = Object.keys(
+    DEFAULT_BADGES
+).map((v) => ({
+    name: v,
+    value: v,
+}));
+const specRoles: APIApplicationCommandOptionChoice<string>[] = [
+    "announcements",
+    "members",
+].map((v) => ({
+    name: v,
+    value: v,
+}));
+const specChannels: APIApplicationCommandOptionChoice<string>[] = [
     "announcements",
     "information",
     "suggestions",
@@ -28,7 +34,10 @@ const specChannels: [string, string][] = [
     "warnings",
     "logs",
     "roles",
-].map((v) => [v, v]);
+].map((v) => ({
+    name: v,
+    value: v,
+}));
 
 class Config extends BotCommand {
     constructor() {
@@ -44,14 +53,14 @@ class Config extends BotCommand {
                             opt
                                 .setName("label")
                                 .setDescription("The special channel name.")
-                                .addChoices(specChannels)
+                                .addChoices(...specChannels)
                                 .setRequired(true)
                         )
                         .addChannelOption((opt) =>
                             opt
                                 .setName("channel")
                                 .setDescription("The channel to associate.")
-                                .addChannelType(0)
+                                .addChannelTypes(0)
                                 .setRequired(true)
                         );
                 })
@@ -63,7 +72,7 @@ class Config extends BotCommand {
                             opt
                                 .setName("label")
                                 .setDescription("The badge to set.")
-                                .addChoices(badges)
+                                .addChoices(...badges)
                                 .setRequired(true)
                         )
                         .addStringOption((opt) =>
@@ -81,7 +90,7 @@ class Config extends BotCommand {
                             opt
                                 .setName("label")
                                 .setDescription("The special role name.")
-                                .addChoices(specRoles)
+                                .addChoices(...specRoles)
                                 .setRequired(true)
                         )
                         .addRoleOption((opt) =>

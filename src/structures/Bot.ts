@@ -13,7 +13,11 @@ export class Bot extends Client<true> {
 
     // NOTE(HordLawk): This feels wrong, but I don't know TS and I need to
     //                 use this property
-    private lastLoggedDeletion: Map<string, GuildAuditLogsEntry<72>>;
+    // NOTE(hayper): I got you fam
+    private lastLoggedDeletion: Map<
+        string,
+        GuildAuditLogsEntry<"MESSAGE_DELETE">
+    >;
 
     constructor() {
         super({
