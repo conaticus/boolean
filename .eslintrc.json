@@ -19,6 +19,8 @@
     "rules": {
         "quotes": ["error", "double"],
         "semi": ["error", "always"],
-        "camelcase": "warn"
+        "camelcase": "warn",
+        "import/no-unresolved": "off",
+        "import/extensions": "off"
     }
 }
