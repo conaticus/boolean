@@ -6,8 +6,6 @@ import { Bot, BotCommand } from "../structures";
 class Ping extends BotCommand {
     constructor() {
         super(
-            "ping",
-            "Pings the bot.",
             new SlashCommandBuilder()
                 .setName("ping")
                 .setDescription("Pings the bot.")

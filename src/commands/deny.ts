@@ -31,8 +31,6 @@ class Deny extends BotCommand {
 
     constructor() {
         super(
-            "deny",
-            "Deny a user's moderator application.",
             new SlashCommandBuilder()
                 .setName("deny")
                 .setDescription("Deny a user's moderator application.")

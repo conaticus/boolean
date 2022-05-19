@@ -7,8 +7,6 @@ import { Bot, BotCommand } from "../structures";
 class Verbal extends BotCommand {
     constructor() {
         super(
-            "verbal",
-            "Warn members in a warnings channel about rule violations.",
             new SlashCommandBuilder()
                 .setName("verbal")
                 .setDescription(

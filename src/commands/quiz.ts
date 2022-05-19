@@ -174,8 +174,6 @@ const constructQuestions = async (
 class Quiz extends BotCommand {
     constructor() {
         super(
-            "quiz",
-            "Create a quiz for server members to play..",
             new SlashCommandBuilder()
                 .setName("quiz")
                 .setDescription("Create a quiz for server members to play..")

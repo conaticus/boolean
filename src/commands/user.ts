@@ -7,8 +7,6 @@ import { Bot, BotCommand } from "../structures";
 class Profile extends BotCommand {
     constructor() {
         super(
-            "user",
-            "Displays user's profile info.",
             new SlashCommandBuilder()
                 .setName("user")
                 .setDescription("Displays user's profile info.")

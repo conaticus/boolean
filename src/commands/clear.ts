@@ -7,8 +7,6 @@ import { handleAssets, newEmbed } from "../utils";
 class Clear extends BotCommand {
     constructor() {
         super(
-            "clear",
-            "Delete specified amount of messages.",
             new SlashCommandBuilder()
                 .setName("clear")
                 .setDescription("Delete specified amount of messages.")

@@ -12,8 +12,6 @@ import { Bot, BotCommand } from "../structures";
 class RoleMe extends BotCommand {
     constructor() {
         super(
-            "roleme",
-            "Give yourself a role.",
             new SlashCommandBuilder()
                 .setName("roleme")
                 .setDescription("Give yourself a role.")

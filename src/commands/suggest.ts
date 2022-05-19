@@ -12,8 +12,6 @@ import { Bot, BotCommand } from "../structures";
 class Suggest extends BotCommand {
     constructor() {
         super(
-            "suggest",
-            "Write a new suggestion.",
             new SlashCommandBuilder()
                 .setName("suggest")
                 .setDescription("Write a new suggestion.")

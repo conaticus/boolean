@@ -33,8 +33,6 @@ const specChannels: [string, string][] = [
 class Config extends BotCommand {
     constructor() {
         super(
-            "config",
-            "Configure the bot.",
             new SlashCommandBuilder()
                 .setName("config")
                 .setDescription("Configure the bot.")

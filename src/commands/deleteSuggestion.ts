@@ -7,8 +7,6 @@ import { Bot, BotCommand } from "../structures";
 class DeleteSuggestion extends BotCommand {
     constructor() {
         super(
-            "delsug",
-            "Delete the current suggestion.",
             new SlashCommandBuilder()
                 .setName("delsug")
                 .setDescription("Delete the current suggestion.")

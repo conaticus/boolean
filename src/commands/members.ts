@@ -6,8 +6,6 @@ import { Bot, BotCommand } from "../structures";
 class Members extends BotCommand {
     constructor() {
         super(
-            "members",
-            "The number of members in this server.",
             new SlashCommandBuilder()
                 .setName("members")
                 .setDescription("The number of members in this server.")

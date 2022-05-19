@@ -8,8 +8,6 @@ import * as utils from "../utils";
 class Announce extends BotCommand {
     constructor() {
         super(
-            "announce",
-            "Write an announcement for the server.",
             new SlashCommandBuilder()
                 .setName("announce")
                 .setDescription("Write an announcement for the server.")

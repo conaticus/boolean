@@ -9,24 +9,16 @@ export type BotCommandOpt = {
 };
 
 export abstract class BotCommand {
-    public readonly name: string;
-
-    public readonly desc: string;
-
     public readonly data: RESTPostAPIApplicationCommandsJSONBody;
 
     public readonly timeout?: number;
 
     public readonly requiredPerms?: PermissionResolvable;
 
-    protected constructor(
-        name: string,
-        desc: string,
+    public constructor(
         data: RESTPostAPIApplicationCommandsJSONBody,
         opt?: BotCommandOpt
     ) {
-        this.name = name;
-        this.desc = desc;
         this.data = data;
         this.timeout = opt?.timeout;
         this.requiredPerms = opt?.requiredPerms;

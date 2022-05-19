@@ -6,8 +6,6 @@ import { Bot, BotCommand } from "../structures";
 class Repeat extends BotCommand {
     constructor() {
         super(
-            "repeat",
-            "Repeats a given message.",
             new SlashCommandBuilder()
                 .setName("repeat")
                 .setDescription("Repeats a given message.")
