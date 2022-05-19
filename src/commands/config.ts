@@ -1,4 +1,7 @@
-import { APIApplicationCommandOptionChoice } from "discord-api-types/v10";
+import {
+    APIApplicationCommandOptionChoice,
+    ChannelType,
+} from "discord-api-types/v10";
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 
@@ -60,7 +63,7 @@ class Config extends BotCommand {
                             opt
                                 .setName("channel")
                                 .setDescription("The channel to associate.")
-                                .addChannelTypes(0)
+                                .addChannelTypes(ChannelType.GuildText)
                                 .setRequired(true)
                         );
                 })
