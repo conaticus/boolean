@@ -1,15 +1,13 @@
 import { Collection, MessageAttachment } from "discord.js";
-
-import * as util from "../src/utils";
-import { MockMessageAttachment } from "./mock.test";
-
-const attachmentWithUrl = (url: string): MessageAttachment => {
-    const mockMessageAtatchment = new MockMessageAttachment();
-    mockMessageAtatchment.url = url;
-    return mockMessageAtatchment;
-};
+import { formatAttachmentsURL } from "../src/utils";
 
 it("should format attachment url", () => {
+    const attachmentWithUrl = (url: string): MessageAttachment => {
+        const mockMessageAtatchment = new MessageAttachment(null);
+        mockMessageAtatchment.url = url;
+        return mockMessageAtatchment;
+    };
+
     const mockDataCollection = new Collection<string, MessageAttachment>();
 
     mockDataCollection.set(
@@ -17,7 +15,7 @@ it("should format attachment url", () => {
         attachmentWithUrl("https://example.com/file.png")
     );
 
-    expect(util.formatAttachmentsURL(mockDataCollection)).toBe(
+    expect(formatAttachmentsURL(mockDataCollection)).toBe(
         "[`Attachment-0-File`](https://example.com/file.png)"
     );
 
@@ -26,7 +24,7 @@ it("should format attachment url", () => {
         attachmentWithUrl("https://example.com/file2.png")
     );
 
-    expect(util.formatAttachmentsURL(mockDataCollection)).toBe(
+    expect(formatAttachmentsURL(mockDataCollection)).toBe(
         "[`Attachment-0-File`](https://example.com/file.png)\n[`Attachment-1-File`](https://example.com/file2.png)"
     );
 });
