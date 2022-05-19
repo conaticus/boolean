@@ -24,8 +24,10 @@ export default TypedEvent({
             }
 
             commandArr.push(command);
-            client.commands.set(command.name, command);
-            client.logger.console.debug(`Registered command ${command.name}`);
+            client.commands.set(command.data.name, command);
+            client.logger.console.debug(
+                `Registered command ${command.data.name}`
+            );
         }
 
         const payload = commandArr.map((cmd) => cmd.data);
