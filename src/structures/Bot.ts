@@ -38,11 +38,11 @@ export class Bot extends Client<true> {
         return Bot.instance;
     }
 
-    getLastLoggedDeletion(guildId: string): GuildAuditLogsEntry<72> | null {
+    getLastLoggedDeletion(guildId: string): GuildAuditLogsEntry<"MESSAGE_DELETE"> | null {
         return this.lastLoggedDeletion.get(guildId) || null;
     }
 
-    setLastLoggedDeletion(guildId: string, value?: GuildAuditLogsEntry<72>) {
+    setLastLoggedDeletion(guildId: string, value?: GuildAuditLogsEntry<"MESSAGE_DELETE">) {
         // NOTE(dylhack): this allows for shorter syntax from outside usage.
         if (value !== undefined) {
             this.lastLoggedDeletion.set(guildId, value);
