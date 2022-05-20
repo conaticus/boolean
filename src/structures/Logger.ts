@@ -3,7 +3,7 @@ import pino, { Logger as PinoLogger, LoggerOptions } from "pino";
 
 import { getSpecialChannel } from "../database";
 
-export class Logger {
+export default class Logger {
     console: PinoLogger;
 
     constructor(options: LoggerOptions) {

@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 
 import { getSpecialChannel, getSpecialRole } from "../database";
-import { Bot, BotCommand } from "../structures";
+import { BotCommand } from "../structures";
 import * as utils from "../utils";
 
 class Announce extends BotCommand {
@@ -22,12 +22,9 @@ class Announce extends BotCommand {
         );
     }
 
-    public async execute(
-        interaction: CommandInteraction<"cached">,
-        _: Bot
-    ): Promise<void> {
+    public async execute(inter: CommandInteraction<"cached">): Promise<void> {
         const announcement = await utils.askQuestion(
-            interaction,
+            inter,
             "Please now send the announcement message.",
             { noErr: true, ephemeral: true }
         );
@@ -36,17 +33,17 @@ class Announce extends BotCommand {
             const errorEmbed = new MessageEmbed()
                 .setColor("RED")
                 .setDescription("Announcement cancelled.");
-            await interaction.reply({ embeds: [errorEmbed] });
+            await inter.reply({ embeds: [errorEmbed] });
             return;
         }
 
         const announcementEmbed = new MessageEmbed()
             .setColor("ORANGE")
-            .setTitle(interaction.options.getString("title", true))
+            .setTitle(inter.options.getString("title", true))
             .setDescription(announcement);
 
         const optAnnounce = await getSpecialChannel(
-            interaction.guildId,
+            inter.guildId,
             "announcements"
         );
         if (optAnnounce === null) {
@@ -54,7 +51,7 @@ class Announce extends BotCommand {
         }
         const announcementsChannel = optAnnounce as TextChannel;
         const announcementRole = await getSpecialRole(
-            interaction.guildId,
+            inter.guildId,
             "announcements"
         );
         if (announcementRole === null) {
@@ -67,7 +64,7 @@ class Announce extends BotCommand {
                 `Successfully created announcement in ${announcementsChannel}`
             );
 
-        await interaction.reply({
+        await inter.reply({
             embeds: [successEmbed],
         });
 

@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 
 import { getRoleLists } from "../database";
-import { Bot, BotCommand } from "../structures";
+import { BotCommand } from "../structures";
 
 class RoleMe extends BotCommand {
     constructor() {
@@ -20,10 +20,7 @@ class RoleMe extends BotCommand {
         );
     }
 
-    public async execute(
-        inter: CommandInteraction<"cached">,
-        _: Bot
-    ): Promise<void> {
+    public async execute(inter: CommandInteraction<"cached">): Promise<void> {
         const { guildId } = inter;
         if (guildId === null) {
             await inter.reply({
@@ -50,7 +47,8 @@ class RoleMe extends BotCommand {
                 .sort((cA, cB) => {
                     if (cA > cB) {
                         return 1;
-                    } else if (cA < cB) {
+                    }
+                    if (cA < cB) {
                         return -1;
                     }
                     return 0;

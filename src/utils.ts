@@ -75,6 +75,23 @@ export function newEmbed(msg: Message): MessageEmbed {
         .addField("Channel", msg.channel.toString(), true);
 }
 
+export function formatAttachmentsURL(
+    attachments: Collection<string, MessageAttachment>
+) {
+    return [...attachments.values()]
+        .map((e, i) =>
+            e.height
+                ? `[\`Attachment-${i}-Media\`](${e.proxyURL})`
+                : `[\`Attachment-${i}-File\`](${e.url})`
+        )
+        .join("\n")
+        .concat("\n")
+        .slice(0, 1024)
+        .split(/\n/g)
+        .slice(0, -1)
+        .join("\n");
+}
+
 export function handleAssets(message: Message, embed: MessageEmbed) {
     // Add stickers
     const sticker = message.stickers.first();
@@ -95,25 +112,8 @@ export function handleAssets(message: Message, embed: MessageEmbed) {
     }
 }
 
-export function formatAttachmentsURL(
-    attachments: Collection<string, MessageAttachment>
-) {
-    return [...attachments.values()]
-        .map((e, i) =>
-            e.height
-                ? `[\`Attachment-${i}-Media\`](${e.proxyURL})`
-                : `[\`Attachment-${i}-File\`](${e.url})`
-        )
-        .join("\n")
-        .concat("\n")
-        .slice(0, 1024)
-        .split(/\n/g)
-        .slice(0, -1)
-        .join("\n");
-}
-
 const forbiddenPhrases: string[] = ["porn", "orange youtube", "faggot", "kys"];
-export const badContent = async (message: Message) => {
+export async function badContent(message: Message): Promise<boolean> {
     const messageWords = weirdToNormalChars(
         message.content.toLowerCase()
     ).split(" ");
@@ -123,14 +123,27 @@ export const badContent = async (message: Message) => {
             stringSimilarity(messageWords.join(" "), phrase) > 0.7 ||
             messageWords.some((word) => stringSimilarity(word, phrase) > 0.7)
     );
-    if (foundPhrase) return true;
-
-    if (!message.inGuild()) return false;
-    const inviteURLs = message.content.match(Invite.INVITES_PATTERN) ?? [];
-    for (const inviteURL of inviteURLs) {
-        const invite = await message.client
-            .fetchInvite(inviteURL)
-            .catch(() => null);
-        if (invite && invite.guild?.id !== message.guild.id) return true;
+    if (foundPhrase) {
+        return true;
     }
-};
+
+    if (!message.inGuild()) {
+        return false;
+    }
+    const inviteURLs = message.content.match(Invite.INVITES_PATTERN) ?? [];
+    const tasks: Promise<Invite | null>[] = [];
+    for (let i = 0; i < inviteURLs.length; i += 1) {
+        const inviteURL = inviteURLs[i];
+        const task = message.client.fetchInvite(inviteURL).catch(() => null);
+        tasks.push(task);
+    }
+    const invites = await Promise.all(tasks);
+    return new Promise((res) => {
+        invites.forEach((invite) => {
+            if (invite && invite.guild?.id !== message.guild.id) {
+                res(true);
+            }
+        });
+        res(false);
+    });
+}

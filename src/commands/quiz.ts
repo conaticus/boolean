@@ -77,7 +77,7 @@ const querySeconds = async (
         return null;
     }
 
-    const questionTime = parseInt(secondsMsg.content) * 1000;
+    const questionTime = parseInt(secondsMsg.content, 10) * 1000;
     if (questionTime / 1000 <= 5) {
         const errEmbed = new MessageEmbed()
             .setColor("RED")
@@ -249,10 +249,13 @@ class Quiz extends BotCommand {
 
         const questionChoices: IQuestionChoice[][] = [];
 
+        // NOTE(dylhack): this code will eventually all get replaced so linters
+        // can be disabled here.
+        // eslint-disable-next-line no-async-promise-executor
         await new Promise(async (resolve) => {
             let questionIdx = 0;
             const loopQuestion = async () => {
-                const question = questions[questionIdx++];
+                const question = questions[(questionIdx += 1)];
 
                 questionChoices.push([]);
 
@@ -264,14 +267,14 @@ class Quiz extends BotCommand {
 
                 const questionMsg = await quizChannel.send(questionMsgContent);
 
-                for (let i = 0; i < question.options.length; i++) {
+                for (let i = 0; i < question.options.length; i += 1) {
                     questionMsg?.react(numberEmojis[i]);
                 }
 
                 const collector = questionMsg?.createReactionCollector({
                     filter: (reaction: MessageReaction, user: User) =>
                         Object.values(numberEmojis).indexOf(
-                            reaction.emoji.name!
+                            reaction.emoji.name || ""
                         ) !== -1 &&
                         // user.id !== interaction.user.id &&
                         user.id !== client.user?.id,
@@ -281,7 +284,7 @@ class Quiz extends BotCommand {
                 await new Promise((res) => {
                     collector.on("collect", (reaction, user) => {
                         const choiceIdx = Object.values(numberEmojis).indexOf(
-                            reaction.emoji.name!
+                            reaction.emoji.name || ""
                         );
                         questionChoices[questionChoices.length - 1].push({
                             userId: user.id,
@@ -316,6 +319,7 @@ class Quiz extends BotCommand {
         });
 
         const sortable: [string, number][] = [];
+        // eslint-disable-next-line guard-for-in,no-restricted-syntax
         for (const user in userCorrectCount) {
             sortable.push([user, userCorrectCount[user]]);
         }

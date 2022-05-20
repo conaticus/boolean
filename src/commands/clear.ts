@@ -27,7 +27,10 @@ class Clear extends BotCommand {
         client: Bot
     ): Promise<void> {
         await interaction.deferReply({ ephemeral: true });
-        const deleted = await interaction.channel!.bulkDelete(
+        if (interaction.channel === null) {
+            throw new Error("How did we get here?");
+        }
+        const deleted = await interaction.channel.bulkDelete(
             interaction.options.getNumber("amount", true),
             true
         );

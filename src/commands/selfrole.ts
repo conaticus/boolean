@@ -8,7 +8,7 @@ import {
     removeRoleChoice,
     removeRoleList,
 } from "../database";
-import { Bot, BotCommand } from "../structures";
+import { BotCommand } from "../structures";
 
 class SelfRole extends BotCommand {
     constructor() {
@@ -16,8 +16,8 @@ class SelfRole extends BotCommand {
             new SlashCommandBuilder()
                 .setName("selfrole")
                 .setDescription("Setup self-role lists.")
-                .addSubcommand((sub) => {
-                    return sub
+                .addSubcommand((sub) =>
+                    sub
                         .setName("createlist")
                         .setDescription(
                             "Create a list of roles that users" +
@@ -28,10 +28,10 @@ class SelfRole extends BotCommand {
                                 .setName("label")
                                 .setDescription("A name for the list.")
                                 .setRequired(true)
-                        );
-                })
-                .addSubcommand((sub) => {
-                    return sub
+                        )
+                )
+                .addSubcommand((sub) =>
+                    sub
                         .setName("deletelist")
                         .setDescription("Delete a role list.")
                         .addStringOption((opt) =>
@@ -39,10 +39,10 @@ class SelfRole extends BotCommand {
                                 .setName("label")
                                 .setDescription("A name for the list.")
                                 .setRequired(true)
-                        );
-                })
-                .addSubcommand((sub) => {
-                    return sub
+                        )
+                )
+                .addSubcommand((sub) =>
+                    sub
                         .setName("addchoice")
                         .setDescription("Add a role to a role list.")
                         .addStringOption((opt) =>
@@ -56,15 +56,13 @@ class SelfRole extends BotCommand {
                                 .setName("role")
                                 .setDescription("The role to add")
                                 .setRequired(true)
-                        );
-                })
-                .addSubcommand((sub) => {
-                    return sub
-                        .setName("list")
-                        .setDescription("Show all of the lists.");
-                })
-                .addSubcommand((sub) => {
-                    return sub
+                        )
+                )
+                .addSubcommand((sub) =>
+                    sub.setName("list").setDescription("Show all of the lists.")
+                )
+                .addSubcommand((sub) =>
+                    sub
                         .setName("remchoice")
                         .setDescription("Remove a role from a role list.")
                         .addStringOption((opt) =>
@@ -78,8 +76,8 @@ class SelfRole extends BotCommand {
                                 .setName("role")
                                 .setDescription("The role to remove")
                                 .setRequired(true)
-                        );
-                })
+                        )
+                )
                 .toJSON(),
             { requiredPerms: ["ADMINISTRATOR"] }
         );
@@ -126,10 +124,7 @@ class SelfRole extends BotCommand {
         await removeRoleChoice(guildId, label, role.id);
     }
 
-    public async execute(
-        interaction: CommandInteraction,
-        client: Bot
-    ): Promise<void> {
+    public async execute(interaction: CommandInteraction): Promise<void> {
         const subCommand = interaction.options.getSubcommand();
         const { guildId } = interaction;
         if (guildId === null) {

@@ -1,21 +1,21 @@
-import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v9";
+import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 import { CommandInteraction, PermissionResolvable } from "discord.js";
 
-import { Bot } from "./Bot";
+import Bot from "./Bot";
 
 export type BotCommandOpt = {
     requiredPerms?: PermissionResolvable;
     timeout?: number;
 };
 
-export abstract class BotCommand {
+export default abstract class BotCommand {
     public readonly data: RESTPostAPIApplicationCommandsJSONBody;
 
     public readonly timeout?: number;
 
     public readonly requiredPerms?: PermissionResolvable;
 
-    public constructor(
+    protected constructor(
         data: RESTPostAPIApplicationCommandsJSONBody,
         opt?: BotCommandOpt
     ) {

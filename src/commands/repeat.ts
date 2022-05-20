@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
 
-import { Bot, BotCommand } from "../structures";
+import { BotCommand } from "../structures";
 
 class Repeat extends BotCommand {
     constructor() {
@@ -21,8 +21,7 @@ class Repeat extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">,
-        _: Bot
+        interaction: CommandInteraction<"cached">
     ): Promise<void> {
         await interaction.channel?.send(
             interaction.options.getString("message", true)
