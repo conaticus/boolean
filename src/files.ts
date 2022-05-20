@@ -22,7 +22,7 @@ const walk = (
                 : [file]),
         ];
     }
-    return results;
+    return results.map((filename) => path.join(pathLike.toString(), filename));
 };
 
 const commandFiles = walk(path.join(__dirname, "commands")).filter((file) =>
