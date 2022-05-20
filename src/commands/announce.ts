@@ -1,9 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {
-    CollectorFilter,
+    ModalSubmitInteraction,
     CommandInteraction,
-    Interaction,
-    MessageComponentInteraction,
     MessageEmbed,
     TextChannel,
 } from "discord.js";
@@ -60,9 +58,7 @@ class Announce extends BotCommand {
         });
         const modalInteraction = await interaction
             .awaitModalSubmit({
-                // NOTE(HordLawk): ts says the type ModalSubmitInteraction doesnt
-                //                 exists for some reason wtf ??
-                filter: (i: any) =>
+                filter: (i: ModalSubmitInteraction) =>
                     i.user.id === interaction.user.id &&
                     i.customId === `announcement_${interaction.id}`,
                 time: 600_000,
