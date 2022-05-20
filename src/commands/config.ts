@@ -14,7 +14,7 @@ import {
     SpecialChannel,
     SpecialRole,
 } from "../database";
-import { Bot, BotCommand } from "../structures";
+import { BotCommand } from "../structures";
 
 const badges: APIApplicationCommandOptionChoice<string>[] = Object.keys(
     DEFAULT_BADGES
@@ -48,8 +48,8 @@ class Config extends BotCommand {
             new SlashCommandBuilder()
                 .setName("config")
                 .setDescription("Configure the bot.")
-                .addSubcommand((sub) => {
-                    return sub
+                .addSubcommand((sub) =>
+                    sub
                         .setName("setchannel")
                         .setDescription("Set a special channel.")
                         .addStringOption((opt) =>
@@ -65,10 +65,10 @@ class Config extends BotCommand {
                                 .setDescription("The channel to associate.")
                                 .addChannelTypes(ChannelType.GuildText)
                                 .setRequired(true)
-                        );
-                })
-                .addSubcommand((sub) => {
-                    return sub
+                        )
+                )
+                .addSubcommand((sub) =>
+                    sub
                         .setName("setbadge")
                         .setDescription("Set a badge.")
                         .addStringOption((opt) =>
@@ -83,10 +83,10 @@ class Config extends BotCommand {
                                 .setName("emoji")
                                 .setDescription("The emoji to associate.")
                                 .setRequired(true)
-                        );
-                })
-                .addSubcommand((sub) => {
-                    return sub
+                        )
+                )
+                .addSubcommand((sub) =>
+                    sub
                         .setName("setrole")
                         .setDescription("Set a special role.")
                         .addStringOption((opt) =>
@@ -101,8 +101,8 @@ class Config extends BotCommand {
                                 .setName("role")
                                 .setDescription("The role to associate.")
                                 .setRequired(true)
-                        );
-                })
+                        )
+                )
                 .toJSON(),
             { requiredPerms: ["ADMINISTRATOR"] }
         );
@@ -129,10 +129,7 @@ class Config extends BotCommand {
         await setSpecialRole(guildId, label as SpecialRole, role.id);
     }
 
-    public async execute(
-        interaction: CommandInteraction,
-        client: Bot
-    ): Promise<void> {
+    public async execute(interaction: CommandInteraction): Promise<void> {
         const subCommand = interaction.options.getSubcommand();
         const { guildId } = interaction;
         if (guildId === null) {

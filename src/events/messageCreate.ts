@@ -7,9 +7,14 @@ import * as utils from "../utils";
 export default TypedEvent({
     eventName: "messageCreate",
     run: async (client: Bot, message: Message) => {
-        if (!message.content || message.author.bot) return;
+        if (!message.content || message.author.bot) {
+            return;
+        }
 
-        if (await utils.badContent(message)) return await message.delete();
+        if (await utils.badContent(message)) {
+            await message.delete();
+            return;
+        }
 
         if (
             message.mentions.users.size > 5 &&

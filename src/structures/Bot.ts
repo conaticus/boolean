@@ -4,7 +4,8 @@ import { eventFiles } from "../files";
 import { BotCommand, Logger } from "../structures";
 import { IBotEvent } from "../types";
 
-export class Bot extends Client<true> {
+export default class Bot extends Client<true> {
+    // eslint-disable-next-line no-use-before-define
     protected static instance: Bot;
 
     public commands = new Collection<string, BotCommand>();
@@ -38,11 +39,16 @@ export class Bot extends Client<true> {
         return Bot.instance;
     }
 
-    getLastLoggedDeletion(guildId: string): GuildAuditLogsEntry<"MESSAGE_DELETE"> | null {
+    getLastLoggedDeletion(
+        guildId: string
+    ): GuildAuditLogsEntry<"MESSAGE_DELETE"> | null {
         return this.lastLoggedDeletion.get(guildId) || null;
     }
 
-    setLastLoggedDeletion(guildId: string, value?: GuildAuditLogsEntry<"MESSAGE_DELETE">) {
+    setLastLoggedDeletion(
+        guildId: string,
+        value?: GuildAuditLogsEntry<"MESSAGE_DELETE">
+    ) {
         // NOTE(dylhack): this allows for shorter syntax from outside usage.
         if (value !== undefined) {
             this.lastLoggedDeletion.set(guildId, value);
@@ -51,26 +57,36 @@ export class Bot extends Client<true> {
 
     async start() {
         await this.initModules();
-        await this.login(process.env.TOKEN!);
+        await this.login(process.env.TOKEN || "");
     }
 
     async initModules() {
-        for await (const file of eventFiles) {
-            const event = (await import(file)).default as IBotEvent<any>;
-            if (!event) {
-                console.error(
-                    `File at path ${file} seems to incorrectly be exporting an event.`
-                );
-                continue;
-            }
-
-            if (event.once)
-                this.once(event.eventName, event.run.bind(null, this));
-            else this.on(event.eventName, event.run.bind(null, this));
-
-            this.logger.console.debug(`Registered event ${event.eventName}`);
+        const tasks: Promise<unknown>[] = [];
+        for (let i = 0; i < eventFiles.length; i += 1) {
+            const file = eventFiles[i];
+            const task = import(file);
+            task.then((module) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const event = module.default as IBotEvent<any>;
+                if (!event) {
+                    console.error(
+                        `File at path ${file} seems to incorrectly be exporting an event.`
+                    );
+                } else {
+                    if (event.once) {
+                        this.once(event.eventName, event.run.bind(null, this));
+                    } else {
+                        this.on(event.eventName, event.run.bind(null, this));
+                    }
+                    this.logger.console.debug(
+                        `Registered event ${event.eventName}`
+                    );
+                }
+            });
+            tasks.push(task);
         }
 
+        await Promise.all(tasks);
         this.logger.console.info("Registering slash commands");
     }
 }

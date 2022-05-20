@@ -69,17 +69,18 @@ class DeleteSuggestion extends BotCommand {
             await interaction.editReply({ embeds: [errorMessageEmbed] });
         }
 
+        const title = (suggestionTitleSplit || [""])[0];
         const dmEmbed = new MessageEmbed()
             .setColor("RED")
-            .setTitle(`Suggestion Deleted`).setDescription(`
-        Suggestion Title: \`${suggestionTitleSplit![0]}\`
+            .setTitle("Suggestion Deleted").setDescription(`
+        Suggestion Title: \`${title}\`
         Reason: \`${reason}\`
         by: <@${interaction.user.id}>
         `);
 
         const logEmbed = new MessageEmbed()
             .setColor("RED")
-            .setTitle(`Suggestion Deleted`)
+            .setTitle("Suggestion Deleted")
             .setAuthor({
                 name: `${suggestionAuthor?.tag}`,
                 iconURL: suggestionAuthor?.displayAvatarURL(),
@@ -87,7 +88,7 @@ class DeleteSuggestion extends BotCommand {
             .setDescription(
                 `<@${interaction?.user.id}> deleted suggestion by <@${suggestionAuthor?.id}>`
             )
-            .addField("• Title", suggestionTitleSplit![0] || " ")
+            .addField("• Title", title)
             .addField(
                 "• Description",
                 suggestionMessage.embeds[0].description ?? " "
@@ -103,7 +104,9 @@ class DeleteSuggestion extends BotCommand {
             await suggestionAuthor?.send({
                 embeds: [dmEmbed],
             });
-        } catch {}
+        } catch (err) {
+            console.error(err);
+        }
     }
 }
 

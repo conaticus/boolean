@@ -4,21 +4,6 @@ import { Bot } from "../structures";
 import { TypedEvent } from "../types";
 import { handleAssets, newEmbed } from "../utils";
 
-export default TypedEvent({
-    eventName: "messageDelete",
-    run: async (client: Bot, message: Message | PartialMessage) => {
-        // Check if the message is partial
-        if (message.partial) return;
-
-        // Check if the author of the deleted messaage is the bot
-        if (message.author.bot) return;
-
-        if (!["DEFAULT", "REPLY"].includes(message.type)) return;
-
-        await log(message, client);
-    },
-});
-
 async function log(message: Message, client: Bot) {
     if (message.guild === null) {
         return;
@@ -33,8 +18,8 @@ async function log(message: Message, client: Bot) {
     if (
         lastEntry &&
         lastLoggedDeletion &&
-        (lastEntry.id != lastLoggedDeletion.id ||
-            lastEntry.extra.count != lastLoggedDeletion.extra.count)
+        (lastEntry.id !== lastLoggedDeletion.id ||
+            lastEntry.extra.count !== lastLoggedDeletion.extra.count)
     )
         executor = lastEntry.executor;
     client.setLastLoggedDeletion(message.guild.id, lastEntry);
@@ -60,6 +45,21 @@ async function log(message: Message, client: Bot) {
 
     await client.logger.channel(message?.guildId || "", embed);
     client.logger.console.info(
-        `${message.author.tag} has deleted the message \"${message.content}\"`
+        `${message.author.tag} has deleted the message "${message.content}"`
     );
 }
+
+export default TypedEvent({
+    eventName: "messageDelete",
+    run: async (client: Bot, message: Message | PartialMessage) => {
+        // Check if the message is partial
+        if (message.partial) return;
+
+        // Check if the author of the deleted messaage is the bot
+        if (message.author.bot) return;
+
+        if (!["DEFAULT", "REPLY"].includes(message.type)) return;
+
+        await log(message, client);
+    },
+});
