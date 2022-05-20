@@ -27,6 +27,12 @@ class Suggest extends BotCommand {
                         .setDescription("Set suggestion's description.")
                         .setRequired(true)
                 )
+                .addAttachmentOption((option) =>
+                    option
+                        .setName("image")
+                        .setDescription("Attach media to your suggestion")
+                        .setRequired(false)
+                )
                 .toJSON(),
             { timeout: 600_000 }
         );
@@ -54,6 +60,8 @@ class Suggest extends BotCommand {
             .setColor("ORANGE")
             .setTitle(`${title} - ${interaction.member?.user.tag}`)
             .setDescription(interaction.options.getString("description", true));
+        const image = interaction.options.getAttachment("image");
+        if (image?.height) suggestionEmbed.setImage(image.url);
 
         await interaction.deferReply({ ephemeral: true });
 
