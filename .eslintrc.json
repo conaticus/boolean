@@ -23,7 +23,6 @@
         "import/no-unresolved": "off",
         "import/extensions": "off",
         "class-methods-use-this": "off",
-        "no-console": "off",
-        "consistent-return": "off"
+        "no-console": "off"
     }
 }
