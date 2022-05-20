@@ -18,7 +18,9 @@ export default TypedEvent({
             .setColor("ORANGE")
             .setTitle("New Member")
             .setDescription(
-                `Welcome ${member.user.username} to the conaticus server, enjoy your stay!`
+                `Welcome ${member.user.username} to the conaticus server\n` +
+                    "Use `/roleme` to choose your pings and languages roles\n" +
+                    "Enjoy your stay!"
             );
 
         const welcomeChannel = await getSpecialChannel(
