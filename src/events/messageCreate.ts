@@ -1,7 +1,8 @@
 import { Message } from "discord.js";
-import * as utils from "../utils";
+
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
+import * as utils from "../utils";
 
 export default TypedEvent({
     eventName: "messageCreate",
@@ -12,9 +13,10 @@ export default TypedEvent({
 
         if (
             message.mentions.users.size > 5 &&
+            message.inGuild() &&
             !message.member?.permissions.has("MENTION_EVERYONE")
         ) {
-            await message.delete();
+            await message.member?.timeout(600_000, "Mass mentions");
         }
     },
 });
