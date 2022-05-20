@@ -1,5 +1,12 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
+import {
+    CollectorFilter,
+    CommandInteraction,
+    Interaction,
+    MessageComponentInteraction,
+    MessageEmbed,
+    TextChannel,
+} from "discord.js";
 
 import { getSpecialChannel, getSpecialRole } from "../database";
 import { Bot, BotCommand } from "../structures";
@@ -11,12 +18,6 @@ class Announce extends BotCommand {
             new SlashCommandBuilder()
                 .setName("announce")
                 .setDescription("Write an announcement for the server.")
-                .addStringOption((option) =>
-                    option
-                        .setName("title")
-                        .setDescription("Set the title of the announcement")
-                        .setRequired(true)
-                )
                 .toJSON(),
             { timeout: 6000, requiredPerms: ["ADMINISTRATOR"] }
         );
@@ -26,24 +27,62 @@ class Announce extends BotCommand {
         interaction: CommandInteraction<"cached">,
         _: Bot
     ): Promise<void> {
-        const announcement = await utils.askQuestion(
-            interaction,
-            "Please now send the announcement message.",
-            { noErr: true, ephemeral: true }
-        );
+        await interaction.showModal({
+            customId: `announcement_${interaction.id}`,
+            title: "Make an announcement",
+            components: [
+                {
+                    type: "ACTION_ROW",
+                    components: [
+                        {
+                            type: "TEXT_INPUT",
+                            customId: "title",
+                            label: "Title",
+                            style: "SHORT",
+                            required: true,
+                            maxLength: 256,
+                        },
+                    ],
+                },
+                {
+                    type: "ACTION_ROW",
+                    components: [
+                        {
+                            type: "TEXT_INPUT",
+                            customId: "content",
+                            label: "Message",
+                            style: "PARAGRAPH",
+                            required: true,
+                        },
+                    ],
+                },
+            ],
+        });
+        const modalInteraction = await interaction
+            .awaitModalSubmit({
+                // NOTE(HordLawk): ts says the type ModalSubmitInteraction doesnt
+                //                 exists for some reason wtf ??
+                filter: (i: any) =>
+                    i.user.id === interaction.user.id &&
+                    i.customId === `announcement_${interaction.id}`,
+                time: 600_000,
+            })
+            .catch(() => null);
 
-        if (!announcement) {
+        if (!modalInteraction) {
             const errorEmbed = new MessageEmbed()
                 .setColor("RED")
                 .setDescription("Announcement cancelled.");
-            await interaction.reply({ embeds: [errorEmbed] });
+            await interaction.followUp({ embeds: [errorEmbed] });
             return;
         }
 
         const announcementEmbed = new MessageEmbed()
             .setColor("ORANGE")
-            .setTitle(interaction.options.getString("title", true))
-            .setDescription(announcement);
+            .setTitle(modalInteraction.fields.getTextInputValue("title"))
+            .setDescription(
+                modalInteraction.fields.getTextInputValue("content")
+            );
 
         const optAnnounce = await getSpecialChannel(
             interaction.guildId,
@@ -67,7 +106,7 @@ class Announce extends BotCommand {
                 `Successfully created announcement in ${announcementsChannel}`
             );
 
-        await interaction.reply({
+        await modalInteraction.reply({
             embeds: [successEmbed],
         });
 
