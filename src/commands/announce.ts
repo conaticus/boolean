@@ -1,8 +1,13 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
+import {
+    ModalSubmitInteraction,
+    CommandInteraction,
+    MessageEmbed,
+    TextChannel,
+} from "discord.js";
 
 import { getSpecialChannel, getSpecialRole } from "../database";
-import { BotCommand } from "../structures";
+import { Bot, BotCommand } from "../structures";
 import * as utils from "../utils";
 
 class Announce extends BotCommand {
@@ -11,39 +16,72 @@ class Announce extends BotCommand {
             new SlashCommandBuilder()
                 .setName("announce")
                 .setDescription("Write an announcement for the server.")
-                .addStringOption((option) =>
-                    option
-                        .setName("title")
-                        .setDescription("Set the title of the announcement")
-                        .setRequired(true)
-                )
                 .toJSON(),
             { timeout: 6000, requiredPerms: ["ADMINISTRATOR"] }
         );
     }
 
-    public async execute(inter: CommandInteraction<"cached">): Promise<void> {
-        const announcement = await utils.askQuestion(
-            inter,
-            "Please now send the announcement message.",
-            { noErr: true, ephemeral: true }
-        );
+    public async execute(
+        interaction: CommandInteraction<"cached">,
+        _: Bot
+    ): Promise<void> {
+        await interaction.showModal({
+            customId: `announcement_${interaction.id}`,
+            title: "Make an announcement",
+            components: [
+                {
+                    type: "ACTION_ROW",
+                    components: [
+                        {
+                            type: "TEXT_INPUT",
+                            customId: "title",
+                            label: "Title",
+                            style: "SHORT",
+                            required: true,
+                            maxLength: 256,
+                        },
+                    ],
+                },
+                {
+                    type: "ACTION_ROW",
+                    components: [
+                        {
+                            type: "TEXT_INPUT",
+                            customId: "content",
+                            label: "Message",
+                            style: "PARAGRAPH",
+                            required: true,
+                        },
+                    ],
+                },
+            ],
+        });
+        const modalInteraction = await interaction
+            .awaitModalSubmit({
+                filter: (i: ModalSubmitInteraction) =>
+                    i.user.id === interaction.user.id &&
+                    i.customId === `announcement_${interaction.id}`,
+                time: 600_000,
+            })
+            .catch(() => null);
 
-        if (!announcement) {
+        if (!modalInteraction) {
             const errorEmbed = new MessageEmbed()
                 .setColor("RED")
                 .setDescription("Announcement cancelled.");
-            await inter.reply({ embeds: [errorEmbed] });
+            await interaction.followUp({ embeds: [errorEmbed] });
             return;
         }
 
         const announcementEmbed = new MessageEmbed()
             .setColor("ORANGE")
-            .setTitle(inter.options.getString("title", true))
-            .setDescription(announcement);
+            .setTitle(modalInteraction.fields.getTextInputValue("title"))
+            .setDescription(
+                modalInteraction.fields.getTextInputValue("content")
+            );
 
         const optAnnounce = await getSpecialChannel(
-            inter.guildId,
+            interaction.guildId,
             "announcements"
         );
         if (optAnnounce === null) {
@@ -51,7 +89,7 @@ class Announce extends BotCommand {
         }
         const announcementsChannel = optAnnounce as TextChannel;
         const announcementRole = await getSpecialRole(
-            inter.guildId,
+            interaction.guildId,
             "announcements"
         );
         if (announcementRole === null) {
@@ -64,7 +102,7 @@ class Announce extends BotCommand {
                 `Successfully created announcement in ${announcementsChannel}`
             );
 
-        await inter.reply({
+        await modalInteraction.reply({
             embeds: [successEmbed],
         });
 
