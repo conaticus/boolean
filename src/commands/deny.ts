@@ -45,12 +45,18 @@ class Deny extends BotCommand {
                         .setName("reason")
                         .setDescription("Reason for the warning.")
                         .setRequired(true)
-                        .addChoice("Too young", "Too young")
-                        .addChoice(
-                            "Not been in the server long enough",
-                            "Not been in the server long enough"
-                        )
-                        .addChoice("Other", "Other")
+                        .addChoices({
+                            name: "Too young",
+                            value: "Too young",
+                        })
+                        .addChoices({
+                            name: "Not been in the server long enough",
+                            value: "Not been in the server long enough",
+                        })
+                        .addChoices({
+                            name: "Other",
+                            value: "Other",
+                        })
                 )
                 .toJSON(),
             { requiredPerms: ["ADMINISTRATOR"] }
