@@ -4,31 +4,6 @@ import { Bot } from "../structures";
 import { TypedEvent } from "../types";
 import * as utils from "../utils";
 
-export default TypedEvent({
-    eventName: "messageUpdate",
-    run: async (
-        client: Bot,
-        oldMessage: Message | PartialMessage,
-        newMessage: Message | PartialMessage
-    ) => {
-        if (newMessage.partial) return;
-
-        if (await utils.badContent(newMessage))
-            return await newMessage.delete();
-
-        if (oldMessage.partial) return;
-
-        // Check if the old message is present in the cache
-        // Throws an exception if the author is null
-        if (oldMessage.author == null) return;
-
-        if (newMessage.author.bot || oldMessage.content === newMessage.content)
-            return;
-
-        await log(oldMessage, newMessage, client);
-    },
-});
-
 async function log(oldMessage: Message, newMessage: Message, client: Bot) {
     const embed = new MessageEmbed()
         .setAuthor({
@@ -42,15 +17,18 @@ async function log(oldMessage: Message, newMessage: Message, client: Bot) {
 
     // Old Message
     if (oldMessage.content !== "") {
-        if (oldMessage.attachments.size >= 1)
+        if (oldMessage.attachments.size >= 1) {
             embed.addField(
                 "• Old Message",
-                (oldMessage.content += "\n".concat(
-                    utils.formatAttachmentsURL(newMessage.attachments)
-                )),
+                oldMessage.content +
+                    "\n".concat(
+                        utils.formatAttachmentsURL(newMessage.attachments)
+                    ),
                 false
             );
-        else embed.addField("• Old Message", oldMessage.content, false);
+        } else {
+            embed.addField("• Old Message", oldMessage.content, false);
+        }
     } else {
         embed.addField(
             "• Old Message",
@@ -64,9 +42,10 @@ async function log(oldMessage: Message, newMessage: Message, client: Bot) {
         if (newMessage.attachments.size >= 1)
             embed.addField(
                 "• New Message",
-                (newMessage.content += "\n".concat(
-                    utils.formatAttachmentsURL(newMessage.attachments)
-                )),
+                newMessage.content +
+                    "\n".concat(
+                        utils.formatAttachmentsURL(newMessage.attachments)
+                    ),
                 false
             );
         else embed.addField("• New Message", newMessage.content, false);
@@ -83,10 +62,45 @@ async function log(oldMessage: Message, newMessage: Message, client: Bot) {
         text: "Boolean",
         iconURL: client.user?.displayAvatarURL(),
     });
-    embed.setThumbnail(newMessage.guild?.iconURL()!);
+    embed.setThumbnail(newMessage.guild?.iconURL() || "");
 
     client.logger.console.info(
-        `${oldMessage.author.tag} has edited the message \"${oldMessage.content}\" to \"${newMessage.content}\"`
+        `${oldMessage.author.tag} has edited the message "${oldMessage.content}" to "${newMessage.content}"`
     );
     await client.logger.channel(newMessage?.guildId || "", embed);
 }
+
+export default TypedEvent({
+    eventName: "messageUpdate",
+    run: async (
+        client: Bot,
+        oldMessage: Message | PartialMessage,
+        newMessage: Message | PartialMessage
+    ) => {
+        if (newMessage.partial) return;
+
+        if (await utils.badContent(newMessage)) {
+            await newMessage.delete();
+            return;
+        }
+
+        if (oldMessage.partial) {
+            return;
+        }
+
+        // Check if the old message is present in the cache
+        // Throws an exception if the author is null
+        if (oldMessage.author == null) {
+            return;
+        }
+
+        if (
+            newMessage.author.bot ||
+            oldMessage.content === newMessage.content
+        ) {
+            return;
+        }
+
+        await log(oldMessage, newMessage, client);
+    },
+});

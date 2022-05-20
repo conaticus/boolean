@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
 
-import { Bot, BotCommand } from "../structures";
+import { BotCommand } from "../structures";
 
 class Deny extends BotCommand {
     private static tooYoung =
@@ -64,8 +64,7 @@ class Deny extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">,
-        _: Bot
+        interaction: CommandInteraction<"cached">
     ): Promise<void> {
         const member = interaction.options.getMember("user");
 
@@ -92,7 +91,7 @@ class Deny extends BotCommand {
 
         const successMessageEmbed = new MessageEmbed()
             .setColor("GREEN")
-            .setDescription(`Successfully denied!`);
+            .setDescription("Successfully denied!");
 
         await interaction.reply({
             embeds: [successMessageEmbed],

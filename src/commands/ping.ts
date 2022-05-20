@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 
-import { Bot, BotCommand } from "../structures";
+import { BotCommand } from "../structures";
 
 class Ping extends BotCommand {
     constructor() {
@@ -15,8 +15,7 @@ class Ping extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">,
-        _: Bot
+        interaction: CommandInteraction<"cached">
     ): Promise<void> {
         // NOTE(conaticus): This is purely for my own amusement
         if (Math.random() < 0.9) {
@@ -35,7 +34,9 @@ class Ping extends BotCommand {
     }
 
     private setTimeout(sec: number): Promise<void> {
-        return new Promise((resolve) => setTimeout(resolve, sec * 1000));
+        return new Promise((resolve) => {
+            setTimeout(resolve, sec * 1000);
+        });
     }
 }
 

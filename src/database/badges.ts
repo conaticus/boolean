@@ -59,7 +59,7 @@ export async function getBadge(
     const result = await client.badge.findFirst({
         where: {
             guildId,
-            badgeName: badgeName,
+            badgeName,
         },
     });
     if (result === null) {

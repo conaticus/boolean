@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed, TextChannel } from "discord.js";
 
 import { getSpecialChannel } from "../database";
-import { Bot, BotCommand } from "../structures";
+import { BotCommand } from "../structures";
 
 class Verbal extends BotCommand {
     constructor() {
@@ -30,8 +30,7 @@ class Verbal extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">,
-        _: Bot
+        interaction: CommandInteraction<"cached">
     ): Promise<void> {
         const optWarnings = await getSpecialChannel(
             interaction.guildId,

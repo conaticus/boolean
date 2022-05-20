@@ -1,3 +1,5 @@
+// NOTE(dylhack): eventually we need to deal with the any's
+/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-non-null-assertion */
 import {
     GuildMember,
     MessageEmbed,
@@ -7,104 +9,6 @@ import {
 
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
-
-export default TypedEvent({
-    eventName: "guildMemberUpdate",
-    run: async (
-        client: Bot,
-        oldMember: GuildMember | PartialGuildMember,
-        newMember: GuildMember | PartialGuildMember
-    ) => {
-        // Fetch the latest audit log
-        const AuditLogs = await oldMember.guild.fetchAuditLogs({
-            limit: 1,
-        });
-        const lastLog = AuditLogs.entries.first();
-        if (lastLog === undefined) {
-            return;
-        }
-        lastLog.changes = lastLog.changes || [];
-        let embed: MessageEmbed | null = null;
-
-        // Role update events
-        if (lastLog && (lastLog.action as string) === "MEMBER_ROLE_UPDATE") {
-            if (lastLog.executor?.bot) {
-                return;
-            }
-
-            // Role add
-            if (lastLog.changes?.at(0)?.key === "$add") {
-                embed = await memberRoleAddEvent(
-                    client,
-                    lastLog.target! as User,
-                    lastLog.executor!,
-                    lastLog.changes?.at(0)?.new
-                );
-                // Role Remove
-            } else if (lastLog.changes?.at(0)?.key === "$remove") {
-                embed = await memberRoleRemoveEvent(
-                    client,
-                    lastLog.target! as User,
-                    lastLog.executor!,
-                    lastLog.changes?.at(0)?.new
-                );
-            }
-            if (embed !== null) {
-                await client.logger.channel(oldMember.guild.id, embed);
-            }
-            return;
-        }
-
-        // Nickname updates
-        if (oldMember.nickname != newMember.nickname) {
-            embed = await nicknameUpdateEvent(
-                newMember as GuildMember,
-                oldMember.nickname!,
-                newMember.nickname!,
-                client
-            );
-            await client.logger.channel(oldMember.guild.id, embed);
-            return;
-        }
-
-        const isDisabled =
-            lastLog.changes.some(
-                (e) => e.key === "communication_disabled_until"
-            ) && newMember.isCommunicationDisabled();
-
-        // Timeout event (this doesn't go-to a log channel, instead their DM's)
-        if (isDisabled) {
-            const durationMinutes = Math.round(
-                (newMember.communicationDisabledUntilTimestamp -
-                    lastLog.createdTimestamp) /
-                    60000
-            );
-            const durationUnits = [
-                [Math.floor(durationMinutes / 1440), "d"],
-                [Math.floor((durationMinutes % 1440) / 60), "h"],
-                [Math.floor(durationMinutes % 60), "m"],
-            ];
-            const durationFormatted = durationUnits
-                .filter((e) => e[0])
-                .flat()
-                .join("");
-            const reason = lastLog.reason?.slice(0, 500);
-            const reasonField = reason ? `Reason: *${reason}*` : "";
-            const dmEmbed = new MessageEmbed()
-                .setColor("RED")
-                .setTitle("You have received a time out").setDescription(`
-${reasonField}
-Moderator: ${lastLog.executor}
-Duration: ${durationFormatted} (<t:${Math.floor(
-                newMember.communicationDisabledUntilTimestamp / 1000
-            )}:R>)
-
-**If you believe this time out is unjustified, please contact Conaticus.**
-                `); // change this ^ to "fill in the [appeal form](${formURL})" when there's an appeal form
-            await newMember.send({ embeds: [dmEmbed] }).catch(() => {});
-        }
-    },
-});
 
 function memberRoleAddEvent(
     client: Bot,
@@ -178,3 +82,101 @@ function nicknameUpdateEvent(
     client.logger.console.info(desc);
     return embed;
 }
+
+export default TypedEvent({
+    eventName: "guildMemberUpdate",
+    run: async (
+        client: Bot,
+        oldMember: GuildMember | PartialGuildMember,
+        newMember: GuildMember | PartialGuildMember
+    ) => {
+        // Fetch the latest audit log
+        const AuditLogs = await oldMember.guild.fetchAuditLogs({
+            limit: 1,
+        });
+        const lastLog = AuditLogs.entries.first();
+        if (lastLog === undefined) {
+            return;
+        }
+        lastLog.changes = lastLog.changes || [];
+        let embed: MessageEmbed | null = null;
+
+        // Role update events
+        if (lastLog && (lastLog.action as string) === "MEMBER_ROLE_UPDATE") {
+            if (lastLog.executor?.bot) {
+                return;
+            }
+
+            // Role add
+            if (lastLog.changes?.at(0)?.key === "$add") {
+                embed = memberRoleAddEvent(
+                    client,
+                    lastLog.target! as User,
+                    lastLog.executor!,
+                    lastLog.changes?.at(0)?.new
+                );
+                // Role Remove
+            } else if (lastLog.changes?.at(0)?.key === "$remove") {
+                embed = await memberRoleRemoveEvent(
+                    client,
+                    lastLog.target! as User,
+                    lastLog.executor!,
+                    lastLog.changes?.at(0)?.new
+                );
+            }
+            if (embed !== null) {
+                await client.logger.channel(oldMember.guild.id, embed);
+            }
+            return;
+        }
+
+        // Nickname updates
+        if (oldMember.nickname !== newMember.nickname) {
+            embed = await nicknameUpdateEvent(
+                newMember as GuildMember,
+                oldMember.nickname!,
+                newMember.nickname!,
+                client
+            );
+            await client.logger.channel(oldMember.guild.id, embed);
+            return;
+        }
+
+        const isDisabled =
+            lastLog.changes.some(
+                (e) => e.key === "communication_disabled_until"
+            ) && newMember.isCommunicationDisabled();
+
+        // Timeout event (this doesn't go-to a log channel, instead their DM's)
+        if (isDisabled) {
+            const durationMinutes = Math.round(
+                (newMember.communicationDisabledUntilTimestamp -
+                    lastLog.createdTimestamp) /
+                    60000
+            );
+            const durationUnits = [
+                [Math.floor(durationMinutes / 1440), "d"],
+                [Math.floor((durationMinutes % 1440) / 60), "h"],
+                [Math.floor(durationMinutes % 60), "m"],
+            ];
+            const durationFormatted = durationUnits
+                .filter((e) => e[0])
+                .flat()
+                .join("");
+            const reason = lastLog.reason?.slice(0, 500);
+            const reasonField = reason ? `Reason: *${reason}*` : "";
+            const dmEmbed = new MessageEmbed()
+                .setColor("RED")
+                .setTitle("You have received a time out").setDescription(`
+${reasonField}
+Moderator: ${lastLog.executor}
+Duration: ${durationFormatted} (<t:${Math.floor(
+                newMember.communicationDisabledUntilTimestamp / 1000
+            )}:R>)
+
+**If you believe this time out is unjustified, please contact Conaticus.**
+                `); // change this ^ to "fill in the [appeal form](${formURL})" when there's an appeal form
+            await newMember.send({ embeds: [dmEmbed] }).catch(() => null);
+        }
+    },
+});

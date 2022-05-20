@@ -7,7 +7,7 @@ import {
 } from "discord.js";
 
 import { getSpecialChannel } from "../database";
-import { Bot, BotCommand } from "../structures";
+import { BotCommand } from "../structures";
 
 class Suggest extends BotCommand {
     constructor() {
@@ -39,8 +39,7 @@ class Suggest extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">,
-        _: Bot
+        interaction: CommandInteraction<"cached">
     ): Promise<void> {
         const optSuggest = await getSpecialChannel(
             interaction.guildId,
@@ -49,11 +48,14 @@ class Suggest extends BotCommand {
         if (optSuggest === null) {
             throw new Error("There is not a suggestions channel yet.");
         }
+        if (interaction.channel === null) {
+            throw new Error("How did we get here?");
+        }
         const suggestionsChannel = optSuggest as TextChannel;
 
         const title = Util.cleanContent(
             interaction.options.getString("title", true),
-            interaction.channel!
+            interaction.channel
         );
 
         const suggestionEmbed = new MessageEmbed()

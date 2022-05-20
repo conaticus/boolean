@@ -13,7 +13,8 @@ const walk = (
 ): string[] => {
     let results: string[] = [];
     const fileList = fs.readdirSync(pathLike, options);
-    for (const file of fileList) {
+    for (let i = 0; i < fileList.length; i += 1) {
+        const file = fileList[i];
         const stat = fs.statSync(path.join(pathLike.toString(), file));
         results = [
             ...results,

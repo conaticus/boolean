@@ -7,8 +7,7 @@ import {
 } from "discord.js";
 
 import { getSpecialChannel, getSpecialRole } from "../database";
-import { Bot, BotCommand } from "../structures";
-import * as utils from "../utils";
+import { BotCommand } from "../structures";
 
 class Announce extends BotCommand {
     constructor() {
@@ -22,8 +21,7 @@ class Announce extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">,
-        _: Bot
+        interaction: CommandInteraction<"cached">
     ): Promise<void> {
         await interaction.showModal({
             customId: `announcement_${interaction.id}`,

@@ -1,10 +1,10 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/rest/v9";
 
+import { GuildAuditLogs } from "discord.js";
 import { commandFiles } from "../files";
 import { Bot, BotCommand } from "../structures";
 import { TypedEvent } from "../types";
-import { GuildAuditLogs } from "discord.js";
 
 export default TypedEvent({
     eventName: "ready",
@@ -14,25 +14,26 @@ export default TypedEvent({
 
         const commandArr: BotCommand[] = [];
 
-        for await (const file of commandFiles) {
+        for (let i = 0; i < commandFiles.length; i += 1) {
+            const file = commandFiles[i];
+            // eslint-disable-next-line no-await-in-loop
             const command = (await import(file)).default as BotCommand;
             if (command === undefined) {
                 console.error(
                     `File at path ${file} seems to incorrectly be exporting a command.`
                 );
-                continue;
+            } else {
+                commandArr.push(command);
+                client.commands.set(command.data.name, command);
+                client.logger.console.debug(
+                    `Registered command ${command.data.name}`
+                );
             }
-
-            commandArr.push(command);
-            client.commands.set(command.data.name, command);
-            client.logger.console.debug(
-                `Registered command ${command.data.name}`
-            );
         }
 
         const payload = commandArr.map((cmd) => cmd.data);
 
-        let tasks: Promise<any>[] = [];
+        let tasks: Promise<unknown>[] = [];
         client.guilds.cache.forEach((guild) => {
             const task = guild
                 .fetchAuditLogs({
@@ -76,6 +77,6 @@ export default TypedEvent({
         await rest.put(Routes.applicationCommands(client.user.id), {
             body: payload,
         });
-        client.logger.console.info(`Registered commands globally`);
+        client.logger.console.info("Registered commands globally");
     },
 });

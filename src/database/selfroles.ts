@@ -20,24 +20,14 @@ interface FullSelfRoleList extends SelfRoleList {
     choices: FullRoleChoice[];
 }
 
-class ListNotFoundError extends Error {
-    public static async newError(guildId: string): Promise<ListNotFoundError> {
-        const lists = await listAll(guildId);
-        let message = "That role list doesn't exist.";
-        message += `${lists}`;
-
-        return new ListNotFoundError(message);
-    }
-}
-
 /**
  * Utility function for getRolelist
  * @param {string} listId
  * @returns {Promise<RoleChoice[]>}
  */
-async function getChoices(listId: string): Promise<RoleChoice[]> {
+function getChoices(listId: string): Promise<RoleChoice[]> {
     const client = getClient();
-    return await client.roleChoice.findMany({
+    return client.roleChoice.findMany({
         where: { listId },
     });
 }
@@ -48,7 +38,9 @@ async function listAll(guildId: string): Promise<string> {
         where: { guildId },
     });
     let result = lists.length > 0 ? "Here are your options:\n" : "";
-    lists.forEach((list) => (result += ` - "${list.title}"\n`));
+    lists.forEach((list) => {
+        result += ` - "${list.title}"\n`;
+    });
     return result;
 }
 
@@ -72,21 +64,21 @@ export async function getRoleList(
     const partChoices = await getChoices(roleList.id);
     const choices: FullRoleChoice[] = [];
     const bot = Bot.getInstance();
-    const tasks: Promise<any>[] = [];
+    const tasks: Promise<unknown>[] = [];
     partChoices.forEach((choice) => {
-        const task = bot.guilds
+        const iTask = bot.guilds
             .fetch(guildId)
             .then((guild) => {
-                const task = guild.roles.fetch(choice.roleId);
-                tasks.push(task);
-                return task;
+                const jTask = guild.roles.fetch(choice.roleId);
+                tasks.push(jTask);
+                return jTask;
             })
             .then((role) => {
                 if (role !== null) {
                     choices.push(role);
                 }
             });
-        tasks.push(task);
+        tasks.push(iTask);
     });
 
     await Promise.all(tasks);
@@ -113,7 +105,7 @@ export async function getRoleLists(
     const roleLists = await client.selfRoleList.findMany({
         where: { guildId },
     });
-    const tasks: Promise<any>[] = [];
+    const tasks: Promise<unknown>[] = [];
     const bot = Bot.getInstance();
     const guild = await bot.guilds.fetch(guildId);
     if (guild === null) {
@@ -126,25 +118,35 @@ export async function getRoleLists(
             ...roleList,
             choices: [],
         };
-        const task = getChoices(roleList.id);
-        task.then((choices) => {
+        const iTask = getChoices(roleList.id);
+        iTask.then((choices) => {
             choices.forEach((choice) => {
-                const task = guild.roles.fetch(choice.roleId);
-                task.then((role) => {
+                const jTask = guild.roles.fetch(choice.roleId);
+                jTask.then((role) => {
                     if (role !== null) {
                         fullList.choices.push(role);
                     }
                 });
-                tasks.push(task);
+                tasks.push(jTask);
             });
         });
         result.push(fullList);
-        tasks.push(task);
+        tasks.push(iTask);
     }
 
     await Promise.all(tasks);
 
     return result;
+}
+
+class ListNotFoundError extends Error {
+    public static async newError(guildId: string): Promise<ListNotFoundError> {
+        const lists = await listAll(guildId);
+        let message = "That role list doesn't exist.";
+        message += `${lists}`;
+
+        return new ListNotFoundError(message);
+    }
 }
 
 /**
@@ -165,7 +167,7 @@ export async function addRoleChoice(
     }
     await client.roleChoice.create({
         data: {
-            roleId: roleId,
+            roleId,
             listId: roleList.id,
         },
     });
