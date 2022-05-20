@@ -21,6 +21,7 @@
         "semi": ["error", "always"],
         "camelcase": "warn",
         "import/no-unresolved": "off",
-        "import/extensions": "off"
+        "import/extensions": "off",
+        "class-methods-use-this": "off"
     }
 }
