@@ -19,7 +19,7 @@ export default TypedEvent({
             .setTitle("New Member")
             .setDescription(
                 `Welcome ${member.user.username} to the conaticus server\n` +
-                    "Use `/roleme` to choose your pings and languages roles\n" +
+                    "Use `/rolemenu` to choose your pings and languages roles\n" +
                     "Enjoy your stay!"
             );
 
