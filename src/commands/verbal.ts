@@ -21,7 +21,7 @@ class Verbal extends BotCommand {
                 .addUserOption((option) =>
                     option
                         .setName("user")
-                        .setDescription("User recieving the warning.")
+                        .setDescription("User receiving the warning.")
                         .setRequired(true)
                 )
                 .addStringOption((option) =>
