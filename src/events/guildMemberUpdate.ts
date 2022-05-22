@@ -7,6 +7,7 @@ import {
     PartialGuildMember,
     User,
     TextChannel,
+    MessageButton,
 } from "discord.js";
 
 import { Bot } from "../structures";
@@ -179,21 +180,14 @@ Duration: ${durationFormatted} (<t:${Math.floor(
 
 **If you believe this time out is unjustified, appeal using the button below.**
                 `);
-            const appealButton = {
-                type: "BUTTON",
-                label: "Appeal time out",
-                style: "PRIMARY",
-                customId: "appeal_timeout",
-                emoji: "📜",
-                disabled: false,
-            };
-            const components = [
-                {
-                    type: "ACTION_ROW",
-                    components: [appealButton],
-                    // NOTE(HordLawk): why the fuck did ts make me do this
-                } as unknown as MessageActionRow,
-            ];
+            const appealButton = new MessageButton()
+                .setLabel("Appeal time out")
+                .setStyle("PRIMARY")
+                .setCustomId("appeal_timeout")
+                .setEmoji("📜");
+            const appealRow = new MessageActionRow();
+            appealRow.addComponents(appealButton);
+            const components = [appealRow];
             const dm = await newMember
                 .send({ embeds: [dmEmbed], components })
                 .catch(() => null);
@@ -236,6 +230,7 @@ Duration: ${durationFormatted} (<t:${Math.floor(
                     });
                     return;
                 }
+                collector.stop();
                 const appealEmbed = new MessageEmbed()
                     .setColor(0x2f3136)
                     .setAuthor({
@@ -257,11 +252,11 @@ Duration: ${durationFormatted} (<t:${Math.floor(
                     throw new Error("There is not an appeals channel yet.");
                 const appealsChannel = optAppeal as TextChannel;
                 await appealsChannel.send({ embeds: [appealEmbed] });
-                appealButton.disabled = true;
+                appealButton.setDisabled(true);
                 await int.update({ components });
             });
             collector.on("end", async () => {
-                appealButton.disabled = true;
+                appealButton.setDisabled(true);
                 await dm.edit({ components });
             });
         }
