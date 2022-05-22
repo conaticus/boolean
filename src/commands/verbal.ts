@@ -1,9 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import {
     CommandInteraction,
+    MessageActionRow,
+    MessageButton,
     MessageEmbed,
     TextChannel,
-    MessageActionRow,
 } from "discord.js";
 
 import { getSpecialChannel } from "../database";
@@ -62,23 +63,15 @@ class Verbal extends BotCommand {
 
                 If you believe this warning is unjustified, appeal using the button below.
             `);
-        const appealButton = {
-            type: "BUTTON",
-            label: "Appeal warning",
-            style: "PRIMARY",
-            customId: "appeal_warning",
-            emoji: "📜",
-            disabled: false,
-        };
-        const components = [
-            {
-                type: "ACTION_ROW",
-                components: [appealButton],
-                // NOTE(HordLawk): why the fuck did ts make me do this
-            } as unknown as MessageActionRow,
-        ];
+        const appealButton = new MessageButton()
+            .setEmoji("📜")
+            .setCustomId("appeal_warning")
+            .setStyle("PRIMARY");
+        const actionRow = new MessageActionRow();
+        actionRow.addComponents(appealButton);
+        const components = [actionRow];
         const dm = await member
-            ?.send({ embeds: [dmEmbed], components })
+            .send({ embeds: [dmEmbed], components })
             .catch(() => null);
         if (dm) {
             const collector = dm.createMessageComponentCollector({
