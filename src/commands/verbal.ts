@@ -49,7 +49,7 @@ class Verbal extends BotCommand {
         const reason = interaction.options.getString("reason", true);
 
         const warnEmbed = new MessageEmbed().setColor("RED").setDescription(`
-                User: <@${member?.user.id}>
+                User: ${member}
                 Reason: \`${reason}\`
                 Moderator: <@${interaction.member.user.id}>
             `);
@@ -58,7 +58,7 @@ class Verbal extends BotCommand {
             .setColor("RED")
             .setTitle("You have recieved a warning").setDescription(`
                 Reason: ${reason}
-                Moderator: <@${interaction.member.user.id}>
+                Moderator: ${interaction.member}
 
                 If you believe this warning is unjustified, appeal using the button below.
             `);
