@@ -20,7 +20,8 @@ export type SpecialChannel =
     | "welcomes"
     | "warnings"
     | "logs"
-    | "roles";
+    | "roles"
+    | "appeals";
 
 /**
  * Utility function of getSpecialChannel

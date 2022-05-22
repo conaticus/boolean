@@ -2,13 +2,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-non-null-assertion */
 import {
     GuildMember,
+    MessageActionRow,
     MessageEmbed,
     PartialGuildMember,
     User,
+    TextChannel,
 } from "discord.js";
 
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
+import { getSpecialChannel } from "../database";
 
 function memberRoleAddEvent(
     client: Bot,
@@ -174,9 +177,93 @@ Duration: ${durationFormatted} (<t:${Math.floor(
                 newMember.communicationDisabledUntilTimestamp / 1000
             )}:R>)
 
-**If you believe this time out is unjustified, please contact Conaticus.**
-                `); // change this ^ to "fill in the [appeal form](${formURL})" when there's an appeal form
-            await newMember.send({ embeds: [dmEmbed] }).catch(() => null);
+**If you believe this time out is unjustified, appeal using the button below.**
+                `);
+            const appealButton = {
+                type: "BUTTON",
+                label: "Appeal time out",
+                style: "PRIMARY",
+                customId: "appeal_timeout",
+                emoji: "📜",
+                disabled: false,
+            };
+            const components = [
+                {
+                    type: "ACTION_ROW",
+                    components: [appealButton],
+                    // NOTE(HordLawk): why the fuck did ts make me do this
+                } as unknown as MessageActionRow,
+            ];
+            const dm = await newMember
+                .send({ embeds: [dmEmbed], components })
+                .catch(() => null);
+            if (!dm) return;
+            const collector = dm.createMessageComponentCollector({
+                componentType: "BUTTON",
+                time: 600_000,
+            });
+            collector.on("collect", async (i) => {
+                await i.showModal({
+                    customId: `appeal_${i.id}`,
+                    title: "Appeal time out",
+                    components: [
+                        {
+                            type: "ACTION_ROW",
+                            components: [
+                                {
+                                    type: "TEXT_INPUT",
+                                    label: "Elaborate",
+                                    placeholder:
+                                        "Explain why you think your time out was unjustified",
+                                    style: "PARAGRAPH",
+                                    customId: "content",
+                                    required: true,
+                                },
+                            ],
+                        },
+                    ],
+                });
+                const int = await i
+                    .awaitModalSubmit({
+                        filter: (inte) => inte.customId === `appeal_${i.id}`,
+                        time: 600_000,
+                    })
+                    .catch(() => null);
+                if (!int) {
+                    await i.followUp({
+                        content: "Modal timed out",
+                        ephemeral: true,
+                    });
+                    return;
+                }
+                const appealEmbed = new MessageEmbed()
+                    .setColor(0x2f3136)
+                    .setAuthor({
+                        name: `${newMember.user.username} appealed their time out`,
+                        iconURL: newMember.user.displayAvatarURL({
+                            dynamic: true,
+                        }),
+                    })
+                    .setDescription(int.fields.getTextInputValue("content"))
+                    .setTimestamp()
+                    .addField("Offender", newMember.toString(), true)
+                    .addField("Moderator", lastLog.executor!.toString(), true);
+                if (reason) appealEmbed.addField("Time out reason", reason);
+                const optAppeal = await getSpecialChannel(
+                    newMember.guild.id,
+                    "appeals"
+                );
+                if (!optAppeal)
+                    throw new Error("There is not an appeals channel yet.");
+                const appealsChannel = optAppeal as TextChannel;
+                await appealsChannel.send({ embeds: [appealEmbed] });
+                appealButton.disabled = true;
+                await int.update({ components });
+            });
+            collector.on("end", async () => {
+                appealButton.disabled = true;
+                await dm.edit({ components });
+            });
         }
     },
 });

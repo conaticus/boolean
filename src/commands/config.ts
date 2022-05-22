@@ -37,6 +37,7 @@ const specChannels: APIApplicationCommandOptionChoice<string>[] = [
     "warnings",
     "logs",
     "roles",
+    "appeals",
 ].map((v) => ({
     name: v,
     value: v,
