@@ -64,6 +64,7 @@ class Verbal extends BotCommand {
                 If you believe this warning is unjustified, appeal using the button below.
             `);
         const appealButton = new MessageButton()
+            .setLabel("Appeal warning")
             .setEmoji("📜")
             .setCustomId("appeal_warning")
             .setStyle("PRIMARY");
@@ -98,9 +99,6 @@ class Verbal extends BotCommand {
             time: 600_000,
         });
         collector.once("end", async () => {
-            if (!dm.editable) {
-                return;
-            }
             appealButton.setDisabled(true);
             await dm.edit({ components });
         });
