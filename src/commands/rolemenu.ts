@@ -13,7 +13,7 @@ class RoleMe extends BotCommand {
     constructor() {
         super(
             new SlashCommandBuilder()
-                .setName("roleme")
+                .setName("rolemenu")
                 .setDescription("Give yourself a role.")
                 .toJSON(),
             {}
