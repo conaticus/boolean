@@ -57,7 +57,7 @@ class Verbal extends BotCommand {
 
         const dmEmbed = new MessageEmbed()
             .setColor("RED")
-            .setTitle("You have recieved a warning").setDescription(`
+            .setTitle("You have received a warning").setDescription(`
                 Reason: ${reason}
                 Moderator: ${interaction.member}
 
