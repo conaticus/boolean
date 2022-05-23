@@ -137,7 +137,7 @@ class Verbal extends BotCommand {
                 return;
             }
             const appealEmbed = new MessageEmbed()
-                .setColor(0x2f3136)
+                .setColor("YELLOW")
                 .setAuthor({
                     name: `${member.user.username} appealed their warning`,
                     iconURL: member.user.displayAvatarURL({
