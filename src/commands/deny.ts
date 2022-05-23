@@ -59,7 +59,7 @@ class Deny extends BotCommand {
                         })
                 )
                 .toJSON(),
-            { requiredPerms: ["ADMINISTRATOR"] }
+            { requiredPerms: ["MANAGE_ROLES"] }
         );
     }
 
