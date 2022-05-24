@@ -153,11 +153,10 @@ export default TypedEvent({
 
         // Timeout event (this doesn't go-to a log channel, instead their DM's)
         if (isDisabled) {
-            const durationMinutes = Math.round(
-                (newMember.communicationDisabledUntilTimestamp -
-                    lastLog.createdTimestamp) /
-                    60000
-            );
+            const durationMs =
+                newMember.communicationDisabledUntilTimestamp -
+                lastLog.createdTimestamp;
+            const durationMinutes = Math.round(durationMs / 60000);
             const durationUnits = [
                 [Math.floor(durationMinutes / 1440), "d"],
                 [Math.floor((durationMinutes % 1440) / 60), "h"],
@@ -194,7 +193,7 @@ Duration: ${durationFormatted} (<t:${Math.floor(
             if (!dm) return;
             const collector = dm.createMessageComponentCollector({
                 componentType: "BUTTON",
-                time: 600_000,
+                time: durationMs > 600_000 ? 600_000 : durationMs,
             });
             collector.on("collect", async (i) => {
                 await i.showModal({
@@ -232,7 +231,7 @@ Duration: ${durationFormatted} (<t:${Math.floor(
                 }
                 collector.stop();
                 const appealEmbed = new MessageEmbed()
-                    .setColor(0x2f3136)
+                    .setColor("ORANGE")
                     .setAuthor({
                         name: `${newMember.user.username} appealed their time out`,
                         iconURL: newMember.user.displayAvatarURL({
