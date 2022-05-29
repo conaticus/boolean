@@ -35,7 +35,7 @@ async function getChannelId(
     const client = getClient();
     const result = await client.specialChannel.findFirst({
         select: { channelId: true },
-        where: { label },
+        where: { guildId, label },
     });
     return result?.channelId || null;
 }
