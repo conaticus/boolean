@@ -241,7 +241,7 @@ export default class ModmailCommand extends BotCommand {
             await this.open(interaction);
             return;
         }
-        await interaction.deferReply();
+        await interaction.deferReply({ ephemeral: true });
         const ctx = await getModmailByInt(interaction);
         if (ctx === null) {
             throw new Error("This is not an active modmail channel.");
