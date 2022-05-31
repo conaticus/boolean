@@ -237,7 +237,6 @@ export default class ModmailCommand extends BotCommand {
         if (ctx === null) {
             throw new Error("This is not an active modmail channel.");
         }
-        console.debug(JSON.stringify(ctx));
 
         switch (subCmd) {
             case "close":
