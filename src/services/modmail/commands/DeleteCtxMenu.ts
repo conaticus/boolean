@@ -9,7 +9,7 @@ export default class ModmailDeleteContext extends BotCommand {
     constructor() {
         super(
             new ContextMenuCommandBuilder()
-                .setName("delete modmail message")
+                .setName("Delete Modmail")
                 .setType(ApplicationCommandType.Message)
                 .toJSON()
         );

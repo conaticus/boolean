@@ -16,7 +16,7 @@ export default class ModmailEditContext extends BotCommand {
     constructor() {
         super(
             new ContextMenuCommandBuilder()
-                .setName("edit modmail message")
+                .setName("Edit Modmail")
                 .setType(ApplicationCommandType.Message)
                 .toJSON()
         );

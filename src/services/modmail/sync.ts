@@ -1,7 +1,36 @@
 import { Modmail, ModmailMessage } from "@prisma/client";
-import { Message } from "discord.js";
+import { AnyChannel, Message } from "discord.js";
 import { editMessage, deleteMessage } from "./database";
-import { getCopies } from "./util";
+import { Bot } from "../../structures";
+
+type Copies = {
+    staffCopy?: Message;
+    memberCopy?: Message;
+};
+
+async function resolveMsg(
+    channel: AnyChannel | null,
+    id: string
+): Promise<Message | undefined> {
+    if (channel !== null && channel.isText()) {
+        const msg = await channel.messages.fetch(id);
+        return msg;
+    }
+    return undefined;
+}
+
+export async function getCopies(
+    ctx: Modmail,
+    msg: ModmailMessage
+): Promise<Copies> {
+    const bot = Bot.getInstance();
+    const user = await bot.users.fetch(ctx.memberId);
+    const dmChannel = await user.createDM();
+    const mmChannel = await bot.channels.fetch(ctx.channelId);
+    const memberCopy = await resolveMsg(dmChannel, msg.memberCopyId);
+    const staffCopy = await resolveMsg(mmChannel, msg.staffCopyId);
+    return { memberCopy, staffCopy };
+}
 
 export async function syncDelete(
     ctx: Modmail,

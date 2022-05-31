@@ -207,13 +207,13 @@ export default class ModmailCommand extends BotCommand {
         const sysMessage = getSystemEmbed(
             `The modmail has been closed.\n - Reason: ${reason}`
         );
+        await int.editReply("Closed.");
         if (mmChannel !== null) {
             await (mmChannel as TextChannel).send({ embeds: [sysMessage] });
             await mmChannel.delete();
         }
         await closeModmail(ctx.id);
         await dmChannel.send({ embeds: [sysMessage] });
-        await int.editReply("Closed.");
     }
 
     public async execute(interaction: CommandInteraction): Promise<void> {
