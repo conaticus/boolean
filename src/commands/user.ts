@@ -12,7 +12,7 @@ class Profile extends BotCommand {
                 .setDescription("Displays user's profile info.")
                 .addUserOption((option) =>
                     option
-                        .setName("user")
+                        .setName("target")
                         .setDescription("The user to display.")
                         .setRequired(false)
                 )
@@ -25,7 +25,8 @@ class Profile extends BotCommand {
         interaction: CommandInteraction<"cached">
     ): Promise<void> {
         const userId =
-            interaction.options.getUser("user")?.id || interaction.user.id;
+            interaction.options.getUser("target", false)?.id ||
+            interaction.user.id;
         const member = await interaction.guild.members
             .fetch(userId)
             .catch(() => null);
