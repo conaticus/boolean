@@ -7,31 +7,33 @@ import { TypedEvent } from "../types";
 export default TypedEvent({
     eventName: "interactionCreate",
     run: async (client: Bot, interaction: Interaction) => {
-        if (!interaction.inCachedGuild()) {
-            return;
-        }
-
         if (interaction.isCommand() || interaction.isContextMenu()) {
             const command = client.commands.get(interaction.commandName);
             if (!command) {
                 return;
             }
 
-            if (
-                command.requiredPerms &&
-                !interaction.member.permissions.has(command.requiredPerms)
-            ) {
-                const invalidPermissionsEmbed = new MessageEmbed()
-                    .setColor("RED")
-                    .setTitle("Command Failed")
-                    .setDescription(
-                        "You have insufficient permissions to use this command."
-                    );
-                await interaction.reply({
-                    embeds: [invalidPermissionsEmbed],
-                    ephemeral: true,
-                });
-                return;
+            if (command.requiredPerms) {
+                if (!interaction.inCachedGuild()) {
+                    return;
+                }
+                const hasPerms = interaction.member.permissions.has(
+                    command.requiredPerms
+                );
+                if (!hasPerms) {
+                    const invalidPermissionsEmbed = new MessageEmbed()
+                        .setColor("RED")
+                        .setTitle("Command Failed")
+                        .setDescription(
+                            "You have insufficient permissions to use" +
+                                " this command."
+                        );
+                    await interaction.reply({
+                        embeds: [invalidPermissionsEmbed],
+                        ephemeral: true,
+                    });
+                    return;
+                }
             }
 
             try {
@@ -69,6 +71,9 @@ export default TypedEvent({
             const roleLists = await getRoleLists(interaction.guildId || "");
 
             if (roleLists.every((e) => e.title !== interaction.customId)) {
+                return;
+            }
+            if (!interaction.inCachedGuild()) {
                 return;
             }
 
