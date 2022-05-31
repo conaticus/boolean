@@ -8,6 +8,7 @@ import { getClient } from "./index";
  * * Announcements -> Posting messages as the bot for an announcements channel
  * * Information -> Like a "rules" channel
  * * Log -> A logger channel
+ * * Modmail -> For communicating between a community member and staff
  * * Roles -> A channel to role yourself (for every user)
  * * Warn -> A warnings report channel
  * * Welcome -> Welcome new users via message in a specific channel
@@ -21,7 +22,8 @@ export type SpecialChannel =
     | "warnings"
     | "logs"
     | "roles"
-    | "appeals";
+    | "appeals"
+    | "modmail";
 
 /**
  * Utility function of getSpecialChannel
@@ -42,26 +44,27 @@ async function getChannelId(
 
 /**
  * The bot has special channels that it interacts with either based on an
- * event or a command execution. Checkout the SpecialChannel type to see
+ * event or a command execution. Check out the SpecialChannel type to see
  * the possible channels. Most of them will speak for themselves, but the code
  * that utilizes them is scattered (mostly in commands and events).
  * @param {string} guildId
  * @param {string} label
+ * @returns {Promise<T | null>}
  */
-export async function getSpecialChannel(
+export async function getSpecialChannel<T extends AnyChannel>(
     guildId: string,
     label: SpecialChannel
-): Promise<AnyChannel | null> {
+): Promise<T | null> {
     const bot = Bot.getInstance();
     const channelId = await getChannelId(guildId, label);
     if (channelId === null) {
         return null;
     }
     const channel = await bot.channels.fetch(channelId);
-    if (channel === undefined) {
+    if (!channel) {
         return null;
     }
-    return channel;
+    return channel as T;
 }
 
 export async function setSpecialChannel(

@@ -5,6 +5,7 @@ import { GuildAuditLogs } from "discord.js";
 import { commandFiles } from "../files";
 import { Bot, BotCommand } from "../structures";
 import { TypedEvent } from "../types";
+import modmailCmds from "../services/modmail";
 
 export default TypedEvent({
     eventName: "ready",
@@ -12,28 +13,44 @@ export default TypedEvent({
     run: async (client: Bot) => {
         client.logger.console.info(`Logged in as ${client.user?.tag}.`);
 
-        const commandArr: BotCommand[] = [];
+        const commandArr: BotCommand[] = [
+            // HACK(dylhack): this is a little hack to get modmail up and
+            //                working. it's possibly not a preferable way of
+            //                doing this.
+            ...modmailCmds(),
+        ];
 
+        let tasks: Promise<unknown>[] = [];
         for (let i = 0; i < commandFiles.length; i += 1) {
             const file = commandFiles[i];
-            // eslint-disable-next-line no-await-in-loop
-            const command = (await import(file)).default as BotCommand;
-            if (command === undefined) {
-                console.error(
-                    `File at path ${file} seems to incorrectly be exporting a command.`
-                );
-            } else {
-                commandArr.push(command);
-                client.commands.set(command.data.name, command);
-                client.logger.console.debug(
-                    `Registered command ${command.data.name}`
-                );
-            }
+            const task = import(file);
+            task.then((module) => {
+                const command = module.default as BotCommand;
+                if (command === undefined) {
+                    console.error(
+                        `File at path ${file} seems to incorrectly` +
+                            " be exporting a command."
+                    );
+                } else {
+                    commandArr.push(command);
+                }
+            });
+            tasks.push(task);
+        }
+
+        await Promise.all(tasks);
+
+        for (let i = 0; i < commandArr.length; i += 1) {
+            const command = commandArr[i];
+            client.commands.set(command.data.name, command);
+            client.logger.console.debug(
+                `Registered command ${command.data.name}`
+            );
         }
 
         const payload = commandArr.map((cmd) => cmd.data);
 
-        let tasks: Promise<unknown>[] = [];
+        tasks = [];
         client.guilds.cache.forEach((guild) => {
             const task = guild
                 .fetchAuditLogs({
@@ -45,7 +62,8 @@ export default TypedEvent({
                         guild.id,
                         audits?.entries.first()
                     );
-                });
+                })
+                .catch(() => null);
             tasks.push(task);
         });
         await Promise.all(tasks);

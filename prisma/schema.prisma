@@ -42,3 +42,49 @@ model SpecialRole {
   roleId  String
   id      String @id @default(uuid())
 }
+
+model ModmailMessage {
+  guildId      String
+  channelId    String?
+  content      String
+  modmail      Modmail             @relation(fields: [modmailId], references: [id])
+  modmailId    String
+  senderId     String
+  deleted      Boolean             @default(false)
+  // This is the member's copy of the message
+  memberCopyId String
+  // This is the staff's copy of the message
+  staffCopyId  String
+  // Database copy
+  id           String              @id @default(uuid())
+  edits        ModmailEdit[]
+  attachments  ModmailAttachment[]
+}
+
+model ModmailAttachment {
+  message   ModmailMessage @relation(fields: [messageId], references: [id])
+  messageId String
+  url       String
+  name      String
+  id        String         @id @default(uuid())
+}
+
+model ModmailEdit {
+  message   ModmailMessage @relation(fields: [messageId], references: [id])
+  messageId String
+  content   String
+  iteration Int
+  id        String         @id @default(uuid())
+}
+
+model Modmail {
+  guildId   String
+  channelId String
+  // The community member involved.
+  memberId  String
+  // The user that created the modmail
+  authorId  String
+  messages  ModmailMessage[]
+  closed    Boolean          @default(false)
+  id        String           @id @default(uuid())
+}
