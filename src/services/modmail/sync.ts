@@ -7,7 +7,7 @@ export async function syncDelete(
     ctx: Modmail,
     msg: ModmailMessage
 ): Promise<void> {
-    await deleteMessage(ctx.id);
+    await deleteMessage(msg.id);
     const c = await getCopies(ctx, msg);
     console.debug(c);
     if (c.memberCopy && c.memberCopy.deletable) {
@@ -32,7 +32,7 @@ export async function syncEdit(
     msg: ModmailMessage,
     newContent: string
 ): Promise<void> {
-    await editMessage(ctx.id, newContent);
+    await editMessage(msg.id, newContent);
     const c = await getCopies(ctx, msg);
     console.debug(c);
     if (c.memberCopy && c.memberCopy.editable) {
