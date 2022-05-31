@@ -19,27 +19,20 @@ async function resolveMsg(
     return undefined;
 }
 
-async function fillMessage(
-    ctx: Modmail,
-    raw: ModmailMessage
-): Promise<FullModmailMessage> {
-    const bot = Bot.getInstance();
-    const user = await bot.users.fetch(ctx.authorId);
-    const dmChannel = await user.createDM();
-    const mmChannel = await bot.channels.fetch(ctx.channelId);
+function fillMessage(ctx: Modmail, raw: ModmailMessage): FullModmailMessage {
     const full: FullModmailMessage = {
         ...raw,
+        getCopies: async () => {
+            const bot = Bot.getInstance();
+            const user = await bot.users.fetch(ctx.authorId);
+            const dmChannel = await user.createDM();
+            const mmChannel = await bot.channels.fetch(ctx.channelId);
+            const memberCopy = await resolveMsg(dmChannel, full.memberCopyId);
+            const staffCopy = await resolveMsg(mmChannel, full.memberCopyId);
+            return { memberCopy, staffCopy };
+        },
     };
-    const tasks = [
-        resolveMsg(dmChannel, full.memberCopyId).then((msg?: Message) => {
-            full.memberCopy = msg;
-        }),
-        resolveMsg(mmChannel, full.staffCopyId).then((msg?: Message) => {
-            full.staffCopy = msg;
-        }),
-    ];
 
-    await Promise.all(tasks);
     return full;
 }
 
@@ -103,7 +96,7 @@ export async function getMessage(
     if (raw === null) {
         return raw;
     }
-    const full = await fillMessage(modmail, raw);
+    const full = fillMessage(modmail, raw);
     return full;
 }
 
@@ -129,7 +122,6 @@ export async function getModmail(
         return null;
     }
 
-    const tasks: Promise<unknown>[] = [];
     const fullModmail: FullModmail = {
         ...modmail,
         messages: [],
@@ -137,14 +129,9 @@ export async function getModmail(
 
     for (let i = 0; i < modmail.messages.length; i += 1) {
         const rawMsg = modmail.messages[i];
-        const task = fillMessage(modmail, rawMsg);
-        task.then((full) => {
-            fullModmail.messages.push(full);
-        });
-        tasks.push(task);
+        const full = fillMessage(modmail, rawMsg);
+        fullModmail.messages.push(full);
     }
-
-    await Promise.all(tasks);
 
     return fullModmail;
 }

@@ -4,11 +4,12 @@ import { FullModmailMessage } from "./types";
 
 export async function syncDelete(ctx: FullModmailMessage): Promise<void> {
     await deleteMessage(ctx.id);
-    if (ctx.memberCopy && ctx.memberCopy.deletable) {
-        await ctx.memberCopy.delete();
+    const c = await ctx.getCopies();
+    if (c.memberCopy && c.memberCopy.deletable) {
+        await c.memberCopy.delete();
     }
-    if (ctx.staffCopy && ctx.staffCopy.deletable) {
-        await ctx.staffCopy.delete();
+    if (c.staffCopy && c.staffCopy.deletable) {
+        await c.staffCopy.delete();
     }
 }
 
@@ -26,10 +27,11 @@ export async function syncEdit(
     newContent: string
 ): Promise<void> {
     await editMessage(ctx.id, newContent);
-    if (ctx.memberCopy && ctx.memberCopy.editable) {
-        await updateEmbed(ctx.memberCopy, newContent);
+    const c = await ctx.getCopies();
+    if (c.memberCopy && c.memberCopy.editable) {
+        await updateEmbed(c.memberCopy, newContent);
     }
-    if (ctx.staffCopy && ctx.staffCopy.editable) {
-        await updateEmbed(ctx.staffCopy, newContent);
+    if (c.staffCopy && c.staffCopy.editable) {
+        await updateEmbed(c.staffCopy, newContent);
     }
 }

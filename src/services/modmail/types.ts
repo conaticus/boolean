@@ -1,12 +1,16 @@
 import { ModmailMessage, Modmail } from "@prisma/client";
 import { Message } from "discord.js";
 
+type Copies = {
+    staffCopy?: Message;
+    memberCopy?: Message;
+};
+
 /**
  * This represents a message that holds the three copies that exist.
  */
 export interface FullModmailMessage extends ModmailMessage {
-    staffCopy?: Message;
-    memberCopy?: Message;
+    getCopies: () => Promise<Copies>;
 }
 
 /**
