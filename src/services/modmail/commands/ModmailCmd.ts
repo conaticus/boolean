@@ -199,7 +199,7 @@ export default class ModmailCommand extends BotCommand {
             int.user.id,
             target.id
         );
-        await int.reply("Modmail opened.");
+        await int.reply({ content: "Modmail opened.", ephemeral: true });
         const dmMessage = getSystemEmbed(
             "New Modmail",
             "You can reply by typing `/modmail reply`"
