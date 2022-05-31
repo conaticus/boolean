@@ -47,7 +47,7 @@ export default class ModmailCommand extends BotCommand {
                                     "Open a modmail for this member" +
                                         " (staff only)."
                                 )
-                                .setRequired(true)
+                                .setRequired(false)
                         )
                 )
                 .addSubcommand((sub: SlashCommandSubcommandBuilder) =>
