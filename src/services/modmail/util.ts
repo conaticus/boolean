@@ -13,19 +13,6 @@ import { Bot } from "../../structures";
 
 const IMAGE_REGEX = /\.|jpe?g|tiff?|png|gif|webp|bmp$/i;
 
-export function getSystemEmbed(title: string, content: string): MessageEmbed {
-    const bot = Bot.getInstance();
-    return new MessageEmbed()
-        .setTitle(title)
-        .setColor(systemColor)
-        .setDescription(content)
-        .setAuthor({
-            name: bot.user.tag,
-            iconURL: bot.user.avatarURL() || bot.user.defaultAvatarURL,
-        })
-        .setTimestamp();
-}
-
 export function getEmbed(
     guild: Guild,
     author: User,
@@ -74,6 +61,19 @@ export function getEmbed(
         .setTimestamp();
 }
 
+export function getSystemEmbed(title: string, content: string): MessageEmbed {
+    const bot = Bot.getInstance();
+    return new MessageEmbed()
+        .setTitle(title)
+        .setColor(systemColor)
+        .setDescription(content)
+        .setAuthor({
+            name: bot.user.tag,
+            iconURL: bot.user.avatarURL() || bot.user.defaultAvatarURL,
+        })
+        .setTimestamp();
+}
+
 export function getStaffEmbed(
     guild: Guild,
     author: User,
@@ -90,6 +90,11 @@ export function getStaffEmbed(
     return [regular, anonymous];
 }
 
+/**
+ * Get an active Modmail based on the current interaction.
+ * @param {BaseCommandInteraction} interaction
+ * @returns {Promise<FullModmail | null>}
+ */
 export async function getModmailByInt(
     interaction: BaseCommandInteraction
 ): Promise<FullModmail | null> {

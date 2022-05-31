@@ -32,6 +32,12 @@ export async function getCopies(
     return { memberCopy, staffCopy };
 }
 
+/**
+ * Sync the deletion of a message between the member and staff copy.
+ * @param {Modmail} ctx
+ * @param {ModmailMessage} msg
+ * @returns {Promise<void>}
+ */
 export async function syncDelete(
     ctx: Modmail,
     msg: ModmailMessage
@@ -56,6 +62,13 @@ async function updateEmbed(msg: Message, newContent: string): Promise<void> {
     await msg.edit({ embeds: [embed] });
 }
 
+/**
+ * Sync the edits of a message between the member and staff copy.
+ * @param {Modmail} ctx
+ * @param {ModmailMessage} msg
+ * @param {string} newContent
+ * @returns {Promise<void>}
+ */
 export async function syncEdit(
     ctx: Modmail,
     msg: ModmailMessage,

@@ -2,6 +2,12 @@ import { Modmail, ModmailMessage, Prisma } from "@prisma/client";
 import { MessageAttachment } from "discord.js";
 import { getClient } from "../../database";
 
+/**
+ * This will store an attachment that is associated with a ModmailMessage
+ * @param {ModmailMessage} ctx
+ * @param {MessageAttachment} attachment
+ * @returns {Promise<void>}
+ */
 export async function storeAttachment(
     ctx: ModmailMessage,
     attachment: MessageAttachment
@@ -18,6 +24,13 @@ export async function storeAttachment(
     });
 }
 
+/**
+ * We do not edit our original contents of a message, instead we
+ * store the edit in an edits table for historical purposes.
+ * @param {string} msgId
+ * @param {string} newContent
+ * @returns {Promise<void>}
+ */
 export async function editMessage(
     msgId: string,
     newContent: string
@@ -37,6 +50,12 @@ export async function editMessage(
     });
 }
 
+/**
+ * We don't delete messages. Instead we mark the message in our database as
+ * deleted.
+ * @param {string} msgId
+ * @returns {Promise<void>}
+ */
 export async function deleteMessage(msgId: string): Promise<void> {
     const client = getClient();
     await client.modmailMessage.update({
@@ -47,9 +66,18 @@ export async function deleteMessage(msgId: string): Promise<void> {
     });
 }
 
+type FullMessage = Prisma.ModmailMessageGetPayload<{
+    include: { attachments: true; edits: true };
+}>;
+
+/**
+ * This will include the message's attachments and edits. If the message
+ * queried doesn't resolve then null is returned.
+ * @returns {Promise<FullMessage | null>
+ */
 export async function getMessage(
     where: Prisma.ModmailMessageWhereInput
-): Promise<ModmailMessage | null> {
+): Promise<FullMessage | null> {
     const client = getClient();
     const raw = await client.modmailMessage.findFirst({
         where,
@@ -67,6 +95,12 @@ export async function getMessage(
 export type FullModmail = Prisma.ModmailGetPayload<{
     include: { messages: true };
 }>;
+
+/**
+ * This will resolve all of the messages with the modmail.
+ * @param {Prisma.ModmailWhereInput} where Prisma SQL query
+ * @returns {Promise<FullModmail | null>}
+ */
 export async function getModmail(
     where: Prisma.ModmailWhereInput
 ): Promise<FullModmail | null> {
