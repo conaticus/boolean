@@ -38,14 +38,6 @@ class Verbal extends BotCommand {
     public async execute(
         interaction: CommandInteraction<"cached">
     ): Promise<void> {
-        const optWarnings = await getSpecialChannel(
-            interaction.guildId,
-            "warnings"
-        );
-        if (optWarnings === null) {
-            throw new Error("There is not a warnings channel yet.");
-        }
-        const warnChannel = optWarnings as TextChannel;
         const member = interaction.options.getMember("user", true);
         const reason = interaction.options.getString("reason", true);
 
@@ -75,19 +67,8 @@ class Verbal extends BotCommand {
             .send({ embeds: [dmEmbed], components })
             .catch(() => null);
         const close = async () => {
-            await warnChannel.send({
-                embeds: [warnEmbed],
-            });
-
-            const successMessageEmbed = new MessageEmbed()
-                .setColor("GREEN")
-                .setDescription(
-                    `Warning successfully issued at ${warnChannel}`
-                );
-
             await interaction.reply({
-                embeds: [successMessageEmbed],
-                ephemeral: true,
+                embeds: [warnEmbed],
             });
         };
         if (!dm) {
