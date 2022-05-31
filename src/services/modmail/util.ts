@@ -51,21 +51,17 @@ export function getEmbed(
         if (attachment.height !== null) {
             if (isImage) {
                 embed.setImage(attachment.url);
-            } else {
-                // NOTE(dylhack): there isn't a setter (apart from the constructor)
-                //                for setting the video.
-                // @ts-ignore
+            } /* else {
+                // NOTE(dylhack): This will work when videos work.
                 embed.video = {
                     url: attachment.url,
                     height: attachment.height,
                     width: attachment.width,
                 };
             }
-        } else {
-            desc += ` - [${attachment.name || "untitled"}](${
-                attachment.url
-            })\n`;
+            */
         }
+        desc += ` - [${name || "untitled"}](${attachment.url})\n`;
     }
     return embed
         .setTitle("Message")
