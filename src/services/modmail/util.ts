@@ -11,6 +11,8 @@ import { FullModmail, FullModmailMessage } from "./types";
 import { getModmail } from "./database";
 import { Bot } from "../../structures";
 
+const IMAGE_REGEX = /\.|jpe?g|tiff?|png|gif|webp|bmp$/i;
+
 export function getSystemEmbed(content: string): MessageEmbed {
     const bot = Bot.getInstance();
     return new MessageEmbed()
@@ -40,11 +42,25 @@ export function getEmbed(
     let desc = content;
     for (let i = 0; i < attachments.length; i += 1) {
         const attachment = attachments[i];
+        const name = attachment.name || "untitled";
+        const ext = name.substring(name.lastIndexOf(".") + 1);
+        const isImage = IMAGE_REGEX.test(ext);
         if (i === 0) {
             desc += "\n\n**Attachments**\n";
         }
         if (attachment.height !== null) {
-            embed.setImage(attachment.url);
+            if (isImage) {
+                embed.setImage(attachment.url);
+            } else {
+                // NOTE(dylhack): there isn't a setter (apart from the constructor)
+                //                for setting the video.
+                // @ts-ignore
+                embed.video = {
+                    url: attachment.url,
+                    height: attachment.height,
+                    width: attachment.width,
+                };
+            }
         } else {
             desc += ` - [${attachment.name || "untitled"}](${
                 attachment.url
