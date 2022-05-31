@@ -28,6 +28,7 @@ export default class ModmailEditContext extends BotCommand {
         const textC = new TextInputComponent()
             .setCustomId("new_content")
             .setLabel("What is your new message?")
+            .setValue(msg.content)
             .setStyle("PARAGRAPH");
         const actionRow = new MessageActionRow({ components: [textC] });
         const modal = new Modal()
