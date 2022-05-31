@@ -25,12 +25,8 @@ async function resolveMsg(
     id: string
 ): Promise<Message | undefined> {
     if (channel !== null && channel.isText()) {
-        try {
-            const msg = await channel.messages.fetch(id);
-            return msg;
-        } catch (_) {
-            return undefined;
-        }
+        const msg = await channel.messages.fetch(id);
+        return msg;
     }
     return undefined;
 }
@@ -44,7 +40,7 @@ export async function getCopies(
     const dmChannel = await user.createDM();
     const mmChannel = await bot.channels.fetch(ctx.channelId);
     const memberCopy = await resolveMsg(dmChannel, msg.memberCopyId);
-    const staffCopy = await resolveMsg(mmChannel, msg.memberCopyId);
+    const staffCopy = await resolveMsg(mmChannel, msg.staffCopyId);
     return { memberCopy, staffCopy };
 }
 
