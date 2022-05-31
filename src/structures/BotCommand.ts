@@ -1,5 +1,5 @@
 import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
-import { CommandInteraction, PermissionResolvable } from "discord.js";
+import { BaseCommandInteraction, PermissionResolvable } from "discord.js";
 
 import Bot from "./Bot";
 
@@ -25,7 +25,7 @@ export default abstract class BotCommand {
     }
 
     public abstract execute(
-        interaction: CommandInteraction<"cached">,
+        interaction: BaseCommandInteraction,
         client: Bot
     ): Promise<void>;
 }

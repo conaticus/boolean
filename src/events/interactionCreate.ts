@@ -11,7 +11,7 @@ export default TypedEvent({
             return;
         }
 
-        if (interaction.isCommand()) {
+        if (interaction.isCommand() || interaction.isContextMenu()) {
             const command = client.commands.get(interaction.commandName);
             if (!command) {
                 return;
