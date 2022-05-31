@@ -10,6 +10,12 @@ class Profile extends BotCommand {
             new SlashCommandBuilder()
                 .setName("user")
                 .setDescription("Displays user's profile info.")
+                .addUserOption((option) =>
+                    option
+                        .setName("user")
+                        .setDescription("The user to display.")
+                        .setRequired(false)
+                )
                 .toJSON(),
             {}
         );
@@ -19,8 +25,7 @@ class Profile extends BotCommand {
         interaction: CommandInteraction<"cached">
     ): Promise<void> {
         const userId =
-            (interaction.options.get("user")?.value as string) ||
-            interaction.user.id;
+            interaction.options.getUser("user")?.id || interaction.user.id;
         const member = await interaction.guild.members
             .fetch(userId)
             .catch(() => null);
