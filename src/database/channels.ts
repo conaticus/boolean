@@ -19,7 +19,6 @@ export type SpecialChannel =
     | "information"
     | "suggestions"
     | "welcomes"
-    | "warnings"
     | "logs"
     | "roles"
     | "appeals"
