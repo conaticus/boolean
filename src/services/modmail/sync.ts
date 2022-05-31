@@ -5,6 +5,7 @@ import { FullModmailMessage } from "./types";
 export async function syncDelete(ctx: FullModmailMessage): Promise<void> {
     await deleteMessage(ctx.id);
     const c = await ctx.getCopies();
+    console.debug(c);
     if (c.memberCopy && c.memberCopy.deletable) {
         await c.memberCopy.delete();
     }
@@ -28,6 +29,7 @@ export async function syncEdit(
 ): Promise<void> {
     await editMessage(ctx.id, newContent);
     const c = await ctx.getCopies();
+    console.debug(c);
     if (c.memberCopy && c.memberCopy.editable) {
         await updateEmbed(c.memberCopy, newContent);
     }

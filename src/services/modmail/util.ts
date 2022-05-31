@@ -99,13 +99,9 @@ export async function getMessageByAuthor(
         throw new Error("There isn't an active modmail here.");
     }
 
-    console.debug(modmail);
     let msg: FullModmailMessage | null = null;
     for (let i = 0; i < modmail.messages.length; i += 1) {
         const message = modmail.messages[i];
-        console.log(
-            `${targetId} | ${message.staffCopyId} | ${message.memberCopyId}`
-        );
         if (message.senderId === int.user.id) {
             if (
                 message.staffCopyId === targetId ||
