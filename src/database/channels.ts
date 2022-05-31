@@ -81,5 +81,17 @@ export async function setSpecialChannel(
                 label,
             },
         });
+    } else {
+        await client.specialChannel.updateMany({
+            where: {
+                guildId,
+                label,
+            },
+            data: {
+                channelId,
+                guildId,
+                label,
+            },
+        });
     }
 }
