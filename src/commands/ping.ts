@@ -21,7 +21,7 @@ class Ping extends BotCommand {
             .setTitle("Ping")
             .setDescription(`API Latency: \`${interaction.client.ws.ping}\`ms`)
             .setColor("ORANGE");
-        interaction.reply({ embeds: [embed] });
+        interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
     private setTimeout(sec: number): Promise<void> {

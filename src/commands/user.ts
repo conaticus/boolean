@@ -87,7 +87,7 @@ class Profile extends BotCommand {
                     ? member.roles.highest.color
                     : "BLUE"
             );
-        await interaction.reply({ embeds: [embed] });
+        await interaction.reply({ embeds: [embed], ephemeral: true });
     }
 }
 
