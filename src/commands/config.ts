@@ -34,7 +34,6 @@ const specChannels: APIApplicationCommandOptionChoice<string>[] = [
     "information",
     "suggestions",
     "welcomes",
-    "warnings",
     "logs",
     "roles",
     "appeals",
