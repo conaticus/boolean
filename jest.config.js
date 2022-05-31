@@ -3,7 +3,7 @@
  * https://jestjs.io/docs/configuration
  */
 
-export default {
+module.exports = {
     preset: "ts-jest",
     clearMocks: true,
 };

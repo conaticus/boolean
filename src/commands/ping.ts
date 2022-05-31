@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 
 import { BotCommand } from "../structures";
 
@@ -17,20 +17,11 @@ class Ping extends BotCommand {
     public async execute(
         interaction: CommandInteraction<"cached">
     ): Promise<void> {
-        // NOTE(conaticus): This is purely for my own amusement
-        if (Math.random() < 0.9) {
-            await interaction.reply("Pong!");
-            return;
-        }
-
-        await interaction.reply("Overriding systems..");
-        interaction.channel?.send("Mwuhahahaha.");
-        await this.setTimeout(0.5);
-        interaction.channel?.send("Silly human.");
-        await this.setTimeout(1);
-        interaction.channel?.send("Think you can control me?");
-        await this.setTimeout(1);
-        interaction.channel?.send("Tactical nuke inbound.");
+        const embed = new MessageEmbed()
+            .setTitle("Ping")
+            .setDescription(`API Latency: \`${interaction.client.ws.ping}\`ms`)
+            .setColor("ORANGE");
+        interaction.reply({ embeds: [embed] });
     }
 
     private setTimeout(sec: number): Promise<void> {
