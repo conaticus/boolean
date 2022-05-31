@@ -20,7 +20,7 @@
         "@discordjs/builders": "^0.13.0",
         "@discordjs/rest": "^0.4.1",
         "@prisma/client": "^3.14.0",
-        "discord-api-types": "^0.33.0",
+        "discord-api-types": "^0.31.1",
         "discord.js": "^13.7.0",
         "pg": "^8.7.3",
         "pino": "^7.11.0",
