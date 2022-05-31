@@ -1,10 +1,14 @@
+import { Modmail, ModmailMessage } from "@prisma/client";
 import { Message } from "discord.js";
 import { editMessage, deleteMessage } from "./database";
-import { FullModmailMessage } from "./types";
+import { getCopies } from "./util";
 
-export async function syncDelete(ctx: FullModmailMessage): Promise<void> {
+export async function syncDelete(
+    ctx: Modmail,
+    msg: ModmailMessage
+): Promise<void> {
     await deleteMessage(ctx.id);
-    const c = await ctx.getCopies();
+    const c = await getCopies(ctx, msg);
     console.debug(c);
     if (c.memberCopy && c.memberCopy.deletable) {
         await c.memberCopy.delete();
@@ -24,11 +28,12 @@ async function updateEmbed(msg: Message, newContent: string): Promise<void> {
 }
 
 export async function syncEdit(
-    ctx: FullModmailMessage,
+    ctx: Modmail,
+    msg: ModmailMessage,
     newContent: string
 ): Promise<void> {
     await editMessage(ctx.id, newContent);
-    const c = await ctx.getCopies();
+    const c = await getCopies(ctx, msg);
     console.debug(c);
     if (c.memberCopy && c.memberCopy.editable) {
         await updateEmbed(c.memberCopy, newContent);

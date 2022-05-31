@@ -5,13 +5,48 @@ import {
     User,
     Guild,
     MessageAttachment,
+    AnyChannel,
+    Message,
 } from "discord.js";
+import { Modmail, ModmailMessage } from "@prisma/client";
 import { modColor, systemColor, userColor } from "./constants";
-import { FullModmail, FullModmailMessage } from "./types";
-import { getModmail } from "./database";
+import { FullModmail, getModmail } from "./database";
 import { Bot } from "../../structures";
 
 const IMAGE_REGEX = /\.|jpe?g|tiff?|png|gif|webp|bmp$/i;
+
+type Copies = {
+    staffCopy?: Message;
+    memberCopy?: Message;
+};
+
+async function resolveMsg(
+    channel: AnyChannel | null,
+    id: string
+): Promise<Message | undefined> {
+    if (channel !== null && channel.isText()) {
+        try {
+            const msg = await channel.messages.fetch(id);
+            return msg;
+        } catch (_) {
+            return undefined;
+        }
+    }
+    return undefined;
+}
+
+export async function getCopies(
+    ctx: Modmail,
+    msg: ModmailMessage
+): Promise<Copies> {
+    const bot = Bot.getInstance();
+    const user = await bot.users.fetch(ctx.authorId);
+    const dmChannel = await user.createDM();
+    const mmChannel = await bot.channels.fetch(ctx.channelId);
+    const memberCopy = await resolveMsg(dmChannel, msg.memberCopyId);
+    const staffCopy = await resolveMsg(mmChannel, msg.memberCopyId);
+    return { memberCopy, staffCopy };
+}
 
 export function getSystemEmbed(content: string): MessageEmbed {
     const bot = Bot.getInstance();
@@ -92,14 +127,14 @@ export async function getModmailByInt(
 
 export async function getMessageByAuthor(
     int: MessageContextMenuInteraction
-): Promise<FullModmailMessage> {
+): Promise<[Modmail, ModmailMessage]> {
     const modmail = await getModmailByInt(int);
     const targetId = int.targetMessage.id;
     if (modmail === null) {
         throw new Error("There isn't an active modmail here.");
     }
 
-    let msg: FullModmailMessage | null = null;
+    let msg: ModmailMessage | null = null;
     for (let i = 0; i < modmail.messages.length; i += 1) {
         const message = modmail.messages[i];
         if (message.senderId === int.user.id) {
@@ -119,5 +154,5 @@ export async function getMessageByAuthor(
         );
     }
 
-    return msg;
+    return [modmail, msg];
 }

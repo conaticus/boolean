@@ -10,8 +10,8 @@ import {
     SlashCommandBuilder,
     SlashCommandSubcommandBuilder,
 } from "@discordjs/builders";
+import { Modmail } from "@prisma/client";
 import { Bot, BotCommand } from "../../../structures";
-import { FullModmail } from "../types";
 import {
     closeModmail,
     countOpenModmails,
@@ -83,10 +83,7 @@ export default class ModmailCommand extends BotCommand {
         );
     }
 
-    private async reply(
-        int: CommandInteraction,
-        ctx: FullModmail
-    ): Promise<void> {
+    private async reply(int: CommandInteraction, ctx: Modmail): Promise<void> {
         const bot = Bot.getInstance();
         const user = await bot.users.fetch(ctx.memberId);
         const dmChannel = await user.createDM();
@@ -201,10 +198,7 @@ export default class ModmailCommand extends BotCommand {
         await dmChannel.send({ embeds: [dmMessage] });
     }
 
-    private async close(
-        int: CommandInteraction,
-        ctx: FullModmail
-    ): Promise<void> {
+    private async close(int: CommandInteraction, ctx: Modmail): Promise<void> {
         const bot = Bot.getInstance();
         const reason = int.options.getString("reason", false) || "No reason.";
         const user = await bot.users.fetch(ctx.memberId);

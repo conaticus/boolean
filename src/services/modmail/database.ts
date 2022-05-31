@@ -1,40 +1,6 @@
 import { Modmail, ModmailMessage, Prisma } from "@prisma/client";
-import { AnyChannel, Message, MessageAttachment } from "discord.js";
+import { MessageAttachment } from "discord.js";
 import { getClient } from "../../database";
-import { FullModmail, FullModmailMessage } from "./types";
-import { Bot } from "../../structures";
-
-async function resolveMsg(
-    channel: AnyChannel | null,
-    id: string
-): Promise<Message | undefined> {
-    if (channel !== null && channel.isText()) {
-        try {
-            const msg = await channel.messages.fetch(id);
-            return msg;
-        } catch (_) {
-            return undefined;
-        }
-    }
-    return undefined;
-}
-
-function fillMessage(ctx: Modmail, raw: ModmailMessage): FullModmailMessage {
-    const full: FullModmailMessage = {
-        ...raw,
-        getCopies: async () => {
-            const bot = Bot.getInstance();
-            const user = await bot.users.fetch(ctx.authorId);
-            const dmChannel = await user.createDM();
-            const mmChannel = await bot.channels.fetch(ctx.channelId);
-            const memberCopy = await resolveMsg(dmChannel, full.memberCopyId);
-            const staffCopy = await resolveMsg(mmChannel, full.memberCopyId);
-            return { memberCopy, staffCopy };
-        },
-    };
-
-    return full;
-}
 
 export async function storeAttachment(
     ctx: ModmailMessage,
@@ -82,9 +48,8 @@ export async function deleteMessage(msgId: string): Promise<void> {
 }
 
 export async function getMessage(
-    modmail: Modmail,
     where: Prisma.ModmailMessageWhereInput
-): Promise<FullModmailMessage | null> {
+): Promise<ModmailMessage | null> {
     const client = getClient();
     const raw = await client.modmailMessage.findFirst({
         where,
@@ -96,10 +61,12 @@ export async function getMessage(
     if (raw === null) {
         return raw;
     }
-    const full = fillMessage(modmail, raw);
-    return full;
+    return raw;
 }
 
+export type FullModmail = Prisma.ModmailGetPayload<{
+    include: { messages: true };
+}>;
 export async function getModmail(
     where: Prisma.ModmailWhereInput
 ): Promise<FullModmail | null> {
@@ -118,22 +85,8 @@ export async function getModmail(
             },
         },
     });
-    if (!modmail) {
-        return null;
-    }
 
-    const fullModmail: FullModmail = {
-        ...modmail,
-        messages: [],
-    };
-
-    for (let i = 0; i < modmail.messages.length; i += 1) {
-        const rawMsg = modmail.messages[i];
-        const full = fillMessage(modmail, rawMsg);
-        fullModmail.messages.push(full);
-    }
-
-    return fullModmail;
+    return modmail;
 }
 
 export async function openModmail(

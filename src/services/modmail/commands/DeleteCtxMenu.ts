@@ -16,8 +16,8 @@ export default class ModmailDeleteContext extends BotCommand {
     }
 
     public async execute(int: MessageContextMenuInteraction): Promise<void> {
-        const msg = await getMessageByAuthor(int);
-        await syncDelete(msg);
+        const [modmail, msg] = await getMessageByAuthor(int);
+        await syncDelete(modmail, msg);
         await int.reply({ content: "Deleted.", ephemeral: true });
     }
 }

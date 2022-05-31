@@ -23,7 +23,7 @@ export default class ModmailEditContext extends BotCommand {
     }
 
     public async execute(int: MessageContextMenuInteraction): Promise<void> {
-        const msg = await getMessageByAuthor(int);
+        const [modmail, msg] = await getMessageByAuthor(int);
         const bot = Bot.getInstance();
         const textC = new TextInputComponent()
             .setCustomId("new_content")
@@ -34,7 +34,7 @@ export default class ModmailEditContext extends BotCommand {
         const modal = new Modal()
             .setTitle("New Message")
             .addComponents(actionRow)
-            .setCustomId(`${int.id}`);
+            .setCustomId(int.id);
         const handle = async (i: Interaction) => {
             if (!i.isModalSubmit()) {
                 return;
@@ -45,7 +45,7 @@ export default class ModmailEditContext extends BotCommand {
             }
 
             const newContent = res.fields.getTextInputValue("new_content");
-            await syncEdit(msg, newContent);
+            await syncEdit(modmail, msg, newContent);
             await i.reply({ content: "Edited.", ephemeral: true });
 
             bot.removeListener("interactionCreate", handle);
