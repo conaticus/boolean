@@ -122,7 +122,7 @@ export default class ModmailCommand extends BotCommand {
             staffCopy.id,
             memberCopy.id
         );
-        await int.reply({ content: "Message sent.", ephemeral: true });
+        await int.editReply({ content: "Message sent." });
         if (attachment !== null) {
             await storeAttachment(msg, attachment);
         }
@@ -219,7 +219,7 @@ export default class ModmailCommand extends BotCommand {
         }
         await closeModmail(ctx.id);
         await dmChannel.send({ embeds: [sysMessage] });
-        await int.reply("Closed.");
+        await int.editReply("Closed.");
     }
 
     public async execute(interaction: CommandInteraction): Promise<void> {
@@ -228,12 +228,8 @@ export default class ModmailCommand extends BotCommand {
             await this.open(interaction);
             return;
         }
-        let ctx: FullModmail | null = null;
-        try {
-            ctx = await getModmailByInt(interaction);
-        } catch (_) {
-            ctx = null;
-        }
+        await interaction.deferReply();
+        const ctx = await getModmailByInt(interaction);
         if (ctx === null) {
             throw new Error("This is not an active modmail channel.");
         }
