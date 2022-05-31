@@ -20,7 +20,7 @@ import {
     storeAttachment,
     storeMsg,
 } from "../database";
-import { getEmbed, getModmailByInt } from "../util";
+import { getEmbed, getModmailByInt, getSystemEmbed } from "../util";
 import { getSpecialChannel } from "../../../database";
 import { maxModmails } from "../constants";
 
@@ -151,6 +151,7 @@ export default class ModmailCommand extends BotCommand {
         await this.checkUp(target, guild);
 
         const topic = int.options.getString("topic", false);
+        const dmChannel = await target.createDM();
         const modmailChan = await getSpecialChannel<TextChannel>(
             guild.id,
             "modmail"
@@ -177,11 +178,27 @@ export default class ModmailCommand extends BotCommand {
             int.user.id,
             target.id
         );
+        await int.reply("Modmail opened.");
+        const dmMessage = getSystemEmbed(
+            "A modmail has been created for you." +
+                `\n - Topic: ${topic}` +
+                `\n - Guild: ${guild.name}` +
+                "\n - You can reply by typing `/modmail reply`"
+        );
+        const mmMessage = getSystemEmbed(
+            "A modmail has been created." +
+                `\n - Topic: ${topic}` +
+                `\n - Modmail ID: ${modmail.id}` +
+                `\n - User ID: ${modmail.memberId}` +
+                `\n - Opened By: ${modmail.authorId}` +
+                "\n - You can reply to the user by typing `/modmail reply`"
+        );
         await channel.setTopic(
             `Topic: "${topic || "Not set."}"\nModmail ID: \`${modmail.id}\`` +
                 `\nUser ID: ${target.id}`
         );
-        await int.reply("Modmail opened.");
+        await channel.send({ embeds: [mmMessage] });
+        await dmChannel.send({ embeds: [dmMessage] });
     }
 
     private async close(
@@ -189,11 +206,19 @@ export default class ModmailCommand extends BotCommand {
         ctx: FullModmail
     ): Promise<void> {
         const bot = Bot.getInstance();
+        const reason = int.options.getString("reason", false) || "No reason.";
+        const user = await bot.users.fetch(ctx.memberId);
         const mmChannel = await bot.channels.fetch(ctx.channelId);
+        const dmChannel = await user.createDM();
+        const sysMessage = getSystemEmbed(
+            "The modmail has been closed." + `\n - Reason: ${reason}`
+        );
         if (mmChannel !== null) {
+            await (mmChannel as TextChannel).send({ embeds: [sysMessage] });
             await mmChannel.delete();
         }
         await closeModmail(ctx.id);
+        await dmChannel.send({ embeds: [sysMessage] });
         await int.reply("Closed.");
     }
 

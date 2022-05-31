@@ -6,9 +6,23 @@ import {
     Guild,
     MessageAttachment,
 } from "discord.js";
-import { modColor, userColor } from "./constants";
+import { modColor, systemColor, userColor } from "./constants";
 import { FullModmail, FullModmailMessage } from "./types";
 import { getModmail } from "./database";
+import { Bot } from "../../structures";
+
+export function getSystemEmbed(content: string): MessageEmbed {
+    const bot = Bot.getInstance();
+    return new MessageEmbed()
+        .setTitle("System Messsage")
+        .setColor(systemColor)
+        .setDescription(content)
+        .setAuthor({
+            name: bot.user.tag,
+            iconURL: bot.user.avatarURL() || bot.user.defaultAvatarURL,
+        })
+        .setTimestamp();
+}
 
 export function getEmbed(
     guild: Guild,
@@ -18,7 +32,11 @@ export function getEmbed(
     attachments: MessageAttachment[] = []
 ): MessageEmbed {
     const guildIcon = guild.iconURL() || undefined;
-    const embed = new MessageEmbed();
+    const embed = new MessageEmbed({
+        footer: {
+            iconURL: guildIcon,
+        },
+    });
     let desc = content;
     for (let i = 0; i < attachments.length; i += 1) {
         const attachment = attachments[i];
@@ -34,16 +52,14 @@ export function getEmbed(
         }
     }
     return embed
+        .setTitle("Message")
         .setDescription(desc)
         .setColor(isStaff ? modColor : userColor)
         .setAuthor({
             iconURL: !isStaff ? author.avatarURL() || undefined : guildIcon,
-            name: !isStaff ? author.tag : "Staff",
+            name: !isStaff ? author.tag : `${guild.name} Staff`,
         })
-        .setFooter({
-            text: guild.name,
-            iconURL: guildIcon || undefined,
-        });
+        .setTimestamp();
 }
 
 export async function getModmailByInt(
