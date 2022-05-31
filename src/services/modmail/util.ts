@@ -13,10 +13,10 @@ import { Bot } from "../../structures";
 
 const IMAGE_REGEX = /\.|jpe?g|tiff?|png|gif|webp|bmp$/i;
 
-export function getSystemEmbed(content: string): MessageEmbed {
+export function getSystemEmbed(title: string, content: string): MessageEmbed {
     const bot = Bot.getInstance();
     return new MessageEmbed()
-        .setTitle("System Messsage")
+        .setTitle(title)
         .setColor(systemColor)
         .setDescription(content)
         .setAuthor({

@@ -201,18 +201,15 @@ export default class ModmailCommand extends BotCommand {
         );
         await int.reply("Modmail opened.");
         const dmMessage = getSystemEmbed(
-            "A modmail has been created for you." +
-                `\n - Topic: ${topic}` +
-                `\n - Guild: ${guild.name}` +
-                "\n - You can reply by typing `/modmail reply`"
+            "New Modmail",
+            "You can reply by typing `/modmail reply`"
         );
         const mmMessage = getSystemEmbed(
-            "A modmail has been created." +
-                `\n - Topic: ${topic}` +
-                `\n - Modmail ID: ${modmail.id}` +
-                `\n - User ID: ${modmail.memberId}` +
-                `\n - Opened By: ${modmail.authorId}` +
-                "\n - You can reply to the user by typing `/modmail reply`"
+            "New Modmail",
+            `\nTopic: \`${topic}\`` +
+                `\nModmail ID: \`${modmail.id}\`` +
+                `\nUser ID: \`${modmail.memberId}\`` +
+                `\nOpened By: \`${modmail.authorId}\``
         );
         await channel.setTopic(
             `Topic: "${topic || "Not set."}"\nModmail ID: \`${modmail.id}\`` +
@@ -228,9 +225,7 @@ export default class ModmailCommand extends BotCommand {
         const user = await bot.users.fetch(ctx.memberId);
         const mmChannel = await bot.channels.fetch(ctx.channelId);
         const dmChannel = await user.createDM();
-        const sysMessage = getSystemEmbed(
-            `The modmail has been closed.\n - Reason: ${reason}`
-        );
+        const sysMessage = getSystemEmbed("Modmail closed", reason);
         await int.editReply("Closed.");
         if (mmChannel !== null) {
             await (mmChannel as TextChannel).send({ embeds: [sysMessage] });
