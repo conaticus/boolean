@@ -5,8 +5,6 @@ import {
     User,
     Guild,
     MessageAttachment,
-    AnyChannel,
-    Message,
 } from "discord.js";
 import { Modmail, ModmailMessage } from "@prisma/client";
 import { modColor, systemColor, userColor } from "./constants";
@@ -14,35 +12,6 @@ import { FullModmail, getModmail } from "./database";
 import { Bot } from "../../structures";
 
 const IMAGE_REGEX = /\.|jpe?g|tiff?|png|gif|webp|bmp$/i;
-
-type Copies = {
-    staffCopy?: Message;
-    memberCopy?: Message;
-};
-
-async function resolveMsg(
-    channel: AnyChannel | null,
-    id: string
-): Promise<Message | undefined> {
-    if (channel !== null && channel.isText()) {
-        const msg = await channel.messages.fetch(id);
-        return msg;
-    }
-    return undefined;
-}
-
-export async function getCopies(
-    ctx: Modmail,
-    msg: ModmailMessage
-): Promise<Copies> {
-    const bot = Bot.getInstance();
-    const user = await bot.users.fetch(ctx.authorId);
-    const dmChannel = await user.createDM();
-    const mmChannel = await bot.channels.fetch(ctx.channelId);
-    const memberCopy = await resolveMsg(dmChannel, msg.memberCopyId);
-    const staffCopy = await resolveMsg(mmChannel, msg.staffCopyId);
-    return { memberCopy, staffCopy };
-}
 
 export function getSystemEmbed(content: string): MessageEmbed {
     const bot = Bot.getInstance();
@@ -103,6 +72,22 @@ export function getEmbed(
             name: !isStaff ? author.tag : `${guild.name} Staff`,
         })
         .setTimestamp();
+}
+
+export function getStaffEmbed(
+    guild: Guild,
+    author: User,
+    content: string,
+    isStaff: boolean,
+    attachments: MessageAttachment[] = []
+): [MessageEmbed, MessageEmbed] {
+    const anonymous = getEmbed(guild, author, content, isStaff, attachments);
+    const regular = getEmbed(guild, author, content, isStaff, attachments);
+    regular.setAuthor({
+        name: author.tag,
+        iconURL: author.avatarURL() || author.defaultAvatarURL,
+    });
+    return [regular, anonymous];
 }
 
 export async function getModmailByInt(

@@ -20,7 +20,12 @@ import {
     storeAttachment,
     storeMsg,
 } from "../database";
-import { getEmbed, getModmailByInt, getSystemEmbed } from "../util";
+import {
+    getEmbed,
+    getModmailByInt,
+    getStaffEmbed,
+    getSystemEmbed,
+} from "../util";
 import { getSpecialChannel } from "../../../database";
 import { maxModmails } from "../constants";
 
@@ -97,20 +102,39 @@ export default class ModmailCommand extends BotCommand {
         const attachment = int.options.getAttachment("attachment", false);
         const attachments: MessageAttachment[] =
             attachment !== null ? [attachment] : [];
-        const embed = getEmbed(
-            mmChannel.guild,
-            int.user,
-            content,
-            int.user.id !== ctx.memberId,
-            attachments
-        );
+        const isStaff = int.user.id !== ctx.memberId;
+        let memberCopy;
+        let staffCopy;
 
-        const memberCopy = await dmChannel.send({
-            embeds: [embed],
-        });
-        const staffCopy = await mmChannel.send({
-            embeds: [embed],
-        });
+        if (!isStaff) {
+            const embed = getEmbed(
+                mmChannel.guild,
+                int.user,
+                content,
+                isStaff,
+                attachments
+            );
+            memberCopy = await dmChannel.send({
+                embeds: [embed],
+            });
+            staffCopy = await mmChannel.send({
+                embeds: [embed],
+            });
+        } else {
+            const [regular, anonymous] = getStaffEmbed(
+                mmChannel.guild,
+                int.user,
+                content,
+                isStaff,
+                attachments
+            );
+            memberCopy = await dmChannel.send({
+                embeds: [anonymous],
+            });
+            staffCopy = await mmChannel.send({
+                embeds: [regular],
+            });
+        }
 
         const msg = await storeMsg(
             ctx,
