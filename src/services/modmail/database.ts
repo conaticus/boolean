@@ -112,7 +112,10 @@ export async function getModmail(
 ): Promise<FullModmail | null> {
     const client = getClient();
     const modmail = await client.modmail.findFirst({
-        where,
+        where: {
+            closed: false,
+            ...where,
+        },
         include: {
             messages: {
                 include: {
