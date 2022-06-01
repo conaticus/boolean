@@ -54,8 +54,13 @@ export default TypedEvent({
                             `\`\`\`\n${msg}\`\`\``
                     );
 
-                if (interaction.deferred || interaction.replied) {
+                if (interaction.deferred) {
                     await interaction.editReply({
+                        content: " ",
+                        embeds: [errorEmbed],
+                    });
+                } else if (interaction.replied) {
+                    await interaction.followUp({
                         content: " ",
                         embeds: [errorEmbed],
                     });
