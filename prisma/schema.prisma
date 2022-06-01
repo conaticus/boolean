@@ -43,6 +43,12 @@ model SpecialRole {
   id      String @id @default(uuid())
 }
 
+model Setting {
+  id String @id @default(uuid())
+  guildId String @unique
+  starboardThreshold Int
+}
+
 model ModmailMessage {
   guildId      String
   channelId    String?

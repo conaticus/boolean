@@ -22,7 +22,8 @@ export type SpecialChannel =
     | "logs"
     | "roles"
     | "appeals"
-    | "modmail";
+    | "modmail"
+    | "starboard";
 
 /**
  * Utility function of getSpecialChannel
@@ -75,6 +76,18 @@ export async function setSpecialChannel(
     const res = await getChannelId(guildId, label);
     if (res === null) {
         await client.specialChannel.create({
+            data: {
+                channelId,
+                guildId,
+                label,
+            },
+        });
+    } else {
+        await client.specialChannel.updateMany({
+            where: {
+                guildId,
+                label,
+            },
             data: {
                 channelId,
                 guildId,
