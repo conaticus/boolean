@@ -12,25 +12,25 @@ export default TypedEvent({
         const guildId = reaction.message.guild.id;
         const guildSettings = await getSettings(guildId);
 
-        if (reaction.count === guildSettings?.starboardThreshold) {
-            const channel = (await getSpecialChannel(
-                guildId,
-                "starboard"
-            )) as TextChannel | null;
+        if (reaction.count !== guildSettings?.starboardThreshold) return;
+    
+        const channel = (await getSpecialChannel(
+            guildId,
+            "starboard"
+        )) as TextChannel | null;
 
-            if (!channel) return;
+        if (!channel) return;
 
-            const starboardEmbed = new MessageEmbed()
-                .setAuthor({
-                    iconURL:
-                        reaction.message.member?.user.avatarURL() ||
-                        reaction.message.member?.user.defaultAvatarURL,
-                    name: reaction.message.member?.user.tag as string,
-                })
-                .setDescription(reaction.message.content as string)
-                .setColor("ORANGE");
+        const starboardEmbed = new MessageEmbed()
+            .setAuthor({
+                iconURL:
+                    reaction.message.member?.user.avatarURL() ||
+                    reaction.message.member?.user.defaultAvatarURL,
+                name: reaction.message.member?.user.tag as string,
+            })
+            .setDescription(reaction.message.content as string)
+            .setColor("ORANGE");
 
-            channel.send({ embeds: [starboardEmbed] });
-        }
+        channel.send({ embeds: [starboardEmbed] });
     },
 });
