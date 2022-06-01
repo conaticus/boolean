@@ -6,8 +6,7 @@ import { TypedEvent } from "../types";
 export default TypedEvent({
     eventName: "messageReactionAdd",
     run: async (_, reaction) => {
-        if (reaction.emoji.name !== "⭐") return;
-        if (!reaction.message.guild) return;
+        if (reaction.emoji.name !== "⭐" || !reaction.message.guild || !reaction.message.member) return;
 
         const guildId = reaction.message.guild.id;
         const guildSettings = await getSettings(guildId);
