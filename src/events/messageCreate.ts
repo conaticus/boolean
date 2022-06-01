@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
 
+import { updateLevels } from "../services/levels";
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
 import * as utils from "../utils";
@@ -23,5 +24,7 @@ export default TypedEvent({
         ) {
             await message.member?.timeout(600_000, "Mass mentions");
         }
+
+        await updateLevels(message.author.id);
     },
 });
