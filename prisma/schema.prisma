@@ -94,3 +94,10 @@ model Modmail {
   closed    Boolean          @default(false)
   id        String           @id @default(uuid())
 }
+
+model Starboard {
+  guildId String @unique
+  messageId String @unique
+  starboardMessageID String @unique
+  stars Int
+}
