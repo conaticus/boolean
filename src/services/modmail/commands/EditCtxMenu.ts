@@ -1,7 +1,6 @@
 import { ContextMenuCommandBuilder } from "@discordjs/builders";
 import { ApplicationCommandType } from "discord-api-types/v10";
 import {
-    Interaction,
     MessageActionRow,
     MessageContextMenuInteraction,
     Modal,
@@ -9,7 +8,7 @@ import {
     TextInputComponent,
 } from "discord.js";
 import { getMessageByAuthor } from "../util";
-import { Bot, BotCommand } from "../../../structures";
+import { BotCommand } from "../../../structures";
 import { syncEdit } from "../sync";
 
 export default class ModmailEditContext extends BotCommand {
@@ -24,7 +23,6 @@ export default class ModmailEditContext extends BotCommand {
 
     public async execute(int: MessageContextMenuInteraction): Promise<void> {
         const [modmail, msg] = await getMessageByAuthor(int);
-        const bot = Bot.getInstance();
         const textC = new TextInputComponent()
             .setCustomId("new_content")
             .setLabel("What is your new message?")
@@ -35,22 +33,13 @@ export default class ModmailEditContext extends BotCommand {
             .setTitle("New Message")
             .addComponents(actionRow)
             .setCustomId(int.id);
-        const handle = async (i: Interaction) => {
-            if (!i.isModalSubmit()) {
-                return;
-            }
-            const res = i as ModalSubmitInteraction;
-            if (res.customId !== modal.customId) {
-                return;
-            }
-
-            const newContent = res.fields.getTextInputValue("new_content");
-            await syncEdit(modmail, msg, newContent);
-            await i.reply({ content: "Edited.", ephemeral: true });
-
-            bot.removeListener("interactionCreate", handle);
-        };
-        bot.on("interactionCreate", handle);
         await int.showModal(modal);
+        const res = await int.awaitModalSubmit({
+            filter: (i: ModalSubmitInteraction) => i.customId === int.id,
+            time: 600_000,
+        });
+        const newContent = res.fields.getTextInputValue("new_content");
+        await syncEdit(modmail, msg, newContent);
+        await res.reply({ content: "Edited.", ephemeral: true });
     }
 }

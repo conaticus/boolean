@@ -20,9 +20,26 @@ class Announce extends BotCommand {
         );
     }
 
-    public async execute(
-        interaction: CommandInteraction<"cached">
-    ): Promise<void> {
+    public async execute(interaction: CommandInteraction): Promise<void> {
+        if (interaction.guildId === null) {
+            throw new Error("This belongs in a server.");
+        }
+        const optAnnounce = await getSpecialChannel(
+            interaction.guildId,
+            "announcements"
+        );
+        if (optAnnounce === null) {
+            throw new Error("There is not an announcements channel yet.");
+        }
+        const announcementsChannel = optAnnounce as TextChannel;
+        const announcementRole = await getSpecialRole(
+            interaction.guildId,
+            "announcements"
+        );
+        if (announcementRole === null) {
+            throw new Error("There is not an announcements role yet.");
+        }
+
         await interaction.showModal({
             customId: `announcement_${interaction.id}`,
             title: "Make an announcement",
@@ -77,22 +94,6 @@ class Announce extends BotCommand {
             .setDescription(
                 modalInteraction.fields.getTextInputValue("content")
             );
-
-        const optAnnounce = await getSpecialChannel(
-            interaction.guildId,
-            "announcements"
-        );
-        if (optAnnounce === null) {
-            throw new Error("There is not an announcements channel yet.");
-        }
-        const announcementsChannel = optAnnounce as TextChannel;
-        const announcementRole = await getSpecialRole(
-            interaction.guildId,
-            "announcements"
-        );
-        if (announcementRole === null) {
-            throw new Error("There is not an announcements role yet.");
-        }
 
         const successEmbed = new MessageEmbed()
             .setColor("GREEN")

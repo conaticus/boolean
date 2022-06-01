@@ -227,6 +227,7 @@ export default class ModmailCommand extends BotCommand {
         const dmChannel = await user.createDM();
         const sysMessage = getSystemEmbed("Modmail closed", reason);
         await int.editReply("Closed.");
+
         if (mmChannel !== null) {
             await (mmChannel as TextChannel).send({ embeds: [sysMessage] });
             await mmChannel.delete();
