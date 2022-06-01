@@ -15,6 +15,7 @@ import {
     SpecialRole,
 } from "../database";
 import { BotCommand } from "../structures";
+import { setSetting } from "../database/settings";
 
 const badges: APIApplicationCommandOptionChoice<string>[] = Object.keys(
     DEFAULT_BADGES
@@ -39,10 +40,15 @@ const specChannels: APIApplicationCommandOptionChoice<string>[] = [
     "roles",
     "appeals",
     "modmail",
+    "starboard",
 ].map((v) => ({
     name: v,
     value: v,
 }));
+
+const settings: APIApplicationCommandOptionChoice<string>[] = [
+    "starboardThreshold",
+].map((v) => ({ name: v, value: v }));
 
 class Config extends BotCommand {
     constructor() {
@@ -105,6 +111,17 @@ class Config extends BotCommand {
                                 .setRequired(true)
                         )
                 )
+                .addSubcommand((sub) =>
+                    sub
+                        .setName("starboardthreshold")
+                        .setDescription("Set the starboard threshold.")
+                        .addNumberOption((opt) =>
+                            opt
+                                .setName("value")
+                                .setDescription("The starboard threshold.")
+                                .setRequired(true)
+                        )
+                )
                 .toJSON(),
             { requiredPerms: ["ADMINISTRATOR"] }
         );
@@ -147,6 +164,14 @@ class Config extends BotCommand {
                 break;
             case "setrole":
                 await Config.setRole(guildId, interaction);
+                break;
+            case "starboardthreshold":
+                await setSetting(guildId, {
+                    starboardThreshold: interaction.options.getNumber(
+                        "value",
+                        true
+                    ),
+                });
                 break;
             default:
                 await interaction.reply("How did we get here?");
