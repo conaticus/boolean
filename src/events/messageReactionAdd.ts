@@ -1,5 +1,4 @@
-import { Message, MessageEmbed, TextChannel } from "discord.js";
-import { getSpecialChannel } from "../database";
+import { Message } from "discord.js";
 import { getSettings } from "../database/settings";
 import { addStarboard } from "../database/starboard";
 import { TypedEvent } from "../types";
