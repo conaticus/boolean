@@ -1,6 +1,15 @@
 import { getClient } from "../../database";
 import { getLevelEntry } from "../../database/levels";
 
+export async function isLevelCooldown(memberId: string): Promise<boolean> {
+    const result = await getLevelEntry(memberId);
+
+    if (result === null) return false;
+
+    const now = new Date();
+    return now.getSeconds() - result.lastTime.getSeconds() <= 60;
+}
+
 export async function upsertLevelEntry(
     memberId: string,
     exp: number
@@ -13,6 +22,7 @@ export async function upsertLevelEntry(
                 memberId,
                 level: 0,
                 exp,
+                lastTime: new Date(),
             },
         });
     } else {

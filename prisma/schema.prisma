@@ -100,4 +100,5 @@ model LevelEntry {
   memberId  String           @unique
   level     Int
   exp       Int
+  lastTime  DateTime
 }
