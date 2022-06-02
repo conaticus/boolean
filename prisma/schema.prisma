@@ -102,3 +102,10 @@ model LevelEntry {
   exp       Int
   lastTime  DateTime
 }
+
+model Starboard {
+  guildId String @unique
+  messageId String @unique
+  starboardMessageID String @unique
+  stars Int
+}
