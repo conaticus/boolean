@@ -10,7 +10,7 @@ import {
 import { getSpecialChannel } from "../database";
 import { BotCommand } from "../structures";
 
-class Verbal extends BotCommand {
+class Warnings extends BotCommand {
     constructor() {
         super(
             new SlashCommandBuilder()
@@ -147,4 +147,4 @@ class Verbal extends BotCommand {
     }
 }
 
-export default new Verbal();
+export default new Warnings();
