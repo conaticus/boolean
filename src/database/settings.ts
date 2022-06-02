@@ -1,5 +1,7 @@
 import { Prisma, Setting } from "@prisma/client";
+import { TextChannel } from "discord.js";
 import { getClient } from ".";
+import { getSpecialChannel } from "./channels";
 
 /**
  * Get all settings for a specific guild
@@ -45,4 +47,12 @@ export const setSetting = async (
             },
         });
     }
+
+    const starboardChannel = (await getSpecialChannel(
+        guildId,
+        "starboard"
+    )) as TextChannel;
+    starboardChannel.setTopic(
+        `a message requires ${settings.starboardThreshold} stars to make it to the starboard.`
+    );
 };
