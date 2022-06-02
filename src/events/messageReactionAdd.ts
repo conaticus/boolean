@@ -1,8 +1,9 @@
-import { Message } from "discord.js";
+import { Message, MessageReaction } from "discord.js";
 import { getSettings } from "../database/settings";
 import {
     addStarboard,
     incrementStarboardMessageInteraction,
+    updateStarboardStars,
 } from "../database/starboard";
 import { TypedEvent } from "../types";
 
@@ -24,12 +25,17 @@ export default TypedEvent({
             reaction.message.id,
             user.id
         );
+        await updateStarboardStars(
+            guildId,
+            <MessageReaction>reaction,
+            "increment"
+        );
 
         if (messageInteractions > 2) return;
 
         if (reaction.count !== guildSettings?.starboardThreshold) return;
 
         const userIds = reaction.users.cache.map((user) => user.id);
-        await addStarboard(guildId, reaction.message as Message, userIds);
+        await addStarboard(guildId, reaction, userIds);
     },
 });

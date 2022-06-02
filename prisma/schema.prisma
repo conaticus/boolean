@@ -98,9 +98,10 @@ model Modmail {
 model Starboard {
   guildId String @unique
   messageId String @unique
-  starboardMessageID String @unique
+  starboardMessageId String @unique
   stars Int
   users StarboardReactor[]
+  messageContent String
 }
 
 model StarboardReactor {

@@ -1,8 +1,10 @@
 import { Setting } from "@prisma/client";
+import { MessageReaction } from "discord.js";
 import { getSettings } from "../database/settings";
 import {
     incrementStarboardMessageInteraction,
     removeStarboard,
+    updateStarboardStars,
 } from "../database/starboard";
 import { TypedEvent } from "../types";
 
@@ -23,6 +25,11 @@ export default TypedEvent({
         const messageInteractions = await incrementStarboardMessageInteraction(
             reaction.message.id,
             user.id
+        );
+        await updateStarboardStars(
+            guildId,
+            <MessageReaction>reaction,
+            "decrement"
         );
 
         if (messageInteractions >= 2) return;
