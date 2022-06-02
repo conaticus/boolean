@@ -14,7 +14,7 @@ class Verbal extends BotCommand {
     constructor() {
         super(
             new SlashCommandBuilder()
-                .setName("verbal")
+                .setName("warn")
                 .setDescription(
                     "Warn members in a warnings channel about rule violations."
                 )
