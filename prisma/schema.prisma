@@ -100,4 +100,12 @@ model Starboard {
   messageId String @unique
   starboardMessageID String @unique
   stars Int
+  users StarboardReactor[]
+}
+
+model StarboardReactor {
+  id String @unique
+  messageInteractions Int @default(1) // total amount of times they have reacted or unreacted with a star
+  starboard Starboard? @relation(fields: [starboardId], references: [messageId])
+  starboardId String?
 }

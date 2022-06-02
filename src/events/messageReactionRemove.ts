@@ -1,11 +1,14 @@
 import { Setting } from "@prisma/client";
 import { getSettings } from "../database/settings";
-import { removeStarboard } from "../database/starboard";
+import {
+    incrementStarboardMessageInteraction,
+    removeStarboard,
+} from "../database/starboard";
 import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "messageReactionRemove",
-    run: async (_, reaction) => {
+    run: async (_, reaction, user) => {
         if (
             reaction.emoji.name !== "⭐" ||
             !reaction.message.guild ||
@@ -16,6 +19,13 @@ export default TypedEvent({
 
         const guildId = reaction.message.guild.id;
         const guildSettings = (await getSettings(guildId)) as Setting;
+
+        const messageInteractions = await incrementStarboardMessageInteraction(
+            reaction.message.id,
+            user.id
+        );
+
+        if (messageInteractions >= 2) return;
 
         if (
             reaction.count !== null &&

@@ -1,11 +1,14 @@
 import { Message } from "discord.js";
 import { getSettings } from "../database/settings";
-import { addStarboard } from "../database/starboard";
+import {
+    addStarboard,
+    incrementStarboardMessageInteraction,
+} from "../database/starboard";
 import { TypedEvent } from "../types";
 
 export default TypedEvent({
     eventName: "messageReactionAdd",
-    run: async (_, reaction) => {
+    run: async (_, reaction, user) => {
         if (
             reaction.emoji.name !== "⭐" ||
             !reaction.message.guild ||
@@ -17,8 +20,16 @@ export default TypedEvent({
         const guildId = reaction.message.guild.id;
         const guildSettings = await getSettings(guildId);
 
+        const messageInteractions = await incrementStarboardMessageInteraction(
+            reaction.message.id,
+            user.id
+        );
+
+        if (messageInteractions > 2) return;
+
         if (reaction.count !== guildSettings?.starboardThreshold) return;
 
-        await addStarboard(guildId, reaction.message as Message);
+        const userIds = reaction.users.cache.map((user) => user.id);
+        await addStarboard(guildId, reaction.message as Message, userIds);
     },
 });
