@@ -22,7 +22,8 @@ export type SpecialChannel =
     | "logs"
     | "roles"
     | "appeals"
-    | "modmail";
+    | "modmail"
+    | "warnings";
 
 /**
  * Utility function of getSpecialChannel
