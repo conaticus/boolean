@@ -145,8 +145,8 @@ class Warnings extends BotCommand {
         });
         await close();
 
-        const warnsChannel = await getSpecialChannel("warnings");
-        warnsChannel.send({ embeds: [warnsEmbed] });
+        const warnsChannel = await getSpecialChannel("warnings") as TextChannel;
+        warnsChannel.send({ embeds: [warnEmbed] });
     }
 }
 
