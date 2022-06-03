@@ -81,4 +81,3 @@ Look at [CONTRIBUTING.md](https://github.com/conaticus/boolean/blob/master/CONTR
 ## Support
 
 If you like cool coding projects like this, subscribe to me at https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ
-Help the community with a simple ⭐
