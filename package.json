@@ -24,9 +24,7 @@
         "discord.js": "^13.7.0",
         "pg": "^8.7.3",
         "pino": "^7.11.0",
-        "pino-pretty": "^7.6.1",
-        "string-similarity-js": "^2.1.4",
-        "weird-to-normal-chars": "^1.8.2"
+        "pino-pretty": "^7.6.1"
     },
     "devDependencies": {
         "@types/jest": "^27.5.1",
