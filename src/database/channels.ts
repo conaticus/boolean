@@ -23,7 +23,8 @@ export type SpecialChannel =
     | "roles"
     | "appeals"
     | "modmail"
-    | "starboard";
+    | "starboard"
+    | "warnings";
 
 /**
  * Utility function of getSpecialChannel

@@ -144,6 +144,9 @@ class Warnings extends BotCommand {
             collector.stop();
         });
         await close();
+
+        const warnsChannel = await getSpecialChannel(interaction.guild.id, "warnings") as TextChannel;
+        warnsChannel.send({ embeds: [warnEmbed] });
     }
 }
 
