@@ -1,13 +1,10 @@
 import {
     Collection,
     CommandInteraction,
-    Invite,
     Message,
     MessageAttachment,
     MessageEmbed,
 } from "discord.js";
-import stringSimilarity from "string-similarity-js";
-import { weirdToNormalChars } from "weird-to-normal-chars";
 
 interface QuestionOptions {
     ephemeral: boolean;
@@ -110,40 +107,4 @@ export function handleAssets(message: Message, embed: MessageEmbed) {
             formatAttachmentsURL(message.attachments)
         );
     }
-}
-
-const forbiddenPhrases: string[] = ["porn", "orange youtube", "faggot", "kys"];
-export async function badContent(message: Message): Promise<boolean> {
-    const messageWords = weirdToNormalChars(
-        message.content.toLowerCase()
-    ).split(" ");
-    const foundPhrase = forbiddenPhrases.some(
-        (phrase) =>
-            messageWords.join(" ").includes(phrase.toLowerCase()) ||
-            stringSimilarity(messageWords.join(" "), phrase) > 0.7 ||
-            messageWords.some((word) => stringSimilarity(word, phrase) > 0.7)
-    );
-    if (foundPhrase) {
-        return true;
-    }
-
-    if (!message.inGuild()) {
-        return false;
-    }
-    const inviteURLs = message.content.match(Invite.INVITES_PATTERN) ?? [];
-    const tasks: Promise<Invite | null>[] = [];
-    for (let i = 0; i < inviteURLs.length; i += 1) {
-        const inviteURL = inviteURLs[i];
-        const task = message.client.fetchInvite(inviteURL).catch(() => null);
-        tasks.push(task);
-    }
-    const invites = await Promise.all(tasks);
-    return new Promise((res) => {
-        invites.forEach((invite) => {
-            if (invite && invite.guild?.id !== message.guild.id) {
-                res(true);
-            }
-        });
-        res(false);
-    });
 }
