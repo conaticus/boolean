@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 
 /**
  * A deep search function that resolves all files within a directory based on a list of extensions.
@@ -24,7 +24,7 @@ export const resolveFiles = (pathLike: fs.PathLike, extensions: string[]): strin
 	});
 
 	// then we are going to loop through the results and resolve it's location to the current directory.
-	return results.map((filePath) => path.resolve(pathLike.toString(), filePath)).filter((path) => extensions.some((ext) => path.endsWith(ext)));
+	return results.map((filePath) => path.resolve(pathLike.toString(), filePath)).filter((filePath) => extensions.some((ext) => filePath.endsWith(ext)));
 };
 
 
