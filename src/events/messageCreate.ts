@@ -2,6 +2,7 @@ import { Message, TextChannel } from "discord.js";
 import { getSpecialChannel } from "../database";
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
+import { v4 as uuid } from "uuid";
 
 export default TypedEvent({
     eventName: "messageCreate",
@@ -14,10 +15,14 @@ export default TypedEvent({
             message.guild.id,
             "help"
         )) as TextChannel;
+        const id = uuid().split("-");
+        const thId = id[id.length - 1];
+        const threadName =
+            message.content.length < 100 ? message.content : `Thread #${thId}`;
 
         if (message.channel.id === helpChannel.id) {
             message.startThread({
-                name: message.content,
+                name: threadName,
                 autoArchiveDuration: "MAX",
             });
         }
