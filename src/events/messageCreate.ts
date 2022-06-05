@@ -1,4 +1,4 @@
-import { Message, MessageAttachment, TextChannel } from "discord.js";
+import { Message, TextChannel } from "discord.js";
 import { getSpecialChannel } from "../database";
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
