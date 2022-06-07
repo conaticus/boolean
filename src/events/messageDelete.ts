@@ -5,9 +5,7 @@ import { TypedEvent } from "../types";
 import { handleAssets, newEmbed } from "../utils";
 
 async function log(message: Message, client: Bot) {
-    if (message.guild === null) {
-        return;
-    }
+    if (!message.guild) return;
     const audits = await message.guild.fetchAuditLogs({
         type: GuildAuditLogs.Actions.MESSAGE_DELETE,
         limit: 1,
@@ -23,6 +21,7 @@ async function log(message: Message, client: Bot) {
     )
         executor = lastEntry.executor;
     client.setLastLoggedDeletion(message.guild.id, lastEntry);
+    if (!["DEFAULT", "REPLY"].includes(message.type)) return;
     const embed = newEmbed(message);
     if (executor) {
         embed
@@ -57,8 +56,6 @@ export default TypedEvent({
 
         // Check if the author of the deleted messaage is the bot
         if (message.author.bot) return;
-
-        if (!["DEFAULT", "REPLY"].includes(message.type)) return;
 
         await log(message, client);
     },

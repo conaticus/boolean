@@ -79,11 +79,6 @@ export default TypedEvent({
     ) => {
         if (newMessage.partial) return;
 
-        if (await utils.badContent(newMessage)) {
-            await newMessage.delete();
-            return;
-        }
-
         if (oldMessage.partial) {
             return;
         }
