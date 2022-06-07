@@ -1,8 +1,8 @@
 import { Message, TextChannel } from "discord.js";
+import { v4 as uuid } from "uuid";
 import { getSpecialChannel } from "../database";
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
-import { v4 as uuid } from "uuid";
 
 export default TypedEvent({
     eventName: "messageCreate",
