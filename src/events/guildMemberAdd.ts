@@ -19,8 +19,8 @@ export default TypedEvent({
             .setTitle("New Member")
             .setDescription(
                 `Welcome ${member.user.username} to Conaticus' discord server\n` +
-                    "Use `/rolemenu` to edit your notification, language and colour roles.\n" + 
                     "Be sure to read our #rules and feel free to introduce yourself in #introductions." +
+                    "Use `/rolemenu` to edit your notification, language and colour roles.\n" + 
                     "Enjoy your stay! :wave:"
             );
 
