@@ -2,15 +2,20 @@
 <h1>Boolean</h1>
 
 ## About
-Connaticus is a Discord bot for the Conaticus' [Discord server](https://discord.com/invite/aDAsjZVzaH). Boolean contains a collection of commands for your server, like a mod mailing system, a custom role menu, etc. Want to see how Boolean was made? Watch the development process [here](https://www.youtube.com/watch?v=xq2jR3_msmk)
+Connaticus is a Discord bot for the Conaticus' [Discord server](https://discord.gg/conaticus). Boolean contains a collection of commands for your server, like a mod mailing system, a custom role menu, etc. Want to see how Boolean was made? Watch the development process [here](https://www.youtube.com/watch?v=xq2jR3_msmk)
 
 ## Setup and configuration guide
 
-### Requirements for hosting own use of Bot
+### Requirements
 ```
-- MySQL Server
+- Postgres Server
 - Node v16x or above
 ```
+
+### Installation with Docker
+If you don't have a server, you can use Docker to host the bot. You can simply use the `docker-compose up` command to start the bot.
+
+If you need to update the bot, you can use the `docker-compose down` command to stop the bot, and then use the `docker-compose up --build` command to start it again or make sure to pull down latest changes from git using `git pull origin master` or use the built-in script `scripts/update.sh`.
 
 ### Installation
 If you have all the requirements for hosting the bot, please follow the next step carefully!
@@ -31,23 +36,7 @@ npm install
 npm run dev
 ```
 
-### Installation with Docker
-If you don't have a server, you can use Docker to host the bot. You can simply use the `docker-compose up` command to start the bot.
-
-If you need to update the bot, you can use the `docker-compose down` command to stop the bot, and then use the `docker-compose up --build` command to start it again or make sure to pull down latest changes from git using `git pull origin master` or use the built-in script `scripts/update.sh`.
-
-#### Note
-Due to many of the values being hardcoded, in order to run your instance you will need to change some values - such as the `guildId` in `config.ts` as it is used for deploying slash commands.
-
-## Other Information
-
-### Embed Colours
-
-General: `"#5E81AC"` \
-Success: `"#A3BE8C"` \
-Error: `"#BF616A"`
-
-### Running the configuration command
+### Configuration
 
 Configuration can be performed via the `/config` command to set special roles
 and channels that the bot identifies and utilizes.
@@ -70,10 +59,10 @@ and channels that the bot identifies and utilizes.
 
 ## Contributing
 
-Look at the [CONTRIBUTING GUIDE](https://github.com/conaticus/boolean/blob/master/CONTRIBUTING.md) to find out how you can help contribute to the development of this bot.
+Look at the [CONTRIBUTING](https://github.com/conaticus/boolean/blob/master/CONTRIBUTING.md) to find out how you can help contribute to the development of this bot.
 
 ## Support
-If you have any questions, please join the [Discord](https://discord.gg/aDAsjZVzaH) or open an issue here on GitHub.
+If you have any questions, please join the [Discord](https://discord.gg/conaticus) or open an issue here on GitHub.
 
 ## Youtube
 If you like cool coding projects like this, subscribe to [Conaticus](https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ)
