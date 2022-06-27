@@ -1,5 +1,7 @@
 # Boolean
 
+![Boolean's Picture](./docs/Boolean%20Pfp.png)
+
 ## About
 
 A bot for Conaticus' [Discord server](https://discord.com/invite/aDAsjZVzaH). A document of the development process has been made here: https://www.youtube.com/watch?v=xq2jR3_msmk.
