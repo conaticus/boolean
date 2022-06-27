@@ -1,4 +1,3 @@
-<p><img src="https://cdn.discordapp.com/avatars/983780349253386330/76763825aaefa8c2b2251829b675777b.webp?size=128" alt="Boolean"></p>
 <h1>Boolean</h1>
 
 ![Boolean's Picture](./docs/Boolean%20Pfp.png)
