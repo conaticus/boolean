@@ -1,66 +1,50 @@
-# Boolean
+<h1>Boolean</h1>
+
+![Boolean's Picture](./docs/Boolean%20Pfp.png)
 
 ## About
+Connaticus is a Discord bot for the Conaticus' [Discord server](https://discord.gg/conaticus). Boolean contains a collection of commands for your server, like a mod mailing system, a custom role menu, etc. Want to see how Boolean was made? Watch the development process [here](https://www.youtube.com/watch?v=xq2jR3_msmk)
 
-A bot for Conaticus' [Discord server](https://discord.com/invite/aDAsjZVzaH). A document of the development process has been made here: https://www.youtube.com/watch?v=xq2jR3_msmk.
+## Setup and configuration guide
 
-## Documentation
-
-### Setup
-
-#### Installation
-
--   Clone/Fork the repository
--   Run `cd boolean`
-
-#### Setting up the .env
-
-In order to setup the bot, you must create a `.env` in the parent directory as you can see in the example, [.env.example](https://github.com/conaticus/boolean/blob/master/.env.example).
-
-In this file you must declare the bot's `TOKEN` - this is the token from the [Discord Developer Portal](https://discord.com/developers/applications).
-
-Syntax:
-
-```env
-TOKEN="your bot's TOKEN"
+### Requirements
+```
+- Postgres Server
+- Node v16x or above
 ```
 
-This will automatically be ignored from the [.gitignore](https://github.com/conaticus/boolean/blob/master/.gitignore). So don't worry about this data being public.
+### Installation with Docker
+If you don't have a server, you can use Docker to host the bot. You can simply use the `docker-compose up` command to start the bot.
 
-#### Docker
+If you need to update the bot, you can use the `docker-compose down` command to stop the bot, and then use the `docker-compose up --build` command to start it again or make sure to pull down latest changes from git using `git pull origin master` or use the built-in script `scripts/update.sh`.
 
-For Docker users, simply run `docker-compose up` _after_ configuring the
-env file.
+### Installation
+If you have all the requirements for hosting the bot, please follow the next step carefully!
 
-To update your install of Boolean run `docker-compose down` to bring
-Boolean down and build again using `docker-compose up --build`. Make sure
-to pull down latest changes from git using `git pull origin master` or use
-the built-in script `scripts/update.sh`.
+1. Clone this repository to your computer, or to your vps.
+```
+git clone https://github.com/conaticus/boolean.git
+```
 
-#### Running the bot
+2. Copy the contents of the `.env.example` file to the `.env` file and fill in the values. (Make sure you have declared the bots token in the `.env` file!)
+3. Create a new database with your MYSQL server, and make sure you have the correct credentials in the `.env` file.
+4. Run the following command to install the dependencies:
+```
+npm install
+```
+5. Run the following command to start the bot:
+```
+npm run dev
+```
 
--   Run `npm i`
-
-In order to start the bot, you must run `npm run dev` to run the TypeScript developer environment. Don't worry about the other `package.json` scripts, they are for production.
-
-Due to many of the values being hardcoded, in order to run your instance you will need to change some values - such as the `guildId` in `config.ts` as it is used for deploying slash commands.
-
-### Other Information
-
-#### Embed Colours
-
-General: `"#5E81AC"` \
-Success: `"#A3BE8C"` \
-Error: `"#BF616A"`
-
-#### Configuration
+### Configuration
 
 Configuration can be performed via the `/config` command to set special roles
 and channels that the bot identifies and utilizes.
 
-# Logging
+## Logging
 
-#### Console levels and their refrences
+### Console levels and their references
 
 -   Fatal : `logger.console.fatal("")`
 -   Error : `logger.console.error("")`
@@ -76,8 +60,10 @@ and channels that the bot identifies and utilizes.
 
 ## Contributing
 
-Look at [CONTRIBUTING.md](https://github.com/conaticus/boolean/blob/master/CONTRIBUTING.md) to find out how you can help contribute to the development of this bot.
+Look at the [CONTRIBUTING](https://github.com/conaticus/boolean/blob/master/CONTRIBUTING.md) to find out how you can help contribute to the development of this bot.
 
 ## Support
+If you have any questions, please join the [Discord](https://discord.gg/conaticus) or open an issue here on GitHub.
 
-If you like cool coding projects like this, subscribe to me at https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ
+## Youtube
+If you like cool coding projects like this, subscribe to [Conaticus](https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ)
