@@ -23,7 +23,7 @@ export type SpecialChannel =
     | "roles"
     | "appeals"
     | "modmail"
-    | "warnings"
+    | "starboard"
     | "help";
 
 /**

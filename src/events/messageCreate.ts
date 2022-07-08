@@ -1,3 +1,6 @@
+import { Message } from "discord.js";
+
+import { updateLevels } from "../services/levels";
 import { Message, TextChannel } from "discord.js";
 import { v4 as uuid } from "uuid";
 import { getSpecialChannel } from "../database";
@@ -34,5 +37,7 @@ export default TypedEvent({
         ) {
             await message.member?.timeout(600_000, "Mass mentions");
         }
+
+        await updateLevels(message.author.id);
     },
 });

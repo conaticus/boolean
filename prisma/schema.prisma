@@ -43,6 +43,12 @@ model SpecialRole {
   id      String @id @default(uuid())
 }
 
+model Setting {
+  id String @id @default(uuid())
+  guildId String @unique
+  starboardThreshold Int
+}
+
 model ModmailMessage {
   guildId      String
   channelId    String?
@@ -87,4 +93,19 @@ model Modmail {
   messages  ModmailMessage[]
   closed    Boolean          @default(false)
   id        String           @id @default(uuid())
+}
+
+model LevelEntry {
+  id        String           @id @default(uuid())
+  memberId  String           @unique
+  level     Int
+  exp       Int
+  lastTime  DateTime
+}
+
+model Starboard {
+  guildId String @unique
+  messageId String @unique
+  starboardMessageID String @unique
+  stars Int
 }
