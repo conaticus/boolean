@@ -10,15 +10,19 @@ export default TypedEvent({
         if (!message.content || message.author.bot || !message.guild) {
             return;
         }
-
-        const helpChannel = (await getSpecialChannel(
-            message.guild.id,
-            "help"
-        )) as TextChannel;
+        let helpChannel;
+        try {
+            helpChannel = (await getSpecialChannel(
+                message.guild.id,
+                "help"
+            )) as TextChannel;
+        } catch (err) {
+            client.logger.console.error(err);
+            return;
+        }
         const id = uuid().split("-");
         const thId = id[id.length - 1];
-        const threadName =
-            message.content.length < 100 ? message.content : `Thread #${thId}`;
+        const threadName = `Thread #${thId}`;
 
         if (message.channel.id === helpChannel.id) {
             message.startThread({
