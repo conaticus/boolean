@@ -3,7 +3,7 @@
 ![Boolean's Picture](./docs/Boolean%20Pfp.png)
 
 ## About
-Conaticus is a Discord bot for the Conaticus' [Discord server](https://discord.gg/conaticus). Boolean contains a collection of commands for your server, like a mod mailing system, a custom role menu, etc. Want to see how Boolean was made? Watch the development process [here](https://www.youtube.com/watch?v=xq2jR3_msmk)
+Boolean is a Discord bot for the Conaticus' [Discord server](https://discord.gg/conaticus). Boolean contains a collection of useful modules for your server, like a mod mailing system, a custom role menu, etc. Want to see how Boolean was made? Watch the development process [here](https://www.youtube.com/watch?v=xq2jR3_msmk)
 
 ## Setup and configuration guide
 
@@ -63,7 +63,9 @@ and channels that the bot identifies and utilizes.
 Look at the [CONTRIBUTING](https://github.com/conaticus/boolean/blob/master/CONTRIBUTING.md) to find out how you can help contribute to the development of this bot.
 
 ## Support
+
 If you have any questions, please join the [Discord](https://discord.gg/conaticus) or open an issue here on GitHub.
 
 ## Youtube
+
 If you like cool coding projects like this, subscribe to [Conaticus](https://www.youtube.com/channel/UCRLHJ-7b4pjDpBBHAUXEvjQ)
