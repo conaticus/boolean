@@ -18,43 +18,66 @@ async function log(oldMessage: Message, newMessage: Message, client: Bot) {
     // Old Message
     if (oldMessage.content !== "") {
         if (oldMessage.attachments.size >= 1) {
-            embed.addField(
-                "• Old Message",
-                oldMessage.content +
-                    "\n".concat(
-                        utils.formatAttachmentsURL(newMessage.attachments)
-                    ),
-                false
-            );
+            embed.addFields([
+                {
+                    name: "• Old Message",
+                    value:
+                        oldMessage.content +
+                        "\n".concat(
+                            utils.formatAttachmentsURL(newMessage.attachments)
+                        ),
+                    inline: false,
+                },
+            ]);
         } else {
-            embed.addField("• Old Message", oldMessage.content, false);
+            embed.addFields([
+                {
+                    name: "• Old Message",
+                    value: oldMessage.content,
+                    inline: false,
+                },
+            ]);
         }
     } else {
-        embed.addField(
-            "• Old Message",
-            utils.formatAttachmentsURL(oldMessage.attachments),
-            false
-        );
+        embed.addFields([
+            {
+                name: "• Old Message",
+                value: utils.formatAttachmentsURL(oldMessage.attachments),
+                inline: false,
+            },
+        ]);
     }
 
     // New Message
     if (newMessage.content !== "") {
         if (newMessage.attachments.size >= 1)
-            embed.addField(
-                "• New Message",
-                newMessage.content +
-                    "\n".concat(
-                        utils.formatAttachmentsURL(newMessage.attachments)
-                    ),
-                false
-            );
-        else embed.addField("• New Message", newMessage.content, false);
+            embed.addFields([
+                {
+                    name: "• New Message",
+                    value:
+                        newMessage.content +
+                        "\n".concat(
+                            utils.formatAttachmentsURL(newMessage.attachments)
+                        ),
+                    inline: false,
+                },
+            ]);
+        else
+            embed.addFields([
+                {
+                    name: "• New Message",
+                    value: newMessage.content,
+                    inline: false,
+                },
+            ]);
     } else {
-        embed.addField(
-            "• New Message",
-            utils.formatAttachmentsURL(newMessage.attachments),
-            false
-        );
+        embed.addFields([
+            {
+                name: "• New Message",
+                value: utils.formatAttachmentsURL(newMessage.attachments),
+                inline: false,
+            },
+        ]);
     }
 
     embed.setTimestamp();
