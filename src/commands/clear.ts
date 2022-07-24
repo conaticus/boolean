@@ -45,15 +45,30 @@ class Clear extends BotCommand {
         const embeds = deleted
             .filter((del) => !del.author.bot)
             .map((message) => {
-                const embed = newEmbed(message)
-                    .addField("\u200B", "\u200B", true)
-                    .addField("Executor", interaction.user.toString(), true)
-                    .addField(
-                        "Sent at",
-                        `<t:${Math.round(message.createdTimestamp / 1000)}>`,
-                        true
-                    )
-                    .addField("\u200B", "\u200B", true);
+                const embed = newEmbed(message).addFields([
+                    {
+                        name: "\u200B",
+                        value: "\u200B",
+                        inline: true,
+                    },
+                    {
+                        name: "Executor",
+                        value: interaction.user.toString(),
+                        inline: true,
+                    },
+                    {
+                        name: "Sent at",
+                        value: `<t:${Math.round(
+                            message.createdTimestamp / 1000
+                        )}>`,
+                        inline: true,
+                    },
+                    {
+                        name: "\u200B",
+                        value: "\u200B",
+                        inline: true,
+                    },
+                ]);
 
                 // Add stickers
                 handleAssets(message, embed);
