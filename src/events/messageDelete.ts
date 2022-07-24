@@ -24,21 +24,36 @@ async function log(message: Message, client: Bot) {
     if (!["DEFAULT", "REPLY"].includes(message.type)) return;
     const embed = newEmbed(message);
     if (executor) {
-        embed
-            .addField("\u200B", "\u200B", true)
-            .addField("Executor", executor.toString(), true)
-            .addField(
-                "Sent at",
-                `<t:${Math.round(message.createdTimestamp / 1000)}>`,
-                true
-            )
-            .addField("\u200B", "\u200B", true);
+        embed.addFields([
+            {
+                name: "\u200B",
+                value: "\u200B",
+                inline: true,
+            },
+            {
+                name: "Executor",
+                value: executor.toString(),
+                inline: true,
+            },
+            {
+                name: "Sent at",
+                value: `<t:${Math.round(message.createdTimestamp / 1000)}>`,
+                inline: true,
+            },
+            {
+                name: "\u200B",
+                value: "\u200B",
+                inline: true,
+            },
+        ]);
     } else {
-        embed.addField(
-            "Sent at",
-            `<t:${Math.round(message.createdTimestamp / 1000)}>`,
-            true
-        );
+        embed.addFields([
+            {
+                name: "Sent at",
+                value: `<t:${Math.round(message.createdTimestamp / 1000)}>`,
+                inline: true,
+            },
+        ]);
     }
     handleAssets(message, embed);
 
