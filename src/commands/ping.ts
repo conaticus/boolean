@@ -23,12 +23,12 @@ class Ping extends BotCommand {
             .setColor("ORANGE");
         interaction.reply({ embeds: [embed], ephemeral: true });
     }
-
-    private setTimeout(sec: number): Promise<void> {
-        return new Promise((resolve) => {
-            setTimeout(resolve, sec * 1000);
-        });
-    }
+    // NOTE(MattPlays): What is the purpose of this function?
+    // private setTimeout(sec: number): Promise<void> {
+    //     return new Promise((resolve) => {
+    //         setTimeout(resolve, sec * 1000);
+    //     });
+    // }
 }
 
 export default new Ping();
