@@ -13,17 +13,23 @@ async function memberRemoveEvent(member: GuildMember, client: Bot) {
         })
         .setDescription("Member left")
         .setColor("RED")
-        .addField(
-            "• Account Created",
-            `<t:${createdTimestamp}> (<t:${createdTimestamp}:R>)`,
-            false
-        )
-        .addField(
-            "• Joined",
-            `<t:${joinedTimestamp}> (<t:${joinedTimestamp}:R>)`,
-            false
-        )
-        .addField("• Account ID", member.id, false)
+        .addFields([
+            {
+                name: "• Account Created",
+                value: `<t:${createdTimestamp}> (<t:${createdTimestamp}:R>)`,
+                inline: false,
+            },
+            {
+                name: "• Joined",
+                value: `<t:${joinedTimestamp}> (<t:${joinedTimestamp}:R>)`,
+                inline: false,
+            },
+            {
+                name: "• Account ID",
+                value: member.id,
+                inline: false,
+            },
+        ])
         .setTimestamp()
         .setFooter({
             text: "Boolean",
