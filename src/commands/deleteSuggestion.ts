@@ -88,12 +88,20 @@ class DeleteSuggestion extends BotCommand {
             .setDescription(
                 `<@${interaction?.user.id}> deleted suggestion by <@${suggestionAuthor?.id}>`
             )
-            .addField("• Title", title)
-            .addField(
-                "• Description",
-                suggestionMessage.embeds[0].description ?? " "
-            )
-            .addField("• Reason", reason);
+            .addFields([
+                {
+                    name: "• Title",
+                    value: title,
+                },
+                {
+                    name: "• Description",
+                    value: suggestionMessage.embeds[0].description ?? " ",
+                },
+                {
+                    name: "• Reason",
+                    value: reason,
+                },
+            ]);
 
         suggestionMessage.delete();
         await reply.channel.delete();
