@@ -22,20 +22,23 @@ function memberRoleAddEvent(
     role: APIRole[]
 ): MessageEmbed {
     const embed = new MessageEmbed()
-        .setTitle(`• Role added to ${target.toString()}`)
+        .setTitle("• Role added")
         .setColor("ORANGE")
         .addFields([
             {
                 name: "Executor",
                 value: executor.toString(),
-            },
-            {
-                name: "Role",
-                value: (role[0] as APIRole).toString(),
+                inline: true,
             },
             {
                 name: "Target",
                 value: target.toString(),
+                inline: true,
+            },
+            {
+                name: "Role",
+                value: `<@&${role[0].id}>`,
+                inline: false,
             },
         ])
         .setTimestamp()
@@ -55,20 +58,23 @@ function memberRoleRemoveEvent(
     role: APIRole[]
 ): MessageEmbed {
     const embed = new MessageEmbed()
-        .setTitle(`• Role removed from ${target.toString()}`)
+        .setTitle("• Role removed")
         .setColor("RED")
         .addFields([
             {
                 name: "Executor",
                 value: executor.toString(),
-            },
-            {
-                name: "Role",
-                value: (role[0] as APIRole).toString(),
+                inline: true,
             },
             {
                 name: "Target",
                 value: target.toString(),
+                inline: true,
+            },
+            {
+                name: "Role",
+                value: `<@&${role[0].id}>`,
+                inline: false,
             },
         ])
         .setTimestamp()
