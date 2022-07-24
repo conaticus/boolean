@@ -1,5 +1,5 @@
 // NOTE(dylhack): eventually we need to deal with the any's
-/* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-non-null-assertion */
+// NOTE(MattPlays): I believe I fixed the any's here
 import {
     GuildMember,
     MessageActionRow,
@@ -10,6 +10,7 @@ import {
     MessageButton,
 } from "discord.js";
 
+import { APIRole } from "discord-api-types/v10";
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
 import { getSpecialChannel } from "../database";
@@ -18,22 +19,32 @@ function memberRoleAddEvent(
     client: Bot,
     target: User,
     executor: User,
-    role: any
+    role: APIRole[]
 ): MessageEmbed {
-    const targetTag = target.tag;
-    const execTag = executor.tag;
-    const desc = `${execTag}(<@${executor?.id}>) added <@&${role[0].id}> to ${targetTag}(<@${target.id}>)`;
     const embed = new MessageEmbed()
-        .setTitle(`• Role added to ${targetTag}`)
-        .setDescription(desc)
+        .setTitle(`• Role added to ${target.toString()}`)
         .setColor("ORANGE")
+        .addFields([
+            {
+                name: "Executor",
+                value: executor.toString(),
+            },
+            {
+                name: "Role",
+                value: (role[0] as APIRole).toString(),
+            },
+            {
+                name: "Target",
+                value: target.toString(),
+            },
+        ])
         .setTimestamp()
         .setFooter({
             text: "Boolean",
             iconURL: client.user?.displayAvatarURL(),
         });
 
-    client.logger.console.info(desc);
+    client.logger.console.info(embed);
     return embed;
 }
 
@@ -41,15 +52,25 @@ function memberRoleRemoveEvent(
     client: Bot,
     target: User,
     executor: User,
-    role: any
+    role: APIRole[]
 ): MessageEmbed {
-    const execTag = executor.tag;
-    const targetTag = target.tag;
-    const desc = `${execTag}(<@${executor?.id}>) removed <@&${role[0].id}> from ${targetTag}(<@${target.id}>)`;
     const embed = new MessageEmbed()
-        .setTitle(`• Role removed from ${targetTag}`)
-        .setDescription(desc)
+        .setTitle(`• Role removed from ${target.toString()}`)
         .setColor("RED")
+        .addFields([
+            {
+                name: "Executor",
+                value: executor.toString(),
+            },
+            {
+                name: "Role",
+                value: (role[0] as APIRole).toString(),
+            },
+            {
+                name: "Target",
+                value: target.toString(),
+            },
+        ])
         .setTimestamp()
         .setFooter({
             text: "Boolean",
@@ -69,14 +90,23 @@ function nicknameUpdateEvent(
     const desc = `${member.user.tag} changed their nickname from ${oldMemberNickname} to ${newMemberNickname}`;
     const embed = new MessageEmbed()
         .setTitle("Nickname was updated!")
-        .setDescription(desc)
         .setAuthor({
             name: member.user.tag,
             iconURL: member.displayAvatarURL(),
         })
         .setColor("ORANGE")
-        .addField("New Nickname", newMemberNickname || "NULL", true)
-        .addField("Old Nickname", oldMemberNickname || "NULL", true)
+        .addFields([
+            {
+                name: "New Nickname",
+                value: newMemberNickname || "NULL",
+                inline: true,
+            },
+            {
+                name: "Old Nickname",
+                value: oldMemberNickname || "NULL",
+                inline: true,
+            },
+        ])
         .setTimestamp()
         .setFooter({
             text: "Boolean",
@@ -115,17 +145,17 @@ export default TypedEvent({
             if (lastLog.changes?.at(0)?.key === "$add") {
                 embed = memberRoleAddEvent(
                     client,
-                    lastLog.target! as User,
-                    lastLog.executor!,
-                    lastLog.changes?.at(0)?.new
+                    lastLog.target as User,
+                    lastLog.executor as User,
+                    lastLog.changes?.at(0)?.new as APIRole[]
                 );
                 // Role Remove
             } else if (lastLog.changes?.at(0)?.key === "$remove") {
-                embed = await memberRoleRemoveEvent(
+                embed = memberRoleRemoveEvent(
                     client,
-                    lastLog.target! as User,
-                    lastLog.executor!,
-                    lastLog.changes?.at(0)?.new
+                    lastLog.target as User,
+                    lastLog.executor as User,
+                    lastLog.changes?.at(0)?.new as APIRole[]
                 );
             }
             if (embed !== null) {
@@ -136,10 +166,10 @@ export default TypedEvent({
 
         // Nickname updates
         if (oldMember.nickname !== newMember.nickname) {
-            embed = await nicknameUpdateEvent(
+            embed = nicknameUpdateEvent(
                 newMember as GuildMember,
-                oldMember.nickname!,
-                newMember.nickname!,
+                oldMember.nickname,
+                newMember.nickname,
                 client
             );
             await client.logger.channel(oldMember.guild.id, embed);
@@ -240,9 +270,23 @@ Duration: ${durationFormatted} (<t:${Math.floor(
                     })
                     .setDescription(int.fields.getTextInputValue("content"))
                     .setTimestamp()
-                    .addField("Offender", newMember.toString(), true)
-                    .addField("Moderator", lastLog.executor!.toString(), true);
-                if (reason) appealEmbed.addField("Time out reason", reason);
+                    .addFields([
+                        {
+                            name: "Offender",
+                            value: newMember.toString(),
+                            inline: true,
+                        },
+                        {
+                            name: "Moderator",
+                            value:
+                                (lastLog.executor as User).toString() ?? "N/A",
+                            inline: true,
+                        },
+                    ]);
+                if (reason)
+                    appealEmbed.addFields([
+                        { name: "Time out reason", value: reason },
+                    ]);
                 const optAppeal = await getSpecialChannel(
                     newMember.guild.id,
                     "appeals"
