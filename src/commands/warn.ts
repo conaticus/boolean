@@ -127,9 +127,22 @@ class Warnings extends BotCommand {
                 })
                 .setDescription(int.fields.getTextInputValue("content"))
                 .setTimestamp()
-                .addField("Offender", member.toString(), true)
-                .addField("Moderator", interaction.user.toString(), true)
-                .addField("Warning reason", reason);
+                .addFields([
+                    {
+                        name: "Offender",
+                        value: member.toString(),
+                        inline: true,
+                    },
+                    {
+                        name: "Moderator",
+                        value: interaction.user.toString(),
+                        inline: true,
+                    },
+                    {
+                        name: "Warning reason",
+                        value: reason,
+                    },
+                ]);
             const optAppeal = await getSpecialChannel(
                 interaction.guild.id,
                 "appeals"
@@ -145,7 +158,10 @@ class Warnings extends BotCommand {
         });
         await close();
 
-        const warnsChannel = await getSpecialChannel(interaction.guild.id, "warnings") as TextChannel;
+        const warnsChannel = (await getSpecialChannel(
+            interaction.guild.id,
+            "warnings"
+        )) as TextChannel;
         warnsChannel.send({ embeds: [warnEmbed] });
     }
 }
