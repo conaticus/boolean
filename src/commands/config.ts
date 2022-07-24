@@ -40,6 +40,7 @@ const specChannels: APIApplicationCommandOptionChoice<string>[] = [
     "appeals",
     "modmail",
     "help",
+    "projects",
 ].map((v) => ({
     name: v,
     value: v,

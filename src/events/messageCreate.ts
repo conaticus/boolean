@@ -12,20 +12,37 @@ async function helpChan(message: Message): Promise<void> {
         message.guild.id,
         "help"
     ).catch(() => null);
-    if (helpChannelOpt === null) {
-        return;
+    if (helpChannelOpt !== null) {
+        const helpChannel = helpChannelOpt as TextChannel;
+
+        const id = uuid().split("-");
+        const thId = id[id.length - 1];
+        const threadName = `Thread #${thId}`;
+
+        if (message.channel.id === helpChannel.id) {
+            message.startThread({
+                name: threadName,
+                autoArchiveDuration: "MAX",
+            });
+        }
     }
-    const helpChannel = helpChannelOpt as TextChannel;
+    const projectsChannelOpt = await getSpecialChannel(
+        message.guild.id,
+        "projects"
+    ).catch(() => null);
+    if (projectsChannelOpt !== null) {
+        const projectsChannel = projectsChannelOpt as TextChannel;
 
-    const id = uuid().split("-");
-    const thId = id[id.length - 1];
-    const threadName = `Thread #${thId}`;
+        const id = uuid().split("-");
+        const thId = id[id.length - 1];
+        const threadName = `Thread #${thId}`;
 
-    if (message.channel.id === helpChannel.id) {
-        message.startThread({
-            name: threadName,
-            autoArchiveDuration: "MAX",
-        });
+        if (message.channel.id === projectsChannel.id) {
+            message.startThread({
+                name: threadName,
+                autoArchiveDuration: "MAX",
+            });
+        }
     }
 }
 
