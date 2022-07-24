@@ -68,8 +68,18 @@ export function newEmbed(msg: Message): MessageEmbed {
             text: "Boolean",
             iconURL: msg.client.user?.displayAvatarURL(),
         })
-        .addField("Author", msg.author.toString(), true)
-        .addField("Channel", msg.channel.toString(), true);
+        .addFields([
+            {
+                name: "Author",
+                value: msg.author.toString(),
+                inline: true,
+            },
+            {
+                name: "Channel",
+                value: msg.channel.toString(),
+                inline: true,
+            },
+        ]);
 }
 
 export function formatAttachmentsURL(
@@ -94,7 +104,9 @@ export function handleAssets(message: Message, embed: MessageEmbed) {
     const sticker = message.stickers.first();
     if (sticker) {
         if (sticker.format === "LOTTIE") {
-            embed.addField("Sticker", `[${sticker.name}](${sticker.url})`);
+            embed.addFields([
+                { name: "Sticker", value: `[${sticker.name}](${sticker.url})` },
+            ]);
         } else {
             embed.setThumbnail(sticker.url);
         }
@@ -102,9 +114,11 @@ export function handleAssets(message: Message, embed: MessageEmbed) {
 
     // Add attachments
     if (message.attachments.size) {
-        embed.addField(
-            "Attachments",
-            formatAttachmentsURL(message.attachments)
-        );
+        embed.addFields([
+            {
+                name: "Attachments",
+                value: formatAttachmentsURL(message.attachments),
+            },
+        ]);
     }
 }
