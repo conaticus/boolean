@@ -25,7 +25,7 @@ class Suggest extends BotCommand {
                     option
                         .setName("description")
                         .setDescription("Set suggestion's description.")
-                        .setRequired(true)
+                        .setRequired(false)
                 )
                 .addAttachmentOption((option) =>
                     option
@@ -57,11 +57,14 @@ class Suggest extends BotCommand {
             interaction.options.getString("title", true),
             interaction.channel
         );
-
+        const desc = interaction.options.getString("description", false);
         const suggestionEmbed = new MessageEmbed()
             .setColor("ORANGE")
-            .setTitle(`${title} - ${interaction.member?.user.tag}`)
-            .setDescription(interaction.options.getString("description", true));
+            .setTitle(`${title} - ${interaction.member?.user.tag}`);
+        if (desc !== null) {
+            suggestionEmbed.setDescription(desc);
+        }
+
         const image = interaction.options.getAttachment("image");
         if (image?.height) suggestionEmbed.setImage(image.url);
 
