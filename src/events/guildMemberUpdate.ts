@@ -2,12 +2,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-non-null-assertion */
 import {
     GuildMember,
-    MessageActionRow,
-    MessageEmbed,
+    ActionRowBuilder,
+    EmbedBuilder,
     PartialGuildMember,
     User,
     TextChannel,
-    MessageButton,
+    ButtonBuilder,
+    Colors,
+    ButtonStyle,
+    ComponentType,
+    TextInputStyle,
 } from "discord.js";
 
 import { Bot } from "../structures";
@@ -19,14 +23,14 @@ function memberRoleAddEvent(
     target: User,
     executor: User,
     role: any
-): MessageEmbed {
+): EmbedBuilder {
     const targetTag = target.tag;
     const execTag = executor.tag;
     const desc = `${execTag}(<@${executor?.id}>) added <@&${role[0].id}> to ${targetTag}(<@${target.id}>)`;
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
         .setTitle(`• Role added to ${targetTag}`)
         .setDescription(desc)
-        .setColor("ORANGE")
+        .setColor(Colors.Orange)
         .setTimestamp()
         .setFooter({
             text: "Boolean",
@@ -42,14 +46,14 @@ function memberRoleRemoveEvent(
     target: User,
     executor: User,
     role: any
-): MessageEmbed {
+): EmbedBuilder {
     const execTag = executor.tag;
     const targetTag = target.tag;
     const desc = `${execTag}(<@${executor?.id}>) removed <@&${role[0].id}> from ${targetTag}(<@${target.id}>)`;
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
         .setTitle(`• Role removed from ${targetTag}`)
         .setDescription(desc)
-        .setColor("RED")
+        .setColor(Colors.Red)
         .setTimestamp()
         .setFooter({
             text: "Boolean",
@@ -65,18 +69,28 @@ function nicknameUpdateEvent(
     oldMemberNickname: string | null,
     newMemberNickname: string | null,
     client: Bot
-): MessageEmbed {
+): EmbedBuilder {
     const desc = `${member.user.tag} changed their nickname from ${oldMemberNickname} to ${newMemberNickname}`;
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
         .setTitle("Nickname was updated!")
         .setDescription(desc)
         .setAuthor({
             name: member.user.tag,
             iconURL: member.displayAvatarURL(),
         })
-        .setColor("ORANGE")
-        .addField("New Nickname", newMemberNickname || "NULL", true)
-        .addField("Old Nickname", oldMemberNickname || "NULL", true)
+        .setColor(Colors.Orange)
+        .addFields([
+            {
+                name: "New Nickname",
+                value: newMemberNickname || "NULL",
+                inline: true,
+            },
+            {
+                name: "Old Nickname",
+                value: oldMemberNickname || "NULL",
+                inline: true,
+            },
+        ])
         .setTimestamp()
         .setFooter({
             text: "Boolean",
@@ -103,10 +117,10 @@ export default TypedEvent({
             return;
         }
         lastLog.changes = lastLog.changes || [];
-        let embed: MessageEmbed | null = null;
+        let embed: EmbedBuilder | null = null;
 
         // Role update events
-        if (lastLog && (lastLog.action as string) === "MEMBER_ROLE_UPDATE") {
+        if (lastLog && lastLog.action === "MEMBER_ROLE_UPDATE") {
             if (lastLog.executor?.bot) {
                 return;
             }
@@ -168,8 +182,8 @@ export default TypedEvent({
                 .join("");
             const reason = lastLog.reason?.slice(0, 500);
             const reasonField = reason ? `Reason: *${reason}*` : "";
-            const dmEmbed = new MessageEmbed()
-                .setColor("RED")
+            const dmEmbed = new EmbedBuilder()
+                .setColor(Colors.Red)
                 .setTitle("You have received a time out").setDescription(`
 ${reasonField}
 Moderator: ${lastLog.executor}
@@ -179,12 +193,12 @@ Duration: ${durationFormatted} (<t:${Math.floor(
 
 **If you believe this time out is unjustified, appeal using the button below.**
                 `);
-            const appealButton = new MessageButton()
+            const appealButton = new ButtonBuilder()
                 .setLabel("Appeal time out")
-                .setStyle("PRIMARY")
+                .setStyle(ButtonStyle.Primary)
                 .setCustomId("appeal_timeout")
                 .setEmoji("📜");
-            const appealRow = new MessageActionRow();
+            const appealRow = new ActionRowBuilder<ButtonBuilder>();
             appealRow.addComponents(appealButton);
             const components = [appealRow];
             const dm = await newMember
@@ -192,7 +206,7 @@ Duration: ${durationFormatted} (<t:${Math.floor(
                 .catch(() => null);
             if (!dm) return;
             const collector = dm.createMessageComponentCollector({
-                componentType: "BUTTON",
+                componentType: ComponentType.Button,
                 time: durationMs > 600_000 ? 600_000 : durationMs,
             });
             collector.on("collect", async (i) => {
@@ -201,14 +215,14 @@ Duration: ${durationFormatted} (<t:${Math.floor(
                     title: "Appeal time out",
                     components: [
                         {
-                            type: "ACTION_ROW",
+                            type: ComponentType.ActionRow,
                             components: [
                                 {
-                                    type: "TEXT_INPUT",
+                                    type: ComponentType.TextInput,
                                     label: "Elaborate",
                                     placeholder:
                                         "Explain why you think your time out was unjustified",
-                                    style: "PARAGRAPH",
+                                    style: TextInputStyle.Paragraph,
                                     customId: "content",
                                     required: true,
                                 },
@@ -230,19 +244,32 @@ Duration: ${durationFormatted} (<t:${Math.floor(
                     return;
                 }
                 collector.stop();
-                const appealEmbed = new MessageEmbed()
-                    .setColor("ORANGE")
+                const appealEmbed = new EmbedBuilder()
+                    .setColor(Colors.Orange)
                     .setAuthor({
                         name: `${newMember.user.username} appealed their time out`,
                         iconURL: newMember.user.displayAvatarURL({
-                            dynamic: true,
+                            extension: "png",
                         }),
                     })
                     .setDescription(int.fields.getTextInputValue("content"))
                     .setTimestamp()
-                    .addField("Offender", newMember.toString(), true)
-                    .addField("Moderator", lastLog.executor!.toString(), true);
-                if (reason) appealEmbed.addField("Time out reason", reason);
+                    .addFields([
+                        {
+                            name: "Offender",
+                            value: newMember.toString(),
+                            inline: true,
+                        },
+                        {
+                            name: "Moderator",
+                            value: lastLog.executor!.toString(),
+                            inline: true,
+                        },
+                    ]);
+                if (reason)
+                    appealEmbed.addFields([
+                        { name: "Time out reason", value: reason },
+                    ]);
                 const optAppeal = await getSpecialChannel(
                     newMember.guild.id,
                     "appeals"
@@ -252,7 +279,8 @@ Duration: ${durationFormatted} (<t:${Math.floor(
                 const appealsChannel = optAppeal as TextChannel;
                 await appealsChannel.send({ embeds: [appealEmbed] });
                 appealButton.setDisabled(true);
-                await int.update({ components });
+                // await int.update({ components }); // TODO: Find replacement for this
+                await int.editReply({ components });
             });
             collector.on("end", async () => {
                 appealButton.setDisabled(true);

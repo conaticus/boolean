@@ -2,8 +2,10 @@ import {
     Collection,
     CommandInteraction,
     Message,
-    MessageAttachment,
-    MessageEmbed,
+    Attachment,
+    EmbedBuilder,
+    StickerFormatType,
+    Colors,
 } from "discord.js";
 
 interface QuestionOptions {
@@ -25,8 +27,8 @@ export async function askQuestion(
     question: string,
     { ephemeral }: QuestionOptions = { ephemeral: false }
 ) {
-    const embed = new MessageEmbed()
-        .setColor("ORANGE")
+    const embed = new EmbedBuilder()
+        .setColor(Colors.Orange)
         .setDescription(question);
 
     if (ephemeral)
@@ -54,26 +56,36 @@ export async function askQuestion(
     }
 }
 
-export function newEmbed(msg: Message): MessageEmbed {
-    return new MessageEmbed()
+export function newEmbed(msg: Message): EmbedBuilder {
+    return new EmbedBuilder()
         .setAuthor({
             name: "Deleted message",
             iconURL: msg.author.displayAvatarURL(),
             url: msg.url,
         })
         .setDescription(msg.content)
-        .setColor("RED")
+        .setColor(Colors.Red)
         .setTimestamp()
         .setFooter({
             text: "Boolean",
             iconURL: msg.client.user?.displayAvatarURL(),
         })
-        .addField("Author", msg.author.toString(), true)
-        .addField("Channel", msg.channel.toString(), true);
+        .addFields([
+            {
+                name: "Author",
+                value: msg.author.toString(),
+                inline: true,
+            },
+            {
+                name: "Channel",
+                value: msg.channel.toString(),
+                inline: true,
+            },
+        ]);
 }
 
 export function formatAttachmentsURL(
-    attachments: Collection<string, MessageAttachment>
+    attachments: Collection<string, Attachment>
 ) {
     return [...attachments.values()]
         .map((e, i) =>
@@ -89,12 +101,17 @@ export function formatAttachmentsURL(
         .join("\n");
 }
 
-export function handleAssets(message: Message, embed: MessageEmbed) {
+export function handleAssets(message: Message, embed: EmbedBuilder) {
     // Add stickers
     const sticker = message.stickers.first();
     if (sticker) {
-        if (sticker.format === "LOTTIE") {
-            embed.addField("Sticker", `[${sticker.name}](${sticker.url})`);
+        if (sticker.format === StickerFormatType.Lottie) {
+            embed.addFields([
+                {
+                    name: "Sticker",
+                    value: `[${sticker.name}](${sticker.url})`,
+                },
+            ]);
         } else {
             embed.setThumbnail(sticker.url);
         }
@@ -102,9 +119,11 @@ export function handleAssets(message: Message, embed: MessageEmbed) {
 
     // Add attachments
     if (message.attachments.size) {
-        embed.addField(
-            "Attachments",
-            formatAttachmentsURL(message.attachments)
-        );
+        embed.addFields([
+            {
+                name: "Attachments",
+                value: formatAttachmentsURL(message.attachments),
+            },
+        ]);
     }
 }

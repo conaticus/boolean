@@ -1,9 +1,12 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
 import {
     ModalSubmitInteraction,
-    CommandInteraction,
-    MessageEmbed,
+    EmbedBuilder,
     TextChannel,
+    ChatInputCommandInteraction,
+    ComponentType,
+    TextInputStyle,
+    SlashCommandBuilder,
+    Colors,
 } from "discord.js";
 
 import { getSpecialChannel, getSpecialRole } from "../database";
@@ -16,11 +19,13 @@ class Announce extends BotCommand {
                 .setName("announce")
                 .setDescription("Write an announcement for the server.")
                 .toJSON(),
-            { timeout: 6000, requiredPerms: ["ADMINISTRATOR"] }
+            { timeout: 6000, requiredPerms: ["Administrator"] }
         );
     }
 
-    public async execute(interaction: CommandInteraction): Promise<void> {
+    public async execute(
+        interaction: ChatInputCommandInteraction
+    ): Promise<void> {
         if (interaction.guildId === null) {
             throw new Error("This belongs in a server.");
         }
@@ -45,26 +50,26 @@ class Announce extends BotCommand {
             title: "Make an announcement",
             components: [
                 {
-                    type: "ACTION_ROW",
+                    type: ComponentType.ActionRow,
                     components: [
                         {
-                            type: "TEXT_INPUT",
+                            type: ComponentType.TextInput,
                             customId: "title",
                             label: "Title",
-                            style: "SHORT",
+                            style: TextInputStyle.Short,
                             required: true,
                             maxLength: 256,
                         },
                     ],
                 },
                 {
-                    type: "ACTION_ROW",
+                    type: ComponentType.ActionRow,
                     components: [
                         {
-                            type: "TEXT_INPUT",
+                            type: ComponentType.TextInput,
                             customId: "content",
                             label: "Message",
-                            style: "PARAGRAPH",
+                            style: TextInputStyle.Paragraph,
                             required: true,
                         },
                     ],
@@ -81,22 +86,22 @@ class Announce extends BotCommand {
             .catch(() => null);
 
         if (!modalInteraction) {
-            const errorEmbed = new MessageEmbed()
-                .setColor("RED")
+            const errorEmbed = new EmbedBuilder()
+                .setColor(Colors.Red)
                 .setDescription("Announcement cancelled.");
             await interaction.followUp({ embeds: [errorEmbed] });
             return;
         }
 
-        const announcementEmbed = new MessageEmbed()
-            .setColor("ORANGE")
+        const announcementEmbed = new EmbedBuilder()
+            .setColor(Colors.Orange)
             .setTitle(modalInteraction.fields.getTextInputValue("title"))
             .setDescription(
                 modalInteraction.fields.getTextInputValue("content")
             );
 
-        const successEmbed = new MessageEmbed()
-            .setColor("GREEN")
+        const successEmbed = new EmbedBuilder()
+            .setColor(Colors.Green)
             .setDescription(
                 `Successfully created announcement in ${announcementsChannel}`
             );

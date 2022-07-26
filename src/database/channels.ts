@@ -1,4 +1,4 @@
-import { AnyChannel } from "discord.js";
+import { Channel } from "discord.js";
 
 import { Bot } from "../structures";
 import { getClient } from "./index";
@@ -52,7 +52,7 @@ async function getChannelId(
  * @param {string} label
  * @returns {Promise<T | null>}
  */
-export async function getSpecialChannel<T extends AnyChannel>(
+export async function getSpecialChannel<T extends Channel>(
     guildId: string,
     label: SpecialChannel
 ): Promise<T | null> {

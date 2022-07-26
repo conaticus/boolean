@@ -1,7 +1,7 @@
 import { REST } from "@discordjs/rest";
 import { Routes } from "discord-api-types/rest/v9";
 
-import { GuildAuditLogs } from "discord.js";
+import { AuditLogEvent } from "discord.js";
 import { commandFiles } from "../files";
 import { Bot, BotCommand } from "../structures";
 import { TypedEvent } from "../types";
@@ -54,7 +54,7 @@ export default TypedEvent({
         client.guilds.cache.forEach((guild) => {
             const task = guild
                 .fetchAuditLogs({
-                    type: GuildAuditLogs.Actions.MESSAGE_DELETE,
+                    type: AuditLogEvent.MessageDelete,
                     limit: 1,
                 })
                 .then((audits) => {

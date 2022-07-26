@@ -1,16 +1,16 @@
 import { Modmail, ModmailMessage, Prisma } from "@prisma/client";
-import { MessageAttachment } from "discord.js";
+import { Attachment } from "discord.js";
 import { getClient } from "../../database";
 
 /**
  * This will store an attachment that is associated with a ModmailMessage
  * @param {ModmailMessage} ctx
- * @param {MessageAttachment} attachment
+ * @param {Attachment} attachment
  * @returns {Promise<void>}
  */
 export async function storeAttachment(
     ctx: ModmailMessage,
-    attachment: MessageAttachment
+    attachment: Attachment
 ): Promise<void> {
     const client = getClient();
     await client.modmailAttachment.create({

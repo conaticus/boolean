@@ -1,5 +1,10 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import {
+    ChatInputCommandInteraction,
+    Colors,
+    CommandInteraction,
+    EmbedBuilder,
+    SlashCommandBuilder,
+} from "discord.js";
 
 import { Bot, BotCommand } from "../structures";
 import { handleAssets, newEmbed } from "../utils";
@@ -18,12 +23,12 @@ class Clear extends BotCommand {
                         .setRequired(true)
                 )
                 .toJSON(),
-            { requiredPerms: ["MANAGE_MESSAGES"] }
+            { requiredPerms: ["ManageMessages"] }
         );
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">,
+        interaction: ChatInputCommandInteraction<"cached">,
         client: Bot
     ): Promise<void> {
         await interaction.deferReply({ ephemeral: true });
@@ -36,8 +41,8 @@ class Clear extends BotCommand {
         );
 
         // Respond to the user
-        const successEmbed = new MessageEmbed()
-            .setColor("GREEN")
+        const successEmbed = new EmbedBuilder()
+            .setColor(Colors.Green)
             .setDescription(`Deleted \`${deleted.size}\` messages.`);
         await interaction.editReply({ embeds: [successEmbed] });
 
@@ -45,15 +50,22 @@ class Clear extends BotCommand {
         const embeds = deleted
             .filter((del) => !del.author.bot)
             .map((message) => {
-                const embed = newEmbed(message)
-                    .addField("\u200B", "\u200B", true)
-                    .addField("Executor", interaction.user.toString(), true)
-                    .addField(
-                        "Sent at",
-                        `<t:${Math.round(message.createdTimestamp / 1000)}>`,
-                        true
-                    )
-                    .addField("\u200B", "\u200B", true);
+                const embed = newEmbed(message).addFields([
+                    { name: "\u200B", value: "\u200B", inline: true },
+                    {
+                        name: "Executor",
+                        value: interaction.user.toString(),
+                        inline: true,
+                    },
+                    {
+                        name: "Sent at",
+                        value: `<t:${Math.round(
+                            message.createdTimestamp / 1000
+                        )}>`,
+                        inline: true,
+                    },
+                    { name: "\u200B", value: "\u200B", inline: true },
+                ]);
 
                 // Add stickers
                 handleAssets(message, embed);

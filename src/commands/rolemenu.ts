@@ -1,9 +1,10 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
 import {
-    CommandInteraction,
-    MessageActionRow,
-    MessageSelectMenu,
-    MessageSelectOptionData,
+    ChatInputCommandInteraction,
+    ActionRowBuilder,
+    SelectMenuBuilder,
+    SelectMenuOptionBuilder,
+    SlashCommandBuilder,
+    ComponentType,
 } from "discord.js";
 
 import { getRoleLists } from "../database";
@@ -20,7 +21,9 @@ class RoleMe extends BotCommand {
         );
     }
 
-    public async execute(inter: CommandInteraction<"cached">): Promise<void> {
+    public async execute(
+        inter: ChatInputCommandInteraction<"cached">
+    ): Promise<void> {
         const { guildId } = inter;
         if (guildId === null) {
             await inter.reply({
@@ -37,13 +40,13 @@ class RoleMe extends BotCommand {
             });
             return;
         }
-        const components: MessageActionRow[] = [];
+        const components: ActionRowBuilder<SelectMenuBuilder>[] = []; // TODO: Check if this is the correct component
         roleLists.forEach((list) => {
-            const row = new MessageActionRow();
+            const row = new ActionRowBuilder<SelectMenuBuilder>();
             if (list.choices.length === 0) {
                 return;
             }
-            const options: MessageSelectOptionData[] = list.choices
+            const options: SelectMenuOptionBuilder[] = list.choices
                 .sort((cA, cB) => {
                     if (cA > cB) {
                         return 1;
@@ -55,14 +58,14 @@ class RoleMe extends BotCommand {
                 })
                 .map((c) => {
                     const isDefault = inter.member.roles.cache.has(c.id);
-                    return {
+                    return SelectMenuOptionBuilder.from({
                         value: c.id,
                         label: c.name,
                         default: isDefault,
-                    };
+                    });
                 });
-            const component = new MessageSelectMenu({
-                type: "SELECT_MENU",
+            const component = new SelectMenuBuilder({
+                type: ComponentType.SelectMenu,
                 customId: list.title,
                 minValues: 0,
                 maxValues: list.choices.length,

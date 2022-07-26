@@ -1,5 +1,10 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import {
+    ChannelType,
+    ChatInputCommandInteraction,
+    Colors,
+    EmbedBuilder,
+    SlashCommandBuilder,
+} from "discord.js";
 
 import { getSpecialChannel } from "../database";
 import { Bot, BotCommand } from "../structures";
@@ -17,12 +22,12 @@ class DeleteSuggestion extends BotCommand {
                         .setRequired(true)
                 )
                 .toJSON(),
-            { requiredPerms: ["MANAGE_MESSAGES"] }
+            { requiredPerms: ["ManageMessages"] }
         );
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">,
+        interaction: ChatInputCommandInteraction<"cached">,
         client: Bot
     ): Promise<void> {
         await interaction.deferReply({ ephemeral: true });
@@ -30,9 +35,9 @@ class DeleteSuggestion extends BotCommand {
         const reply = await interaction.fetchReply();
         const reason = interaction.options.getString("reason", true);
 
-        if (reply.channel.type !== "GUILD_PUBLIC_THREAD") {
-            const errorMessageEmbed = new MessageEmbed()
-                .setColor("RED")
+        if (reply.channel.type !== ChannelType.GuildPublicThread) {
+            const errorMessageEmbed = new EmbedBuilder()
+                .setColor(Colors.Red)
                 .setDescription(
                     "You can only delete a suggestion in a thread."
                 );
@@ -60,8 +65,8 @@ class DeleteSuggestion extends BotCommand {
             !suggestionMessage ||
             suggestionMessage.channelId !== suggestionsChannel.id
         ) {
-            const errorMessageEmbed = new MessageEmbed()
-                .setColor("RED")
+            const errorMessageEmbed = new EmbedBuilder()
+                .setColor(Colors.Red)
                 .setDescription(
                     `You can only delete a suggestion in ${suggestionsChannel}.`
                 );
@@ -70,16 +75,16 @@ class DeleteSuggestion extends BotCommand {
         }
 
         const title = (suggestionTitleSplit || [""])[0];
-        const dmEmbed = new MessageEmbed()
-            .setColor("RED")
+        const dmEmbed = new EmbedBuilder()
+            .setColor(Colors.Red)
             .setTitle("Suggestion Deleted").setDescription(`
         Suggestion Title: \`${title}\`
         Reason: \`${reason}\`
         by: <@${interaction.user.id}>
         `);
 
-        const logEmbed = new MessageEmbed()
-            .setColor("RED")
+        const logEmbed = new EmbedBuilder()
+            .setColor(Colors.Red)
             .setTitle("Suggestion Deleted")
             .setAuthor({
                 name: `${suggestionAuthor?.tag}`,
@@ -88,12 +93,20 @@ class DeleteSuggestion extends BotCommand {
             .setDescription(
                 `<@${interaction?.user.id}> deleted suggestion by <@${suggestionAuthor?.id}>`
             )
-            .addField("• Title", title)
-            .addField(
-                "• Description",
-                suggestionMessage.embeds[0].description ?? " "
-            )
-            .addField("• Reason", reason);
+            .addFields([
+                {
+                    name: "• Title",
+                    value: title,
+                },
+                {
+                    name: "• Description",
+                    value: suggestionMessage.embeds[0].description ?? " ",
+                },
+                {
+                    name: "• Reason",
+                    value: reason,
+                },
+            ]);
 
         suggestionMessage.delete();
         await reply.channel.delete();

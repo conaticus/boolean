@@ -2,8 +2,7 @@ import {
     APIApplicationCommandOptionChoice,
     ChannelType,
 } from "discord-api-types/v10";
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 
 import {
     Badges,
@@ -107,32 +106,40 @@ class Config extends BotCommand {
                         )
                 )
                 .toJSON(),
-            { requiredPerms: ["ADMINISTRATOR"] }
+            { requiredPerms: ["Administrator"] }
         );
     }
 
     private static async setChannel(
         guildId: string,
-        inter: CommandInteraction
+        inter: ChatInputCommandInteraction
     ) {
         const label = inter.options.getString("label", true);
         const channel = inter.options.getChannel("channel", true);
         await setSpecialChannel(guildId, label as SpecialChannel, channel.id);
     }
 
-    private static async setBadge(guildId: string, inter: CommandInteraction) {
+    private static async setBadge(
+        guildId: string,
+        inter: ChatInputCommandInteraction
+    ) {
         const label = inter.options.getString("label", true);
         const emoji = inter.options.getString("emoji", true);
         await setBadge(guildId, label as Badges, emoji);
     }
 
-    private static async setRole(guildId: string, inter: CommandInteraction) {
+    private static async setRole(
+        guildId: string,
+        inter: ChatInputCommandInteraction
+    ) {
         const label = inter.options.getString("label", true);
         const role = inter.options.getRole("role", true);
         await setSpecialRole(guildId, label as SpecialRole, role.id);
     }
 
-    public async execute(interaction: CommandInteraction): Promise<void> {
+    public async execute(
+        interaction: ChatInputCommandInteraction
+    ): Promise<void> {
         const subCommand = interaction.options.getSubcommand();
         const { guildId } = interaction;
         if (guildId === null) {

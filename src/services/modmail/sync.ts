@@ -1,5 +1,5 @@
 import { Modmail, ModmailMessage } from "@prisma/client";
-import { AnyChannel, Message } from "discord.js";
+import { Channel, ChannelType, EmbedBuilder, Message } from "discord.js";
 import { editMessage, deleteMessage } from "./database";
 import { Bot } from "../../structures";
 
@@ -9,10 +9,10 @@ type Copies = {
 };
 
 async function resolveMsg(
-    channel: AnyChannel | null,
+    channel: Channel | null,
     id: string
 ): Promise<Message | undefined> {
-    if (channel !== null && channel.isText()) {
+    if (channel !== null && channel.type == ChannelType.GuildText) {
         const msg = await channel.messages.fetch(id);
         return msg;
     }
@@ -58,8 +58,9 @@ async function updateEmbed(msg: Message, newContent: string): Promise<void> {
     if (embed === undefined) {
         return;
     }
-    embed.setDescription(newContent);
-    await msg.edit({ embeds: [embed] });
+    const embedBuilder = EmbedBuilder.from(embed);
+    embedBuilder.setDescription(newContent);
+    await msg.edit({ embeds: [embedBuilder] });
 }
 
 /**

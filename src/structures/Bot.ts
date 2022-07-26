@@ -1,4 +1,11 @@
-import { Client, Collection, GuildAuditLogsEntry, Intents } from "discord.js";
+import {
+    Client,
+    Collection,
+    GuildAuditLogsEntry,
+    GatewayIntentBits,
+    AuditLogEvent,
+    Partials,
+} from "discord.js";
 
 import { eventFiles } from "../files";
 import { BotCommand, Logger } from "../structures";
@@ -17,19 +24,19 @@ export default class Bot extends Client<true> {
     // NOTE(hayper): I got you fam
     private lastLoggedDeletion: Map<
         string,
-        GuildAuditLogsEntry<"MESSAGE_DELETE">
+        GuildAuditLogsEntry<AuditLogEvent.MessageDelete>
     >;
 
     constructor() {
         super({
             intents: [
-                Intents.FLAGS.GUILDS,
-                Intents.FLAGS.GUILD_MESSAGES,
-                Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
-                Intents.FLAGS.GUILD_MEMBERS,
-                Intents.FLAGS.GUILD_PRESENCES,
+                GatewayIntentBits.Guilds,
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.GuildMessageReactions,
+                GatewayIntentBits.GuildMembers,
+                GatewayIntentBits.GuildPresences,
             ],
-            partials: ["MESSAGE", "CHANNEL", "REACTION"],
+            partials: [Partials.Message, Partials.Channel, Partials.Reaction],
         });
         this.lastLoggedDeletion = new Map();
         Bot.instance = this;
@@ -41,13 +48,13 @@ export default class Bot extends Client<true> {
 
     getLastLoggedDeletion(
         guildId: string
-    ): GuildAuditLogsEntry<"MESSAGE_DELETE"> | null {
+    ): GuildAuditLogsEntry<AuditLogEvent.MessageDelete> | null {
         return this.lastLoggedDeletion.get(guildId) || null;
     }
 
     setLastLoggedDeletion(
         guildId: string,
-        value?: GuildAuditLogsEntry<"MESSAGE_DELETE">
+        value?: GuildAuditLogsEntry<AuditLogEvent.MessageDelete>
     ) {
         // NOTE(dylhack): this allows for shorter syntax from outside usage.
         if (value !== undefined) {

@@ -1,5 +1,9 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import {
+    ChatInputCommandInteraction,
+    Colors,
+    EmbedBuilder,
+    SlashCommandBuilder,
+} from "discord.js";
 
 import { BotCommand } from "../structures";
 
@@ -59,17 +63,17 @@ class Deny extends BotCommand {
                         })
                 )
                 .toJSON(),
-            { requiredPerms: ["MANAGE_ROLES"] }
+            { requiredPerms: ["ManageRoles"] }
         );
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">
+        interaction: ChatInputCommandInteraction<"cached">
     ): Promise<void> {
         const member = interaction.options.getMember("user");
 
-        const dmEmbed = new MessageEmbed()
-            .setColor("RED")
+        const dmEmbed = new EmbedBuilder()
+            .setColor(Colors.Red)
             .setTitle("Your application has been denied");
 
         const user =
@@ -89,8 +93,8 @@ class Deny extends BotCommand {
         dmEmbed.setDescription(reason);
         await member?.send({ embeds: [dmEmbed] });
 
-        const successMessageEmbed = new MessageEmbed()
-            .setColor("GREEN")
+        const successMessageEmbed = new EmbedBuilder()
+            .setColor(Colors.Green)
             .setDescription("Successfully denied!");
 
         await interaction.reply({
