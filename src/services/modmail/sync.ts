@@ -12,7 +12,7 @@ async function resolveMsg(
     channel: Channel | null,
     id: string
 ): Promise<Message | undefined> {
-    if (channel !== null && channel.type == ChannelType.GuildText) {
+    if (channel !== null && channel.type === ChannelType.GuildText) {
         const msg = await channel.messages.fetch(id);
         return msg;
     }

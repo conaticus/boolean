@@ -1,6 +1,5 @@
 import {
     BaseGuildTextChannel,
-    CommandInteraction,
     Guild,
     Attachment,
     TextChannel,

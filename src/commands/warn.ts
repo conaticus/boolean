@@ -42,7 +42,7 @@ class Warnings extends BotCommand {
     public async execute(
         interaction: ChatInputCommandInteraction<"cached">
     ): Promise<void> {
-        const member = interaction.options.getMember("user");
+        const member = interaction.options.getMember("user")!;
         const reason = interaction.options.getString("reason", true);
 
         const warnEmbed = new EmbedBuilder().setColor(Colors.Red)
@@ -68,7 +68,7 @@ class Warnings extends BotCommand {
         const actionRow = new ActionRowBuilder<ButtonBuilder>();
         actionRow.addComponents(appealButton);
         const components = [actionRow];
-        const dm = await member!
+        const dm = await member
             .send({ embeds: [dmEmbed], components })
             .catch(() => null);
         const close = async () => {
@@ -125,8 +125,8 @@ class Warnings extends BotCommand {
             const appealEmbed = new EmbedBuilder()
                 .setColor(Colors.Yellow)
                 .setAuthor({
-                    name: `${member!.user.username} appealed their warning`,
-                    iconURL: member!.user.displayAvatarURL({
+                    name: `${member.user.username} appealed their warning`,
+                    iconURL: member.user.displayAvatarURL({
                         extension: "png",
                     }),
                 })
@@ -135,7 +135,7 @@ class Warnings extends BotCommand {
                 .addFields([
                     {
                         name: "Offender",
-                        value: member!.toString(),
+                        value: member.toString(),
                         inline: true,
                     },
                     {
