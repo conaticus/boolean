@@ -1,11 +1,11 @@
-import { ContextMenuCommandBuilder } from "@discordjs/builders";
-import { ApplicationCommandType } from "discord-api-types/v10";
+import { ApplicationCommandType, TextInputStyle } from "discord-api-types/v10";
 import {
-    MessageActionRow,
-    MessageContextMenuInteraction,
-    Modal,
+    ActionRowBuilder,
+    MessageContextMenuCommandInteraction,
+    ModalBuilder,
     ModalSubmitInteraction,
-    TextInputComponent,
+    TextInputBuilder,
+    ContextMenuCommandBuilder,
 } from "discord.js";
 import { getMessageByAuthor } from "../util";
 import { BotCommand } from "../../../structures";
@@ -21,15 +21,19 @@ export default class ModmailEditContext extends BotCommand {
         );
     }
 
-    public async execute(int: MessageContextMenuInteraction): Promise<void> {
+    public async execute(
+        int: MessageContextMenuCommandInteraction
+    ): Promise<void> {
         const [modmail, msg] = await getMessageByAuthor(int);
-        const textC = new TextInputComponent()
+        const textC = new TextInputBuilder()
             .setCustomId("new_content")
             .setLabel("What is your new message?")
             .setValue(msg.content)
-            .setStyle("PARAGRAPH");
-        const actionRow = new MessageActionRow({ components: [textC] });
-        const modal = new Modal()
+            .setStyle(TextInputStyle.Paragraph);
+        const actionRow = new ActionRowBuilder<TextInputBuilder>({
+            components: [textC],
+        });
+        const modal = new ModalBuilder()
             .setTitle("New Message")
             .addComponents(actionRow)
             .setCustomId(int.id);

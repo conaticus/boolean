@@ -1,10 +1,10 @@
 import {
-    MessageContextMenuInteraction,
-    BaseCommandInteraction,
-    MessageEmbed,
+    MessageContextMenuCommandInteraction,
+    EmbedBuilder,
     User,
     Guild,
-    MessageAttachment,
+    Attachment,
+    CommandInteraction,
 } from "discord.js";
 import { Modmail, ModmailMessage } from "@prisma/client";
 import { modColor, systemColor, userColor } from "./constants";
@@ -18,12 +18,13 @@ export function getEmbed(
     author: User,
     content: string,
     isStaff: boolean,
-    attachments: MessageAttachment[] = []
-): MessageEmbed {
+    attachments: Attachment[] = []
+): EmbedBuilder {
     const guildIcon = guild.iconURL() || undefined;
-    const embed = new MessageEmbed({
+    const embed = new EmbedBuilder({
         footer: {
             iconURL: guildIcon,
+            text: "",
         },
     });
     let desc = content;
@@ -61,9 +62,9 @@ export function getEmbed(
         .setTimestamp();
 }
 
-export function getSystemEmbed(title: string, content: string): MessageEmbed {
+export function getSystemEmbed(title: string, content: string): EmbedBuilder {
     const bot = Bot.getInstance();
-    return new MessageEmbed()
+    return new EmbedBuilder()
         .setTitle(title)
         .setColor(systemColor)
         .setDescription(content)
@@ -79,8 +80,8 @@ export function getStaffEmbed(
     author: User,
     content: string,
     isStaff: boolean,
-    attachments: MessageAttachment[] = []
-): [MessageEmbed, MessageEmbed] {
+    attachments: Attachment[] = []
+): [EmbedBuilder, EmbedBuilder] {
     const anonymous = getEmbed(guild, author, content, isStaff, attachments);
     const regular = getEmbed(guild, author, content, isStaff, attachments);
     regular.setAuthor({
@@ -92,11 +93,11 @@ export function getStaffEmbed(
 
 /**
  * Get an active Modmail based on the current interaction.
- * @param {BaseCommandInteraction} interaction
+ * @param {CommandInteraction} interaction
  * @returns {Promise<FullModmail | null>}
  */
 export async function getModmailByInt(
-    interaction: BaseCommandInteraction
+    interaction: CommandInteraction
 ): Promise<FullModmail | null> {
     let ctx: FullModmail | null = null;
     if (interaction.guildId === null) {
@@ -112,7 +113,7 @@ export async function getModmailByInt(
 }
 
 export async function getMessageByAuthor(
-    int: MessageContextMenuInteraction
+    int: MessageContextMenuCommandInteraction
 ): Promise<[Modmail, ModmailMessage]> {
     const modmail = await getModmailByInt(int);
     const targetId = int.targetMessage.id;

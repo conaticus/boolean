@@ -1,5 +1,9 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import {
+    ChatInputCommandInteraction,
+    Colors,
+    EmbedBuilder,
+    SlashCommandBuilder,
+} from "discord.js";
 
 import { BotCommand } from "../structures";
 
@@ -15,20 +19,20 @@ class Ping extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">
+        interaction: ChatInputCommandInteraction<"cached">
     ): Promise<void> {
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setTitle("Ping")
             .setDescription(`API Latency: \`${interaction.client.ws.ping}\`ms`)
-            .setColor("ORANGE");
+            .setColor(Colors.Orange);
         interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
-    private setTimeout(sec: number): Promise<void> {
-        return new Promise((resolve) => {
-            setTimeout(resolve, sec * 1000);
-        });
-    }
+    // private setTimeout(sec: number): Promise<void> {
+    //     return new Promise((resolve) => {
+    //         setTimeout(resolve, sec * 1000);
+    //     });
+    // }
 }
 
 export default new Ping();

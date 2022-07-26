@@ -1,8 +1,9 @@
 import {
     GuildMember,
-    MessageEmbed,
+    EmbedBuilder,
     PartialGuildMember,
     TextChannel,
+    Colors,
 } from "discord.js";
 
 import { getSpecialChannel } from "../database";
@@ -14,8 +15,8 @@ export default TypedEvent({
     run: async (client: Bot, member: GuildMember | PartialGuildMember) => {
         if (member.partial) return;
 
-        const welcomeMessageEmbed = new MessageEmbed()
-            .setColor("ORANGE")
+        const welcomeMessageEmbed = new EmbedBuilder()
+            .setColor(Colors.Orange)
             .setTitle("New Member")
             .setDescription(
                 `Welcome ${member.user.username} to the conaticus server\n` +

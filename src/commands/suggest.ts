@@ -1,9 +1,11 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
 import {
-    CommandInteraction,
-    MessageEmbed,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
     TextChannel,
-    Util,
+    cleanContent,
+    SlashCommandBuilder,
+    Colors,
+    ThreadAutoArchiveDuration,
 } from "discord.js";
 
 import { getSpecialChannel } from "../database";
@@ -39,7 +41,7 @@ class Suggest extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">
+        interaction: ChatInputCommandInteraction<"cached">
     ): Promise<void> {
         const optSuggest = await getSpecialChannel(
             interaction.guildId,
@@ -53,13 +55,13 @@ class Suggest extends BotCommand {
         }
         const suggestionsChannel = optSuggest as TextChannel;
 
-        const title = Util.cleanContent(
+        const title = cleanContent(
             interaction.options.getString("title", true),
             interaction.channel
         );
         const desc = interaction.options.getString("description", false);
-        const suggestionEmbed = new MessageEmbed()
-            .setColor("ORANGE")
+        const suggestionEmbed = new EmbedBuilder()
+            .setColor(Colors.Orange)
             .setTitle(`${title} - ${interaction.member?.user.tag}`);
         if (desc !== null) {
             suggestionEmbed.setDescription(desc);
@@ -77,12 +79,12 @@ class Suggest extends BotCommand {
         await message.react("❌");
         const thread = await message.startThread({
             name: title,
-            autoArchiveDuration: "MAX",
+            autoArchiveDuration: ThreadAutoArchiveDuration.OneWeek,
         });
         await thread.members.add(interaction.user);
 
-        const successMessageEmbed = new MessageEmbed()
-            .setColor("GREEN")
+        const successMessageEmbed = new EmbedBuilder()
+            .setColor(Colors.Green)
             .setDescription(
                 `Suggestion successfully created at ${suggestionsChannel}`
             );

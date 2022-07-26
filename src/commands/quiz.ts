@@ -1,11 +1,12 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
 import {
-    CommandInteraction,
+    ChatInputCommandInteraction,
     Message,
-    MessageEmbed,
+    EmbedBuilder,
     MessageReaction,
     TextChannel,
     User,
+    SlashCommandBuilder,
+    Colors,
 } from "discord.js";
 
 import { Bot, BotCommand } from "../structures";
@@ -34,8 +35,10 @@ const numberEmojis = [
     "🔟",
 ];
 
-const constructEmbedMessage = (message: string): { embeds: MessageEmbed[] } => {
-    const embed = new MessageEmbed().setDescription(message).setColor("ORANGE");
+const constructEmbedMessage = (message: string): { embeds: EmbedBuilder[] } => {
+    const embed = new EmbedBuilder()
+        .setDescription(message)
+        .setColor(Colors.Orange);
     return { embeds: [embed] };
 };
 
@@ -57,8 +60,8 @@ const collectMessage = async (
 };
 
 const cancelQuiz = async (user: User, channel: TextChannel) => {
-    const errEmbed = new MessageEmbed()
-        .setColor("RED")
+    const errEmbed = new EmbedBuilder()
+        .setColor(Colors.Red)
         .setTitle("Quiz cancelled.")
         .setDescription("Quiz creation timed out.");
     await channel.send({ embeds: [errEmbed] });
@@ -79,8 +82,8 @@ const querySeconds = async (
 
     const questionTime = parseInt(secondsMsg.content, 10) * 1000;
     if (questionTime / 1000 <= 5) {
-        const errEmbed = new MessageEmbed()
-            .setColor("RED")
+        const errEmbed = new EmbedBuilder()
+            .setColor(Colors.Red)
             .setDescription("Questions must be at least 5 seconds long.");
         await channel.send({ embeds: [errEmbed] });
         await querySeconds(user, channel);
@@ -155,10 +158,10 @@ const constructQuestions = async (
 
     const correctOptionIdx = Number(correctOptionMsg.content) - 1;
     if (correctOptionIdx > questionOptions.length - 1 || correctOptionIdx < 0) {
-        const errEmbed = new MessageEmbed()
+        const errEmbed = new EmbedBuilder()
             .setTitle("Quiz cancelled")
             .setDescription("That option does not exist.")
-            .setColor("RED");
+            .setColor(Colors.Red);
         await channel.send({ embeds: [errEmbed] });
         return null;
     }
@@ -184,20 +187,20 @@ class Quiz extends BotCommand {
                         .setRequired(true)
                 )
                 .toJSON(),
-            { requiredPerms: ["ADMINISTRATOR"] }
+            { requiredPerms: ["Administrator"] }
         );
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">,
+        interaction: ChatInputCommandInteraction<"cached">,
         client: Bot
     ): Promise<void> {
         const quizChannel = interaction.options.getChannel(
             "channel"
         ) as TextChannel;
 
-        const replyEmbed = new MessageEmbed()
-            .setColor("ORANGE")
+        const replyEmbed = new EmbedBuilder()
+            .setColor(Colors.Orange)
             .setDescription("Setting up quiz..");
         await interaction.reply({ embeds: [replyEmbed], ephemeral: true });
 
@@ -236,8 +239,8 @@ class Quiz extends BotCommand {
             )
         );
 
-        const quizEmbed = new MessageEmbed()
-            .setColor("ORANGE")
+        const quizEmbed = new EmbedBuilder()
+            .setColor(Colors.Orange)
             .setTitle("Quiz")
             .setDescription(
                 `Title: ${quizTitle}\nQuestions: ${questions.length}\nBy: <@${interaction.user.id}>`
@@ -327,8 +330,8 @@ class Quiz extends BotCommand {
         sortable.sort((a, b) => a[1] - b[1]);
         const winnerId = sortable[sortable.length - 1][0];
 
-        const finishEmbed = new MessageEmbed()
-            .setColor("GREEN")
+        const finishEmbed = new EmbedBuilder()
+            .setColor(Colors.Green)
             .setTitle("Quiz Ended")
             .setDescription(
                 `Congratulations <@${winnerId}>, you won the quiz!`

@@ -1,5 +1,9 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import {
+    ChatInputCommandInteraction,
+    Colors,
+    EmbedBuilder,
+    SlashCommandBuilder,
+} from "discord.js";
 
 import { BotCommand } from "../structures";
 
@@ -16,19 +20,19 @@ class Repeat extends BotCommand {
                         .setRequired(true)
                 )
                 .toJSON(),
-            { timeout: 60000, requiredPerms: ["ADMINISTRATOR"] }
+            { timeout: 60000, requiredPerms: ["Administrator"] }
         );
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">
+        interaction: ChatInputCommandInteraction<"cached">
     ): Promise<void> {
         await interaction.channel?.send(
             interaction.options.getString("message", true)
         );
 
-        const successEmbed = new MessageEmbed()
-            .setColor("GREEN")
+        const successEmbed = new EmbedBuilder()
+            .setColor(Colors.Green)
             .setDescription("Repeated your message.");
         await interaction.reply({ embeds: [successEmbed], ephemeral: true });
     }
