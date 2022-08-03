@@ -27,12 +27,6 @@ class Ping extends BotCommand {
             .setColor(Colors.Orange);
         interaction.reply({ embeds: [embed], ephemeral: true });
     }
-
-    // private setTimeout(sec: number): Promise<void> {
-    //     return new Promise((resolve) => {
-    //         setTimeout(resolve, sec * 1000);
-    //     });
-    // }
 }
 
 export default new Ping();
