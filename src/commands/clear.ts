@@ -1,5 +1,10 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import {
+    CommandInteraction,
+    Message,
+    MessageEmbed,
+    PartialMessage,
+} from "discord.js";
 
 import { Bot, BotCommand } from "../structures";
 import { handleAssets, newEmbed } from "../utils";
@@ -42,28 +47,39 @@ class Clear extends BotCommand {
         await interaction.editReply({ embeds: [successEmbed] });
 
         // Log the cleared messages
-        const embeds = deleted
-            .filter((del) => !del.author.bot)
-            .map((message) => {
-                const embed = newEmbed(message)
-                    .addField("\u200B", "\u200B", true)
-                    .addField("Executor", interaction.user.toString(), true)
-                    .addField(
-                        "Sent at",
-                        `<t:${Math.round(message.createdTimestamp / 1000)}>`,
-                        true
-                    )
-                    .addField("\u200B", "\u200B", true);
-
-                // Add stickers
-                handleAssets(message, embed);
-                return embed;
-            });
+        const filter = (del: Message | PartialMessage | undefined) => {
+            return del !== undefined && del.author !== null;
+        };
+        const embeds = deleted.map((message) => {
+            if (!filter(message)) {
+                return;
+            }
+            const msg = message as Message;
+            const embed = newEmbed(msg).addFields([
+                { name: "\u200B", value: "\u200B", inline: true },
+                {
+                    name: "Executor",
+                    value: interaction.user.toString(),
+                    inline: true,
+                },
+                {
+                    name: "Sent at",
+                    value: `<t:${Math.round(msg.createdTimestamp / 1000)}>`,
+                    inline: true,
+                },
+                { name: "\u200B", value: "\u200B", inline: true },
+            ]);
+            // Add stickers
+            handleAssets(msg, embed);
+            return embed;
+        });
         const tasks = [];
         for (let i = 0; i < embeds.length; i += 1) {
             const embed = embeds[i];
-            const task = client.logger.channel(interaction.guildId, embed);
-            tasks.push(task);
+            if (embed !== undefined) {
+                const task = client.logger.channel(interaction.guildId, embed);
+                tasks.push(task);
+            }
         }
         await Promise.all(tasks);
     }
