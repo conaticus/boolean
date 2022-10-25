@@ -3,7 +3,7 @@
 ![Boolean's Picture](./docs/Boolean%20Pfp.png)
 
 ## About
-Boolean is a Discord bot for the Conaticus' [Discord server](https://discord.gg/conaticus). Boolean contains a collection of useful modules for your server, like a mod mailing system, a custom role menu, etc. Want to see how Boolean was made? Watch the development process [here](https://www.youtube.com/watch?v=xq2jR3_msmk)
+Boolean is a Discord bot for the Conaticus' [Discord server](https://discord.gg/w2kQMg5U). Boolean contains a collection of useful modules for your server, like a mod mailing system, a custom role menu, etc. Want to see how Boolean was made? Watch the development process [here](https://www.youtube.com/watch?v=xq2jR3_msmk)
 
 ## Setup and configuration guide
 
