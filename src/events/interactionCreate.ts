@@ -1,5 +1,4 @@
-import { Interaction, MessageEmbed } from "discord.js";
-
+import { Interaction, EmbedBuilder, Colors } from "discord.js";
 import { getRoleLists } from "../database";
 import { Bot } from "../structures";
 import { TypedEvent } from "../types";
@@ -7,7 +6,7 @@ import { TypedEvent } from "../types";
 export default TypedEvent({
     eventName: "interactionCreate",
     run: async (client: Bot, interaction: Interaction) => {
-        if (interaction.isCommand() || interaction.isContextMenu()) {
+        if (interaction.isCommand() || interaction.isContextMenuCommand()) {
             const command = client.commands.get(interaction.commandName);
             if (!command) {
                 return;
@@ -21,8 +20,8 @@ export default TypedEvent({
                     command.requiredPerms
                 );
                 if (!hasPerms) {
-                    const invalidPermissionsEmbed = new MessageEmbed()
-                        .setColor("RED")
+                    const invalidPermissionsEmbed = new EmbedBuilder()
+                        .setColor(Colors.Red)
                         .setTitle("Command Failed")
                         .setDescription(
                             "You have insufficient permissions to use" +
@@ -47,8 +46,8 @@ export default TypedEvent({
                 }
 
                 console.error(e);
-                const errorEmbed = new MessageEmbed()
-                    .setColor("RED")
+                const errorEmbed = new EmbedBuilder()
+                    .setColor(Colors.Red)
                     .setDescription(
                         "❌ An error occurred while executing the command." +
                             `\`\`\`\n${msg}\`\`\``

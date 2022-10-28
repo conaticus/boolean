@@ -1,11 +1,12 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
 import {
-    CommandInteraction,
+    Colors,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
     Message,
-    MessageEmbed,
     PartialMessage,
+    SlashCommandBuilder,
 } from "discord.js";
-
+import { PermissionFlagsBits } from "discord-api-types/v10";
 import { Bot, BotCommand } from "../structures";
 import { handleAssets, newEmbed } from "../utils";
 
@@ -23,12 +24,12 @@ class Clear extends BotCommand {
                         .setRequired(true)
                 )
                 .toJSON(),
-            { requiredPerms: ["MANAGE_MESSAGES"] }
+            { requiredPerms: [PermissionFlagsBits.ManageMessages] }
         );
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">,
+        interaction: ChatInputCommandInteraction<"cached">,
         client: Bot
     ): Promise<void> {
         await interaction.deferReply({ ephemeral: true });
@@ -41,38 +42,13 @@ class Clear extends BotCommand {
         );
 
         // Respond to the user
-        const successEmbed = new MessageEmbed()
-            .setColor("GREEN")
+        const successEmbed = new EmbedBuilder()
+            .setColor(Colors.Green)
             .setDescription(`Deleted \`${deleted.size}\` messages.`);
         await interaction.editReply({ embeds: [successEmbed] });
 
         // Log the cleared messages
-        const filter = (del: Message | PartialMessage | undefined) => {
-            return del !== undefined && del.author !== null;
-        };
-        const embeds = deleted.map((message) => {
-            if (!filter(message)) {
-                return;
-            }
-            const msg = message as Message;
-            const embed = newEmbed(msg).addFields([
-                { name: "\u200B", value: "\u200B", inline: true },
-                {
-                    name: "Executor",
-                    value: interaction.user.toString(),
-                    inline: true,
-                },
-                {
-                    name: "Sent at",
-                    value: `<t:${Math.round(msg.createdTimestamp / 1000)}>`,
-                    inline: true,
-                },
-                { name: "\u200B", value: "\u200B", inline: true },
-            ]);
-            // Add stickers
-            handleAssets(msg, embed);
-            return embed;
-        });
+        const embeds = deleted.map((m) => this.createEmbed(interaction, m));
         const tasks = [];
         for (let i = 0; i < embeds.length; i += 1) {
             const embed = embeds[i];
@@ -82,6 +58,42 @@ class Clear extends BotCommand {
             }
         }
         await Promise.all(tasks);
+    }
+
+    /**
+     *
+     * @param interaction
+     * @param del
+     * @private
+     */
+    private createEmbed(
+        interaction: ChatInputCommandInteraction,
+        del: Message | PartialMessage | undefined
+    ): EmbedBuilder | undefined {
+        // check if partial or undefined
+        if (del !== undefined && del.author !== null) {
+            return;
+        }
+        const msg = del as Message;
+        const embed = newEmbed(msg);
+        embed.addFields([
+            { name: "\u200B", value: "\u200B", inline: true },
+            {
+                name: "Executor",
+                value: interaction.user.toString(),
+                inline: true,
+            },
+            {
+                name: "Sent at",
+                value: `<t:${Math.round(msg.createdTimestamp / 1000)}>`,
+                inline: true,
+            },
+            { name: "\u200B", value: "\u200B", inline: true },
+        ]);
+        // Add stickers
+        handleAssets(msg, embed);
+        // eslint-disable-next-line consistent-return
+        return embed;
     }
 }
 

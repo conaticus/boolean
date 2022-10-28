@@ -1,16 +1,16 @@
 import { Modmail, ModmailMessage, Prisma } from "@prisma/client";
-import { MessageAttachment } from "discord.js";
+import { Attachment } from "discord.js";
 import { getClient } from "../../database";
 
 /**
  * This will store an attachment that is associated with a ModmailMessage
  * @param {ModmailMessage} ctx
- * @param {MessageAttachment} attachment
+ * @param {Attachment} attachment
  * @returns {Promise<void>}
  */
 export async function storeAttachment(
     ctx: ModmailMessage,
-    attachment: MessageAttachment
+    attachment: Attachment
 ): Promise<void> {
     const client = getClient();
     await client.modmailAttachment.create({
@@ -98,14 +98,12 @@ export type FullModmail = Prisma.ModmailGetPayload<{
 
 /**
  * This will resolve all of the messages with the modmail.
- * @param {Prisma.ModmailWhereInput} where Prisma SQL query
- * @returns {Promise<FullModmail | null>}
  */
 export async function getModmail(
     where: Prisma.ModmailWhereInput
 ): Promise<FullModmail | null> {
     const client = getClient();
-    const modmail = await client.modmail.findFirst({
+    return client.modmail.findFirst({
         where: {
             closed: false,
             ...where,
@@ -119,8 +117,6 @@ export async function getModmail(
             },
         },
     });
-
-    return modmail;
 }
 
 export async function openModmail(
@@ -130,7 +126,7 @@ export async function openModmail(
     memberId: string
 ): Promise<Modmail> {
     const client = getClient();
-    const modmail = await client.modmail.create({
+    return client.modmail.create({
         data: {
             guildId,
             authorId,
@@ -138,8 +134,6 @@ export async function openModmail(
             memberId,
         },
     });
-
-    return modmail;
 }
 
 export async function hasActiveModmail(userId: string): Promise<boolean> {

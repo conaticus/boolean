@@ -1,11 +1,10 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
 import {
-    CommandInteraction,
-    MessageActionRow,
-    MessageSelectMenu,
-    MessageSelectOptionData,
+    ActionRowBuilder,
+    ChatInputCommandInteraction,
+    SelectMenuBuilder,
+    SelectMenuComponentOptionData,
+    SlashCommandBuilder,
 } from "discord.js";
-
 import { getRoleLists } from "../database";
 import { BotCommand } from "../structures";
 
@@ -20,7 +19,9 @@ class RoleMe extends BotCommand {
         );
     }
 
-    public async execute(inter: CommandInteraction<"cached">): Promise<void> {
+    public async execute(
+        inter: ChatInputCommandInteraction<"cached">
+    ): Promise<void> {
         const { guildId } = inter;
         if (guildId === null) {
             await inter.reply({
@@ -37,13 +38,13 @@ class RoleMe extends BotCommand {
             });
             return;
         }
-        const components: MessageActionRow[] = [];
+        const components: ActionRowBuilder<SelectMenuBuilder>[] = [];
         roleLists.forEach((list) => {
-            const row = new MessageActionRow();
+            const row = new ActionRowBuilder<SelectMenuBuilder>();
             if (list.choices.length === 0) {
                 return;
             }
-            const options: MessageSelectOptionData[] = list.choices
+            const options: SelectMenuComponentOptionData[] = list.choices
                 .sort((cA, cB) => {
                     if (cA > cB) {
                         return 1;
@@ -61,8 +62,7 @@ class RoleMe extends BotCommand {
                         default: isDefault,
                     };
                 });
-            const component = new MessageSelectMenu({
-                type: "SELECT_MENU",
+            const component = new SelectMenuBuilder({
                 customId: list.title,
                 minValues: 0,
                 maxValues: list.choices.length,

@@ -1,6 +1,9 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
-
+import {
+    SlashCommandBuilder,
+    ChatInputCommandInteraction,
+    EmbedBuilder,
+    Colors,
+} from "discord.js";
 import { Badges, getBadge } from "../database";
 import { BotCommand } from "../structures";
 
@@ -22,7 +25,7 @@ class Profile extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">
+        interaction: ChatInputCommandInteraction<"cached">
     ): Promise<void> {
         const userId =
             interaction.options.getUser("target", false)?.id ||
@@ -33,9 +36,9 @@ class Profile extends BotCommand {
         if (member === null) {
             await interaction.reply({
                 embeds: [
-                    new MessageEmbed()
+                    new EmbedBuilder()
                         .setTitle("User not found")
-                        .setColor("RED"),
+                        .setColor(Colors.Red),
                 ],
                 ephemeral: true,
             });
@@ -53,14 +56,9 @@ class Profile extends BotCommand {
         });
         await Promise.all(tasks);
 
-        const avatar =
-            member.user.avatarURL({
-                dynamic: true,
-                size: 4096,
-            }) || "";
-        const banner =
-            member.user.bannerURL({ dynamic: true, size: 4096 }) || "";
-        const embed = new MessageEmbed()
+        const avatar = member.user.avatarURL({ size: 4096 }) || "";
+        const banner = member.user.bannerURL({ size: 4096 }) || "";
+        const embed = new EmbedBuilder()
             .setTitle(`${member.user.username}'s profile`)
             .addFields(
                 {
@@ -91,7 +89,7 @@ class Profile extends BotCommand {
             .setColor(
                 member.roles.highest.id !== interaction.guildId
                     ? member.roles.highest.color
-                    : "BLUE"
+                    : Colors.Blue
             );
         await interaction.reply({ embeds: [embed], ephemeral: true });
     }

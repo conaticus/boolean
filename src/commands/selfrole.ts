@@ -1,6 +1,5 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction } from "discord.js";
-
+import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
+import { PermissionFlagsBits } from "discord-api-types/v10";
 import {
     addRoleChoice,
     createRoleList,
@@ -79,11 +78,14 @@ class SelfRole extends BotCommand {
                         )
                 )
                 .toJSON(),
-            { requiredPerms: ["ADMINISTRATOR"] }
+            { requiredPerms: [PermissionFlagsBits.Administrator] }
         );
     }
 
-    private static async showLists(guildId: string, inter: CommandInteraction) {
+    private static async showLists(
+        guildId: string,
+        inter: ChatInputCommandInteraction
+    ) {
         const lists = await getRoleLists(guildId);
         let content = "**Here are the Role Lists**";
         if (lists.length > 0) {
@@ -98,33 +100,41 @@ class SelfRole extends BotCommand {
 
     private static async createRoleList(
         guildId: string,
-        inter: CommandInteraction
-    ) {
+        inter: ChatInputCommandInteraction
+    ): Promise<void> {
         const label = inter.options.getString("label", true);
         await createRoleList(guildId, label);
     }
 
     private static async deleteRoleList(
         guildId: string,
-        inter: CommandInteraction
-    ) {
+        inter: ChatInputCommandInteraction
+    ): Promise<void> {
         const label = inter.options.getString("label", true);
         await removeRoleList(guildId, label);
     }
 
-    private static async addChoice(guildId: string, inter: CommandInteraction) {
+    private static async addChoice(
+        guildId: string,
+        inter: ChatInputCommandInteraction
+    ): Promise<void> {
         const label = inter.options.getString("label", true);
         const role = inter.options.getRole("role", true);
         await addRoleChoice(guildId, label, role.id);
     }
 
-    private static async remChoice(guildId: string, inter: CommandInteraction) {
+    private static async remChoice(
+        guildId: string,
+        inter: ChatInputCommandInteraction
+    ) {
         const label = inter.options.getString("label", true);
         const role = inter.options.getRole("role", true);
         await removeRoleChoice(guildId, label, role.id);
     }
 
-    public async execute(interaction: CommandInteraction): Promise<void> {
+    public async execute(
+        interaction: ChatInputCommandInteraction
+    ): Promise<void> {
         const subCommand = interaction.options.getSubcommand();
         const { guildId } = interaction;
         if (guildId === null) {

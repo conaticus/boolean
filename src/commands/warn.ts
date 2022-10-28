@@ -1,12 +1,18 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
 import {
-    CommandInteraction,
-    MessageActionRow,
-    MessageButton,
-    MessageEmbed,
+    ActionRowBuilder,
+    ButtonBuilder,
+    ButtonStyle,
+    ChatInputCommandInteraction,
+    Colors,
+    EmbedBuilder,
+    SlashCommandBuilder,
     TextChannel,
 } from "discord.js";
-
+import {
+    ComponentType,
+    PermissionFlagsBits,
+    TextInputStyle,
+} from "discord-api-types/v10";
 import { getSpecialChannel } from "../database";
 import { BotCommand } from "../structures";
 
@@ -31,36 +37,40 @@ class Warnings extends BotCommand {
                         .setRequired(true)
                 )
                 .toJSON(),
-            { requiredPerms: ["MANAGE_MESSAGES"] }
+            { requiredPerms: [PermissionFlagsBits.ManageMessages] }
         );
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">
+        interaction: ChatInputCommandInteraction<"cached">
     ): Promise<void> {
-        const member = interaction.options.getMember("user", true);
+        const member = interaction.options.getMember("user");
         const reason = interaction.options.getString("reason", true);
+        if (member === null) {
+            throw new Error("Provided user is null.");
+        }
 
-        const warnEmbed = new MessageEmbed().setColor("RED").setDescription(`
+        const warnEmbed = new EmbedBuilder().setColor(Colors.Red)
+            .setDescription(`
                 User: ${member}
                 Reason: \`${reason}\`
                 Moderator: <@${interaction.member.user.id}>
             `);
 
-        const dmEmbed = new MessageEmbed()
-            .setColor("RED")
+        const dmEmbed = new EmbedBuilder()
+            .setColor(Colors.Red)
             .setTitle("You have received a warning").setDescription(`
                 Reason: ${reason}
                 Moderator: ${interaction.member}
 
                 If you believe this warning is unjustified, appeal using the button below.
             `);
-        const appealButton = new MessageButton()
+        const appealButton = new ButtonBuilder()
             .setLabel("Appeal warning")
             .setEmoji("📜")
             .setCustomId("appeal_warning")
-            .setStyle("PRIMARY");
-        const actionRow = new MessageActionRow();
+            .setStyle(ButtonStyle.Primary);
+        const actionRow = new ActionRowBuilder<ButtonBuilder>();
         actionRow.addComponents(appealButton);
         const components = [actionRow];
         const dm = await member
@@ -76,7 +86,7 @@ class Warnings extends BotCommand {
             return;
         }
         const collector = dm.createMessageComponentCollector({
-            componentType: "BUTTON",
+            componentType: ComponentType.Button,
             time: 600_000,
         });
         collector.once("end", async () => {
@@ -89,14 +99,14 @@ class Warnings extends BotCommand {
                 title: "Appeal warning",
                 components: [
                     {
-                        type: "ACTION_ROW",
+                        type: ComponentType.ActionRow,
                         components: [
                             {
-                                type: "TEXT_INPUT",
+                                type: ComponentType.TextInput,
                                 label: "Elaborate",
                                 placeholder:
                                     "Explain why you think your warning was unjustified",
-                                style: "PARAGRAPH",
+                                style: TextInputStyle.Paragraph,
                                 customId: "content",
                                 required: true,
                             },
@@ -117,19 +127,28 @@ class Warnings extends BotCommand {
                 });
                 return;
             }
-            const appealEmbed = new MessageEmbed()
-                .setColor("YELLOW")
+            const appealEmbed = new EmbedBuilder()
+                .setColor(Colors.Yellow)
                 .setAuthor({
                     name: `${member.user.username} appealed their warning`,
-                    iconURL: member.user.displayAvatarURL({
-                        dynamic: true,
-                    }),
+                    iconURL: member.user.displayAvatarURL(),
                 })
                 .setDescription(int.fields.getTextInputValue("content"))
                 .setTimestamp()
-                .addField("Offender", member.toString(), true)
-                .addField("Moderator", interaction.user.toString(), true)
-                .addField("Warning reason", reason);
+                .addFields([
+                    {
+                        name: "Offender",
+                        value: member.toString(),
+                        inline: true,
+                    },
+                    {
+                        name: "Moderator",
+                        value: interaction.user.toString(),
+                        inline: true,
+                    },
+                    { name: "Warning reason", value: reason },
+                ]);
+
             const optAppeal = await getSpecialChannel(
                 interaction.guild.id,
                 "appeals"
@@ -140,12 +159,15 @@ class Warnings extends BotCommand {
             const appealsChannel = optAppeal as TextChannel;
             await appealsChannel.send({ embeds: [appealEmbed] });
             appealButton.setDisabled(true);
-            await int.update({ components });
+            await int.editReply({ components });
             collector.stop();
         });
         await close();
 
-        const warnsChannel = await getSpecialChannel(interaction.guild.id, "warnings") as TextChannel;
+        const warnsChannel = (await getSpecialChannel(
+            interaction.guild.id,
+            "warnings"
+        )) as TextChannel;
         warnsChannel.send({ embeds: [warnEmbed] });
     }
 }

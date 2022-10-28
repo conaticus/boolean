@@ -21,7 +21,7 @@ interface FullSelfRoleList extends SelfRoleList {
 }
 
 /**
- * Utility function for getRolelist
+ * Utility function for getRoleList
  * @param {string} listId
  * @returns {Promise<RoleChoice[]>}
  */

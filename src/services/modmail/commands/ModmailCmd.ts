@@ -1,15 +1,14 @@
 import {
+    Attachment,
     BaseGuildTextChannel,
-    CommandInteraction,
+    ChannelType,
+    ChatInputCommandInteraction,
     Guild,
-    MessageAttachment,
+    SlashCommandBuilder,
+    SlashCommandSubcommandBuilder,
     TextChannel,
     User,
 } from "discord.js";
-import {
-    SlashCommandBuilder,
-    SlashCommandSubcommandBuilder,
-} from "@discordjs/builders";
 import { Modmail } from "@prisma/client";
 import { Bot, BotCommand } from "../../../structures";
 import {
@@ -88,7 +87,10 @@ export default class ModmailCommand extends BotCommand {
         );
     }
 
-    private async reply(int: CommandInteraction, ctx: Modmail): Promise<void> {
+    private async reply(
+        int: ChatInputCommandInteraction,
+        ctx: Modmail
+    ): Promise<void> {
         const bot = Bot.getInstance();
         const user = await bot.users.fetch(ctx.memberId);
         const dmChannel = await user.createDM();
@@ -100,7 +102,7 @@ export default class ModmailCommand extends BotCommand {
         const mmChannel = optChannel as BaseGuildTextChannel;
         const content = int.options.getString("content", true);
         const attachment = int.options.getAttachment("attachment", false);
-        const attachments: MessageAttachment[] =
+        const attachments: Attachment[] =
             attachment !== null ? [attachment] : [];
         const isStaff = int.user.id !== ctx.memberId;
         let memberCopy;
@@ -162,7 +164,7 @@ export default class ModmailCommand extends BotCommand {
         }
     }
 
-    private async open(int: CommandInteraction): Promise<void> {
+    private async open(int: ChatInputCommandInteraction): Promise<void> {
         const { guild, user } = int;
         if (guild === null) {
             throw new Error("This command belongs in a server.");
@@ -189,10 +191,11 @@ export default class ModmailCommand extends BotCommand {
             );
         }
 
-        const channel = await parent.createChannel(
-            `${target.username}-${target.discriminator}`,
-            { type: "GUILD_TEXT" }
-        );
+        const channel = await parent.guild.channels.create({
+            name: `${target.username}-${target.discriminator}`,
+            type: ChannelType.GuildText,
+            parent: parent.id,
+        });
         const modmail = await openModmail(
             guild.id,
             channel.id,
@@ -219,7 +222,10 @@ export default class ModmailCommand extends BotCommand {
         await dmChannel.send({ embeds: [dmMessage] });
     }
 
-    private async close(int: CommandInteraction, ctx: Modmail): Promise<void> {
+    private async close(
+        int: ChatInputCommandInteraction,
+        ctx: Modmail
+    ): Promise<void> {
         const bot = Bot.getInstance();
         const reason = int.options.getString("reason", false) || "No reason.";
         const user = await bot.users.fetch(ctx.memberId);
@@ -236,7 +242,9 @@ export default class ModmailCommand extends BotCommand {
         await dmChannel.send({ embeds: [sysMessage] });
     }
 
-    public async execute(interaction: CommandInteraction): Promise<void> {
+    public async execute(
+        interaction: ChatInputCommandInteraction
+    ): Promise<void> {
         const subCmd = interaction.options.getSubcommand(true);
         if (subCmd === "open") {
             await this.open(interaction);

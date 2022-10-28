@@ -1,4 +1,5 @@
-import { Message, TextChannel } from "discord.js";
+import { Message, TextChannel, ThreadAutoArchiveDuration } from "discord.js";
+import { PermissionFlagsBits } from "discord-api-types/v10";
 import { v4 as uuid } from "uuid";
 import { getSpecialChannel } from "../database";
 import { Bot } from "../structures";
@@ -22,9 +23,9 @@ async function helpChan(message: Message): Promise<void> {
     const threadName = `Thread #${thId}`;
 
     if (message.channel.id === helpChannel.id) {
-        message.startThread({
+        await message.startThread({
             name: threadName,
-            autoArchiveDuration: "MAX",
+            autoArchiveDuration: ThreadAutoArchiveDuration.ThreeDays,
         });
     }
 }
@@ -33,7 +34,7 @@ async function massPingCheck(message: Message): Promise<void> {
     if (
         message.mentions.users.size > 5 &&
         message.inGuild() &&
-        !message.member?.permissions.has("MENTION_EVERYONE")
+        !message.member?.permissions.has(PermissionFlagsBits.MentionEveryone)
     ) {
         await message.member?.timeout(600_000, "Mass mentions");
     }

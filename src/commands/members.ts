@@ -1,5 +1,8 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import {
+    CommandInteraction,
+    EmbedBuilder,
+    SlashCommandBuilder,
+} from "discord.js";
 
 import { Bot, BotCommand } from "../structures";
 
@@ -21,7 +24,7 @@ class Members extends BotCommand {
         const membersCount = client.guilds.cache
             .map((guild) => guild.memberCount)
             .reduce((a, b) => a + b, 0);
-        const successMessageEmbed = new MessageEmbed().setDescription(
+        const successMessageEmbed = new EmbedBuilder().setDescription(
             `There are ${membersCount} members in server`
         );
 
