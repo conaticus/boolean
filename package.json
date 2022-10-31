@@ -13,7 +13,6 @@
         "check": "tsc -w --noEmit",
         "format": "prettier --write ./src",
         "prepare": "husky install",
-        "test": "jest",
         "lint": "eslint ./src --ext .ts"
     },
     "dependencies": {
