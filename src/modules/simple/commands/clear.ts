@@ -1,8 +1,14 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import {
+    ChatInputCommandInteraction,
+    Message,
+    SlashCommandBuilder,
+    TextChannel,
+} from "discord.js";
 import { PermissionFlagsBits } from "discord-api-types/v10";
 import EmbedFactory from "../../../providers/EmbedFactory";
 import LoggerFactory from "../../../providers/LoggerFactory";
 import BotCommand from "../../../structures/BotCommand";
+import BotFactory from "../../../providers/BotFactory";
 
 class Clear extends BotCommand {
     constructor() {
@@ -25,6 +31,7 @@ class Clear extends BotCommand {
     public async execute(
         interaction: ChatInputCommandInteraction<"cached">
     ): Promise<void> {
+        const bot = BotFactory.getBot();
         const logger = LoggerFactory.getGuildLogger(
             "clear",
             interaction.guildId
@@ -46,13 +53,30 @@ class Clear extends BotCommand {
         await interaction.editReply({ embeds: [successEmbed] });
 
         // Log the cleared messages
-        deleted.forEach((msg) => {
-            if (msg)
-                logger.debug(
-                    `${interaction.user} cleared message` +
-                        `"${msg.content}" from ${msg.author}`
-                );
-        });
+        const report = (msg: Message) =>
+            logger.debug(
+                `${interaction.user} cleared message` +
+                    ` "${msg.content}" from ${msg.author}`
+            );
+        const tasks: Promise<unknown>[] = [];
+        for (const [_, msg] of deleted) {
+            let task;
+            if (msg) {
+                if (msg.partial) {
+                    task = bot.channels
+                        .fetch(msg.channelId)
+                        .then(async (chan) => {
+                            if (chan) {
+                                const txt = chan as TextChannel;
+                                const res = await txt.messages.fetch(msg.id);
+                                report(res);
+                            }
+                        });
+                    tasks.push(task);
+                } else report(msg);
+            }
+        }
+        await Promise.all(tasks);
     }
 }
 
