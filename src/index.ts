@@ -1,14 +1,10 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import "dotenv/config";
-
-import { connectToDatabase } from "./database";
-import { Bot } from "./structures";
-
-const bot = new Bot();
+import { connectToDatabase } from "./modules/simple/database";
+import BotFactory from "./providers/BotFactory";
 
 async function main() {
     await connectToDatabase();
-    await bot.start();
+    await BotFactory.getBot().start();
 }
 
 main().catch(console.error);

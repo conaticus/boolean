@@ -78,7 +78,7 @@ export function newEmbed(msg: Message): EmbedBuilder {
 
 export function formatAttachmentsURL(
     attachments: Collection<string, Attachment>
-) {
+): string {
     return [...attachments.values()]
         .map((e, i) =>
             e.height
