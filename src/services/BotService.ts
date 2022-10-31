@@ -26,11 +26,14 @@ export default class BotService extends Client<true> {
     public async start(): Promise<void> {
         const mods = new ModResolutionService();
         await this.login(process.env.TOKEN || "");
+        await this.clearCmds();
         await Promise.all(
             [new SimpleModule(mods), new ModmailModule()].map((m) =>
                 m.onEnable()
             )
         );
+        // TODO(dylhack): implement tick system
+        setTimeout(this.registerCmds, 5000);
     }
 
     public resolveCmd(name: string): BotCommand | null {
@@ -48,23 +51,26 @@ export default class BotService extends Client<true> {
     }
 
     private async registerCmd(cmd: BotCommand): Promise<void> {
-        const logger = LoggerFactory.getLogger("init");
         // Register to a testing server
+        this.commands.set(cmd.data.name, cmd);
+        LoggerFactory.getLogger("init").debug(
+            `Queueing ${cmd.data.name} for registration`
+        );
+    }
+
+    public async registerCmds(): Promise<void> {
+        const logger = LoggerFactory.getLogger("init");
         const devServer = process.env.DEV_SERVER;
+        const cmds = this.commands.map((cmd) => {
+            return cmd.data;
+        });
         if (devServer && devServer.length > 0) {
-            await this.application.commands.create(cmd.data, devServer);
-            logger.warn(`Registered ${cmd.data.name} commands to ${devServer}`);
+            await this.application.commands.set(cmds, devServer);
+            logger.warn(`Registered ${cmds.length} command(s) to ${devServer}`);
             // else... register globally
         } else {
-            // clear dev commands
-            const tasks: Promise<unknown>[] = [];
-            this.guilds.cache.forEach((guild) => {
-                const task = guild.commands.set([]);
-                tasks.push(task);
-            });
-            await Promise.all(tasks).catch(() => null);
-            await this.application.commands.create(cmd.data);
-            logger.info(`Registered ${cmd.data.name} command globally`);
+            await this.application.commands.set(cmds);
+            logger.info(`Registering ${cmds.length} command(s) globally`);
         }
     }
 
@@ -77,5 +83,15 @@ export default class BotService extends Client<true> {
             this.on(event.name, event.run.bind(event));
         }
         logger.debug(`Registered event ${event.name} (once = ${event.once})`);
+    }
+
+    private async clearCmds(): Promise<void> {
+        // clear dev commands
+        const tasks: Promise<unknown>[] = [this.application.commands.set([])];
+        this.guilds.cache.forEach((guild) => {
+            const task = guild.commands.set([]);
+            tasks.push(task);
+        });
+        await Promise.all(tasks).catch(() => null);
     }
 }
