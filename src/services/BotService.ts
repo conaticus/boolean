@@ -33,7 +33,7 @@ export default class BotService extends Client<true> {
             )
         );
         // TODO(dylhack): implement tick system
-        setTimeout(this.registerCmds, 5000);
+        setTimeout(this.registerCmds.bind(this), 5000);
     }
 
     public resolveCmd(name: string): BotCommand | null {
