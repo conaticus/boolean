@@ -3,8 +3,8 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-
-import { Bot, BotCommand } from "../../../bot";
+import BotCommand from "../../../structures/BotCommand";
+import BotFactory from "../../../providers/BotFactory";
 
 class Members extends BotCommand {
     constructor() {
@@ -18,9 +18,9 @@ class Members extends BotCommand {
     }
 
     public async execute(
-        interaction: CommandInteraction<"cached">,
-        client: Bot
+        interaction: CommandInteraction<"cached">
     ): Promise<void> {
+        const client = BotFactory.getBot();
         const membersCount = client.guilds.cache
             .map((guild) => guild.memberCount)
             .reduce((a, b) => a + b, 0);

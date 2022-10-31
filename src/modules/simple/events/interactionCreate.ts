@@ -1,12 +1,17 @@
-import { Interaction, EmbedBuilder, Colors } from "discord.js";
+import { Colors, EmbedBuilder, Interaction } from "discord.js";
 import { getRoleLists } from "../database";
-import { Bot } from "../../../bot";
-import BotEvent from "../../../bot/BotEvent";
+import BotEvent from "../../../structures/BotEvent";
+import BotFactory from "../../../providers/BotFactory";
 
-export default class InteractionCreateEvent extends BotEvent<"interactionCreate"> {
-    public async run(client: Bot, interaction: Interaction): Promise<void> {
+class InteractionCreateEvent extends BotEvent<"interactionCreate"> {
+    constructor() {
+        super({ name: "interactionCreate" });
+    }
+
+    public async run(interaction: Interaction): Promise<void> {
         if (interaction.isCommand() || interaction.isContextMenuCommand()) {
-            const command = client.register.resolveCmd(interaction.commandName);
+            const client = BotFactory.getBot();
+            const command = client.resolveCmd(interaction.commandName);
             if (!command) {
                 return;
             }
@@ -35,7 +40,7 @@ export default class InteractionCreateEvent extends BotEvent<"interactionCreate"
             }
 
             try {
-                await command.execute(interaction, client);
+                await command.execute(interaction);
             } catch (e) {
                 let msg = "NULL";
                 if (e instanceof Error) {
@@ -97,3 +102,5 @@ export default class InteractionCreateEvent extends BotEvent<"interactionCreate"
         }
     }
 }
+
+export default new InteractionCreateEvent();

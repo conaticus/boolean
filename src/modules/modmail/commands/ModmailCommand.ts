@@ -10,12 +10,13 @@ import {
 } from "discord.js";
 import { Modmail } from "@prisma/client";
 import { ChannelType } from "discord-api-types/v10";
-import { Bot, BotCommand } from "../../../bot";
 import { getSpecialChannel } from "../../simple/database";
 import ModmailService from "../services/ModmailService";
 import LoggerFactory from "../../../providers/LoggerFactory";
 import ModmailEmbedFactory from "../providers/ModmailEmbedFactory";
 import ResolutionService from "../services/ResolutionService";
+import BotCommand from "../../../structures/BotCommand";
+import BotFactory from "../../../providers/BotFactory";
 
 export default class ModmailCommand extends BotCommand {
     private readonly modmail: ModmailService;
@@ -82,11 +83,40 @@ export default class ModmailCommand extends BotCommand {
         this.resolution = res;
     }
 
+    public async execute(
+        interaction: ChatInputCommandInteraction
+    ): Promise<void> {
+        const subCmd = interaction.options.getSubcommand(true);
+        if (subCmd === "open") {
+            await this.open(interaction);
+            return;
+        }
+        await interaction.deferReply({ ephemeral: true });
+        const ctx = await this.resolution.getModmailByInt(interaction);
+        if (ctx === null) {
+            throw new Error("This is not an active modmail channel.");
+        }
+
+        switch (subCmd) {
+            case "close":
+                await this.close(interaction, ctx);
+                break;
+            case "reply":
+                await this.reply(interaction, ctx);
+                break;
+            default:
+                // NOTE(dylhack): this should never be a resolvable clause.
+                //                sub commands added should be added to this
+                //                switch.
+                throw new Error("How did we get here? (sub cmd unresolvable)");
+        }
+    }
+
     private async reply(
         int: ChatInputCommandInteraction,
         ctx: Modmail
     ): Promise<void> {
-        const bot = Bot.getInstance();
+        const bot = BotFactory.getBot();
         const user = await bot.users.fetch(ctx.memberId);
         const dmChannel = await user.createDM();
         const optChannel = await bot.channels.fetch(ctx.channelId);
@@ -237,35 +267,6 @@ export default class ModmailCommand extends BotCommand {
                 err
             );
             await int.editReply("Failed to close.");
-        }
-    }
-
-    public async execute(
-        interaction: ChatInputCommandInteraction
-    ): Promise<void> {
-        const subCmd = interaction.options.getSubcommand(true);
-        if (subCmd === "open") {
-            await this.open(interaction);
-            return;
-        }
-        await interaction.deferReply({ ephemeral: true });
-        const ctx = await this.resolution.getModmailByInt(interaction);
-        if (ctx === null) {
-            throw new Error("This is not an active modmail channel.");
-        }
-
-        switch (subCmd) {
-            case "close":
-                await this.close(interaction, ctx);
-                break;
-            case "reply":
-                await this.reply(interaction, ctx);
-                break;
-            default:
-                // NOTE(dylhack): this should never be a resolvable clause.
-                //                sub commands added should be added to this
-                //                switch.
-                throw new Error("How did we get here? (sub cmd unresolvable)");
         }
     }
 }

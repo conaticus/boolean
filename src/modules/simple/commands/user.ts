@@ -1,11 +1,11 @@
 import {
-    SlashCommandBuilder,
     ChatInputCommandInteraction,
-    EmbedBuilder,
     Colors,
+    EmbedBuilder,
+    SlashCommandBuilder,
 } from "discord.js";
 import { Badges, getBadge } from "../database";
-import { BotCommand } from "../../../bot";
+import BotCommand from "../../../structures/BotCommand";
 
 class Profile extends BotCommand {
     constructor() {

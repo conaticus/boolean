@@ -4,15 +4,14 @@ import {
     EmbedBuilder,
     SlashCommandBuilder,
 } from "discord.js";
-
-import { BotCommand } from "../../../bot";
+import BotCommand from "../../../structures/BotCommand";
 
 class Ping extends BotCommand {
     constructor() {
         super(
             new SlashCommandBuilder()
                 .setName("ping")
-                .setDescription("Pings the bot.")
+                .setDescription("Pings the structures.")
                 .toJSON(),
             { timeout: 2000 }
         );

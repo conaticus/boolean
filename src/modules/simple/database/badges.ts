@@ -1,10 +1,8 @@
-import { getClient } from "./index";
-
 /**
  * @const defaults
  * Badges are used for profile breakdowns. See commands/user.ts
  * These are default assets that represent Discord granted badges. Optionally
- * the bot owner or administrator can update them. This is helpful if the
+ * the structures owner or administrator can update them. This is helpful if the
  * emojis aren't available anymore.
  * @example
  ┌───────────────────────────────────────────────────────────────┐
@@ -16,6 +14,8 @@ import { getClient } from "./index";
  │                                        └────────────────────┘ │
  └───────────────────────────────────────────────────────────────┘
  */
+import DBFactory from "../../../providers/DBFactory";
+
 export const DEFAULT_BADGES = {
     DISCORD_EMPLOYEE: "<:discord_staff:585598614521511948>",
     PARTNERED_SERVER_OWNER: "<:discord_partner:585598614685089792>",
@@ -55,7 +55,7 @@ export async function getBadge(
     guildId: string,
     badgeName: Badges
 ): Promise<string> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     const result = await client.badge.findFirst({
         where: {
             guildId,
@@ -76,7 +76,7 @@ export async function setBadge(
     badgeName: Badges,
     emoji: string
 ): Promise<void> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     await client.badge.create({
         data: {
             guildId,

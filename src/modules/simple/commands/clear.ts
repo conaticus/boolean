@@ -1,16 +1,8 @@
-import {
-    Colors,
-    ChatInputCommandInteraction,
-    EmbedBuilder,
-    Message,
-    PartialMessage,
-    SlashCommandBuilder,
-} from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { PermissionFlagsBits } from "discord-api-types/v10";
-import { Bot, BotCommand } from "../../../bot";
-import { handleAssets } from "../../../utils";
 import EmbedFactory from "../../../providers/EmbedFactory";
 import LoggerFactory from "../../../providers/LoggerFactory";
+import BotCommand from "../../../structures/BotCommand";
 
 class Clear extends BotCommand {
     constructor() {
@@ -31,8 +23,7 @@ class Clear extends BotCommand {
     }
 
     public async execute(
-        interaction: ChatInputCommandInteraction<"cached">,
-        client: Bot
+        interaction: ChatInputCommandInteraction<"cached">
     ): Promise<void> {
         const logger = LoggerFactory.getGuildLogger(
             "clear",
@@ -62,42 +53,6 @@ class Clear extends BotCommand {
                         `"${msg.content}" from ${msg.author}`
                 );
         });
-    }
-
-    /**
-     *
-     * @param interaction
-     * @param del
-     * @private
-     */
-    private createEmbed(
-        interaction: ChatInputCommandInteraction,
-        del: Message | PartialMessage | undefined
-    ): EmbedBuilder | undefined {
-        // check if partial or undefined
-        if (del !== undefined && del.author !== null) {
-            return;
-        }
-        const msg = del as Message;
-        const embed = EmbedFactory.newDeleteEmbed("clear", msg);
-        embed.addFields([
-            { name: "\u200B", value: "\u200B", inline: true },
-            {
-                name: "Executor",
-                value: interaction.user.toString(),
-                inline: true,
-            },
-            {
-                name: "Sent at",
-                value: `<t:${Math.round(msg.createdTimestamp / 1000)}>`,
-                inline: true,
-            },
-            { name: "\u200B", value: "\u200B", inline: true },
-        ]);
-        // Add stickers
-        handleAssets(msg, embed);
-        // eslint-disable-next-line consistent-return
-        return embed;
     }
 }
 

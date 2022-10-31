@@ -1,7 +1,5 @@
-import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 import { BaseInteraction, PermissionResolvable } from "discord.js";
-
-import BotService from "./BotService";
+import { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/rest/v10/interactions";
 
 export type BotCommandOpt = {
     requiredPerms?: PermissionResolvable;
@@ -22,10 +20,8 @@ export default abstract class BotCommand {
         this.data = data;
         this.timeout = opt?.timeout;
         this.requiredPerms = opt?.requiredPerms;
+        this.data = data;
     }
 
-    public abstract execute(
-        interaction: BaseInteraction,
-        client: BotService
-    ): Promise<void>;
+    public abstract execute(interaction: BaseInteraction): Promise<void>;
 }

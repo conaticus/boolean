@@ -12,6 +12,11 @@ RUN sh ./scripts/build.sh
 
 FROM base as production
 
+ENV TOKEN=""
+ENV LOG_LEVEL="info"
+ENV DEV_SERVER=""
+ENV DATABASE_URL="postgresql://postgres:supersecurepassword@postgres/postgres?schema=boolean"
+
 COPY --from=build /opt/app/package.json /opt/app/package.json
 COPY --from=build /opt/app/node_modules /opt/app/node_modules
 COPY --from=build /opt/app/dist /opt/app/dist

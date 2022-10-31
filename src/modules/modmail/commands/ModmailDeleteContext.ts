@@ -3,9 +3,9 @@ import {
     ContextMenuCommandBuilder,
     MessageContextMenuCommandInteraction,
 } from "discord.js";
-import { BotCommand } from "../../../bot";
 import ResolutionService from "../services/ResolutionService";
 import ModmailService from "../services/ModmailService";
+import BotCommand from "../../../structures/BotCommand";
 
 export default class ModmailDeleteContext extends BotCommand {
     private readonly modmail: ModmailService;

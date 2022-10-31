@@ -6,7 +6,7 @@ import {
     SlashCommandBuilder,
 } from "discord.js";
 import { getRoleLists } from "../database";
-import { BotCommand } from "../../../bot";
+import BotCommand from "../../../structures/BotCommand";
 
 class RoleMe extends BotCommand {
     constructor() {

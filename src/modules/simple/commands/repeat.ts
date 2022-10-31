@@ -5,7 +5,7 @@ import {
     SlashCommandBuilder,
 } from "discord.js";
 import { PermissionFlagsBits } from "discord-api-types/v10";
-import { BotCommand } from "../../../bot";
+import BotCommand from "../../../structures/BotCommand";
 
 class Repeat extends BotCommand {
     constructor() {

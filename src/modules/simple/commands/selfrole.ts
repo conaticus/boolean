@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from "discord.js";
+import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { PermissionFlagsBits } from "discord-api-types/v10";
 import {
     addRoleChoice,
@@ -7,7 +7,7 @@ import {
     removeRoleChoice,
     removeRoleList,
 } from "../database";
-import { BotCommand } from "../../../bot";
+import BotCommand from "../../../structures/BotCommand";
 
 class SelfRole extends BotCommand {
     constructor() {

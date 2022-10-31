@@ -1,8 +1,7 @@
 .github
 .husky
-__tests__
-node_modules
 dist
+node_modules
 .editorconfig
 .env.example
 .eslintignore
@@ -11,5 +10,4 @@ dist
 .prettierignore
 .prettierrc.json
 CONTRIBUTING.md
-jest.config.ts
 README.md

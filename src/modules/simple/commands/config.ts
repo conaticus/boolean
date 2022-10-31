@@ -14,7 +14,7 @@ import {
     SpecialChannel,
     SpecialRole,
 } from "../database";
-import { BotCommand } from "../../../bot";
+import BotCommand from "../../../structures/BotCommand";
 
 const badges: APIApplicationCommandOptionChoice<string>[] = Object.keys(
     DEFAULT_BADGES
@@ -50,7 +50,7 @@ class Config extends BotCommand {
         super(
             new SlashCommandBuilder()
                 .setName("config")
-                .setDescription("Configure the bot.")
+                .setDescription("Configure the structures.")
                 .addSubcommand((sub) =>
                     sub
                         .setName("setchannel")

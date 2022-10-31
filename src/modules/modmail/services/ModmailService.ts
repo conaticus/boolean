@@ -8,9 +8,9 @@ import {
 import { Modmail, ModmailMessage } from "@prisma/client";
 import ModmailDatabase from "../database/ModmailDatabase";
 import ModmailEmbedFactory from "../providers/ModmailEmbedFactory";
-import { Bot } from "../../../bot";
 import LoggerFactory from "../../../providers/LoggerFactory";
 import { APIEmbed } from "discord-api-types/v10";
+import BotFactory from "../../../providers/BotFactory";
 
 type OpenOptions = {
     authorId: string;
@@ -44,7 +44,7 @@ export default class ModmailService {
             "Modmail closed",
             reason
         );
-        const { channels } = Bot.getInstance();
+        const { channels } = BotFactory.getBot();
         const alert = async (
             c: Channel | null
         ): Promise<TextChannel | null> => {
@@ -194,7 +194,7 @@ export default class ModmailService {
         ctx: Modmail,
         msg: ModmailMessage
     ): Promise<Copies> {
-        const { channels } = Bot.getInstance();
+        const { channels } = BotFactory.getBot();
         try {
             const dmChannel = (await channels.fetch(ctx.memberId)) as DMChannel;
             const mmChannel = (await channels.fetch(

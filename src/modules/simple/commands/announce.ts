@@ -1,10 +1,10 @@
 import {
-    ModalSubmitInteraction,
-    CommandInteraction,
-    TextChannel,
-    EmbedBuilder,
     Colors,
+    CommandInteraction,
+    EmbedBuilder,
+    ModalSubmitInteraction,
     SlashCommandBuilder,
+    TextChannel,
 } from "discord.js";
 import {
     ComponentType,
@@ -12,7 +12,7 @@ import {
     TextInputStyle,
 } from "discord-api-types/v10";
 import { getSpecialChannel, getSpecialRole } from "../database";
-import { BotCommand } from "../../../bot";
+import BotCommand from "../../../structures/BotCommand";
 
 class Announce extends BotCommand {
     constructor() {

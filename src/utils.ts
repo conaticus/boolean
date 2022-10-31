@@ -1,80 +1,10 @@
 import {
     Attachment,
     Collection,
-    Colors,
-    CommandInteraction,
     EmbedBuilder,
     Message,
     StickerFormatType,
 } from "discord.js";
-
-interface QuestionOptions {
-    ephemeral: boolean;
-}
-
-export function askQuestion(
-    interaction: CommandInteraction<"cached">,
-    question: string
-): Promise<string>;
-export function askQuestion(
-    interaction: CommandInteraction<"cached">,
-    question: string,
-    options: Exclude<QuestionOptions, "noErr"> & { noErr: true }
-): Promise<string | null>;
-
-export async function askQuestion(
-    interaction: CommandInteraction<"cached">,
-    question: string,
-    { ephemeral }: QuestionOptions = { ephemeral: false }
-) {
-    const embed = new EmbedBuilder()
-        .setColor(Colors.Orange)
-        .setDescription(question);
-
-    if (ephemeral)
-        await interaction.reply({
-            embeds: [embed],
-            ephemeral,
-        });
-    else
-        await interaction.channel?.send({
-            embeds: [embed],
-        });
-
-    try {
-        const messages = await interaction.channel?.awaitMessages({
-            filter: (m) => m.author.id === interaction.user.id,
-            time: 60_000,
-            max: 1,
-        });
-        const msg = messages?.first();
-
-        if (msg?.content) return msg.content;
-        return null;
-    } catch (err) {
-        return null;
-    }
-}
-
-export function newEmbed(msg: Message): EmbedBuilder {
-    return new EmbedBuilder()
-        .setAuthor({
-            name: "Deleted message",
-            iconURL: msg.author.displayAvatarURL(),
-            url: msg.url,
-        })
-        .setDescription(msg.content)
-        .setColor(Colors.Red)
-        .setTimestamp()
-        .setFooter({
-            text: "Boolean",
-            iconURL: msg.client.user?.displayAvatarURL(),
-        })
-        .addFields([
-            { name: "Author", value: msg.author.toString(), inline: true },
-            { name: "Channel", value: msg.channel.toString(), inline: true },
-        ]);
-}
 
 export function formatAttachmentsURL(
     attachments: Collection<string, Attachment>

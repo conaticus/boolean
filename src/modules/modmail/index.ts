@@ -48,16 +48,17 @@
  *  - /modmail reply (message: string) (attachment? Attachment)
  */
 import IModule from "../../interfaces/IModule";
-import RegisterService from "../../services/RegisterService";
-import ModmailDeleteContext from "./commands/DeleteCtxMenu";
-import ModmailEditContext from "./commands/EditCtxMenu";
-import ModmailCommand from "./commands/ModmailCmd";
+import ModmailCommand from "./commands/ModmailCommand";
 import ModmailDatabase from "./database/ModmailDatabase";
 import ModmailService from "./services/ModmailService";
 import ResolutionService from "./services/ResolutionService";
+import ModmailEditContext from "./commands/ModmailEditContext";
+import ModmailDeleteContext from "./commands/ModmailDeleteContext";
+import BotFactory from "../../providers/BotFactory";
 
 export default class ModmailModule implements IModule {
-    public async onEnable(reg: RegisterService): Promise<void> {
+    public async onEnable(): Promise<void> {
+        const bot = BotFactory.getBot();
         const db = new ModmailDatabase();
         const mm = new ModmailService(db);
         const res = new ResolutionService(db);
@@ -67,7 +68,7 @@ export default class ModmailModule implements IModule {
                 new ModmailCommand(mm, res),
                 new ModmailEditContext(mm, res),
                 new ModmailDeleteContext(mm, res),
-            ].map((c) => reg.register(c))
+            ].map((c) => bot.register(c))
         );
     }
 

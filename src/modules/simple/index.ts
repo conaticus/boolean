@@ -1,8 +1,8 @@
 import IModule from "../../interfaces/IModule";
 import ModResolutionService from "../../services/ModResolutionService";
-import RegisterService from "../../services/RegisterService";
-import path from "path";
+import path from "node:path";
 import LoggerFactory from "../../providers/LoggerFactory";
+import BotFactory from "../../providers/BotFactory";
 
 export default class SimpleModule implements IModule {
     private readonly mods: ModResolutionService;
@@ -25,15 +25,13 @@ export default class SimpleModule implements IModule {
 
     public async onDisable(): Promise<void> {}
 
-    public async onEnable(reg: RegisterService): Promise<void> {
-        await this.initModules(reg, this.commandFiles);
-        await this.initModules(reg, this.eventFiles);
+    public async onEnable(): Promise<void> {
+        await this.initModules(this.commandFiles);
+        await this.initModules(this.eventFiles);
     }
 
-    public async initModules(
-        reg: RegisterService,
-        files: string[]
-    ): Promise<void> {
+    public async initModules(files: string[]): Promise<void> {
+        const bot = BotFactory.getBot();
         const logger = LoggerFactory.getLogger("simple-module");
         const tasks: Promise<unknown>[] = [];
         for (let i = 0; i < files.length; i += 1) {
@@ -49,7 +47,7 @@ export default class SimpleModule implements IModule {
                         null
                     );
                 } else {
-                    tasks.push(reg.register(result));
+                    tasks.push(bot.register(result));
                 }
             });
             tasks.push(task);

@@ -1,11 +1,14 @@
 import { Message, TextChannel, ThreadAutoArchiveDuration } from "discord.js";
 import { v4 as uuid } from "uuid";
 import { getSpecialChannel } from "../database";
-import { Bot } from "../../../bot";
-import BotEvent from "../../../bot/BotEvent";
+import BotEvent from "../../../structures/BotEvent";
 
-export default class MessageCreateEvent extends BotEvent<"messageCreate"> {
-    public async run(client: Bot, message: Message): Promise<void> {
+class MessageCreateEvent extends BotEvent<"messageCreate"> {
+    constructor() {
+        super({ name: "messageCreate" });
+    }
+
+    public async run(message: Message): Promise<void> {
         await this.helpChan(message);
     }
 
@@ -34,3 +37,5 @@ export default class MessageCreateEvent extends BotEvent<"messageCreate"> {
         }
     }
 }
+
+export default new MessageCreateEvent();

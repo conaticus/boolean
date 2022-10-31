@@ -1,11 +1,10 @@
 import { Channel } from "discord.js";
-
-import { Bot } from "../../../bot";
-import { getClient } from "./index";
+import BotFactory from "../../../providers/BotFactory";
+import DBFactory from "../../../providers/DBFactory";
 
 /**
  * Here is a brief description of each special channel.
- * * Announcements -> Posting messages as the bot for an announcements channel
+ * * Announcements -> Posting messages as the structures for an announcements channel
  * * Information -> Like a "rules" channel
  * * Log -> A logger channel
  * * Modmail -> For communicating between a community member and staff
@@ -35,7 +34,7 @@ async function getChannelId(
     guildId: string,
     label: SpecialChannel
 ): Promise<string | null> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     const result = await client.specialChannel.findFirst({
         select: { channelId: true },
         where: { guildId, label },
@@ -44,7 +43,7 @@ async function getChannelId(
 }
 
 /**
- * The bot has special channels that it interacts with either based on an
+ * The structures has special channels that it interacts with either based on an
  * event or a command execution. Check out the SpecialChannel type to see
  * the possible channels. Most of them will speak for themselves, but the code
  * that utilizes them is scattered (mostly in commands and events).
@@ -53,7 +52,7 @@ export async function getSpecialChannel<T extends Channel>(
     guildId: string,
     label: SpecialChannel
 ): Promise<T | null> {
-    const bot = Bot.getInstance();
+    const bot = BotFactory.getBot();
     const channelId = await getChannelId(guildId, label);
     if (channelId === null) {
         return null;
@@ -70,7 +69,7 @@ export async function setSpecialChannel(
     label: SpecialChannel,
     channelId: string
 ): Promise<void> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     const res = await getChannelId(guildId, label);
     if (res === null) {
         await client.specialChannel.create({

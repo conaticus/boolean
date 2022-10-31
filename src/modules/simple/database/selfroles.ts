@@ -1,8 +1,7 @@
 import { RoleChoice, SelfRoleList } from "@prisma/client";
 import { Role } from "discord.js";
-
-import { Bot } from "../../../bot";
-import { getClient } from "./index";
+import DBFactory from "../../../providers/DBFactory";
+import BotFactory from "../../../providers/BotFactory";
 
 type FullRoleChoice = Role;
 
@@ -26,14 +25,14 @@ interface FullSelfRoleList extends SelfRoleList {
  * @returns {Promise<RoleChoice[]>}
  */
 function getChoices(listId: string): Promise<RoleChoice[]> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     return client.roleChoice.findMany({
         where: { listId },
     });
 }
 
 async function listAll(guildId: string): Promise<string> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     const lists = await client.selfRoleList.findMany({
         where: { guildId },
     });
@@ -54,7 +53,7 @@ export async function getRoleList(
     guildId: string,
     title: string
 ): Promise<FullSelfRoleList | null> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     const roleList = await client.selfRoleList.findFirst({
         where: { guildId, title },
     });
@@ -63,7 +62,7 @@ export async function getRoleList(
     }
     const partChoices = await getChoices(roleList.id);
     const choices: FullRoleChoice[] = [];
-    const bot = Bot.getInstance();
+    const bot = BotFactory.getBot();
     const tasks: Promise<unknown>[] = [];
     partChoices.forEach((choice) => {
         const iTask = bot.guilds
@@ -101,12 +100,12 @@ export async function getRoleLists(
     guildId: string
 ): Promise<FullSelfRoleList[]> {
     const result: FullSelfRoleList[] = [];
-    const client = getClient();
+    const client = DBFactory.getClient();
     const roleLists = await client.selfRoleList.findMany({
         where: { guildId },
     });
     const tasks: Promise<unknown>[] = [];
-    const bot = Bot.getInstance();
+    const bot = BotFactory.getBot();
     const guild = await bot.guilds.fetch(guildId);
     if (guild === null) {
         throw new Error("Guild unresolvable, how did we get here?");
@@ -160,7 +159,7 @@ export async function addRoleChoice(
     label: string,
     roleId: string
 ): Promise<void> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     const roleList = await getRoleList(guildId, label);
     if (roleList === null) {
         throw await ListNotFoundError.newError(guildId);
@@ -184,7 +183,7 @@ export async function removeRoleChoice(
     label: string,
     roleId: string
 ): Promise<void> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     // NOTE(dylhack): This is intentional to prevent a user from tampering
     //                with a role list of another server.
     const roleList = await getRoleList(guildId, label);
@@ -199,7 +198,7 @@ export async function removeRoleList(
     guildId: string,
     label: string
 ): Promise<void> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     const roleList = await getRoleList(guildId, label);
     if (roleList === null) {
         throw await ListNotFoundError.newError(guildId);
@@ -212,7 +211,7 @@ export async function createRoleList(
     guildId: string,
     label: string
 ): Promise<void> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     const res = await client.selfRoleList.findFirst({
         where: {
             guildId,

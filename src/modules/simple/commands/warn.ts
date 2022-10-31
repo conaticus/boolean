@@ -14,7 +14,7 @@ import {
     TextInputStyle,
 } from "discord-api-types/v10";
 import { getSpecialChannel } from "../database";
-import { BotCommand } from "../../../bot";
+import BotCommand from "../../../structures/BotCommand";
 
 class Warnings extends BotCommand {
     constructor() {
@@ -168,7 +168,7 @@ class Warnings extends BotCommand {
             interaction.guild.id,
             "warnings"
         )) as TextChannel;
-        warnsChannel.send({ embeds: [warnEmbed] });
+        await warnsChannel.send({ embeds: [warnEmbed] });
     }
 }
 

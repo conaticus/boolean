@@ -1,16 +1,10 @@
-import { Bot } from "../bot";
-import ModResolutionService from "../services/ModResolutionService";
-import RegisterService from "../services/RegisterService";
+import Bot from "../services/BotService";
 
 export default class BotFactory {
     private static bot: Bot | null = null;
 
     public static getBot(): Bot {
-        if (BotFactory.bot === null)
-            BotFactory.bot = new Bot(
-                new ModResolutionService(),
-                new RegisterService()
-            );
+        if (BotFactory.bot === null) BotFactory.bot = new Bot();
         return BotFactory.bot;
     }
 }

@@ -1,7 +1,6 @@
 import { Role } from "discord.js";
-
-import { Bot } from "../../../bot";
-import { getClient } from "./index";
+import DBFactory from "../../../providers/DBFactory";
+import BotFactory from "../../../providers/BotFactory";
 
 export type SpecialRole = "announcements" | "members";
 
@@ -9,8 +8,8 @@ export async function getSpecialRole(
     guildId: string,
     label: SpecialRole
 ): Promise<Role | null> {
-    const bot = Bot.getInstance();
-    const client = getClient();
+    const bot = BotFactory.getBot();
+    const client = DBFactory.getClient();
     const specialRole = await client.specialRole.findFirst({
         where: {
             guildId,
@@ -29,7 +28,7 @@ export async function setSpecialRole(
     label: SpecialRole,
     roleId: string
 ): Promise<void> {
-    const client = getClient();
+    const client = DBFactory.getClient();
     await client.specialRole.create({
         data: {
             guildId,

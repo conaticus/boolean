@@ -1,20 +1,19 @@
 import {
-    GuildMember,
+    Colors,
     EmbedBuilder,
+    GuildMember,
     PartialGuildMember,
     TextChannel,
-    Colors,
 } from "discord.js";
 import { getSpecialChannel } from "../database";
-import { Bot } from "../../../bot";
-import BotEvent from "../../../bot/BotEvent";
+import BotEvent from "../../../structures/BotEvent";
 
-export default class GuildMemberAddEvent extends BotEvent<"guildMemberAdd"> {
+class GuildMemberAddEvent extends BotEvent<"guildMemberAdd"> {
     constructor() {
         super({ name: "guildMemberAdd" });
     }
 
-    public async run(client: Bot, member: GuildMember | PartialGuildMember) {
+    public async run(member: GuildMember | PartialGuildMember) {
         if (member.partial) return;
 
         const welcomeMessageEmbed = new EmbedBuilder()
@@ -33,9 +32,11 @@ export default class GuildMemberAddEvent extends BotEvent<"guildMemberAdd"> {
         if (welcomeChannel !== null) {
             const txt = welcomeChannel as TextChannel;
             await txt.send({
-                content: `<@${member.user.id}>`,
+                content: `<@${member}>`,
                 embeds: [welcomeMessageEmbed],
             });
         }
     }
 }
+
+export default new GuildMemberAddEvent();

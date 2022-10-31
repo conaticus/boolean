@@ -1,16 +1,17 @@
-import { Bot } from "../../../bot";
 import LoggerFactory from "../../../providers/LoggerFactory";
-import BotEvent from "../../../bot/BotEvent";
+import BotEvent from "../../../structures/BotEvent";
 
-export default class ErrorEvent extends BotEvent<"error"> {
+class ErrorEvent extends BotEvent<"error"> {
     constructor() {
         super({ name: "error" });
     }
 
-    public async run(bot: Bot, err: Error) {
+    public async run(error: Error): Promise<void> {
         LoggerFactory.getLogger("error-handler").error(
             "An uncaught error occurred",
-            err
+            error
         );
     }
 }
+
+export default new ErrorEvent();
