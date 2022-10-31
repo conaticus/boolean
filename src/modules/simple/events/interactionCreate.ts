@@ -40,7 +40,8 @@ class InteractionCreateEvent extends BotEvent<"interactionCreate"> {
             }
 
             try {
-                await command.execute(interaction);
+                const exec = command.execute.bind(command);
+                await exec(interaction);
             } catch (e) {
                 let msg = "NULL";
                 if (e instanceof Error) {

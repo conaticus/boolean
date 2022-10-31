@@ -50,10 +50,10 @@ export default class BotService extends Client<true> {
     private async registerCmd(cmd: BotCommand): Promise<void> {
         const logger = LoggerFactory.getLogger("init");
         // Register to a testing server
-        const devServer = process.env.DEV_SERVER || "";
-        if (devServer.length === 0) {
+        const devServer = process.env.DEV_SERVER;
+        if (devServer && devServer.length > 0) {
             await this.application.commands.create(cmd.data, devServer);
-            logger.warn(`Registered commands to ${devServer}`);
+            logger.warn(`Registered ${cmd.data.name} commands to ${devServer}`);
             // else... register globally
         } else {
             // clear dev commands
@@ -64,7 +64,7 @@ export default class BotService extends Client<true> {
             });
             await Promise.all(tasks).catch(() => null);
             await this.application.commands.create(cmd.data);
-            logger.info("Registered commands globally");
+            logger.info(`Registered ${cmd.data.name} command globally`);
         }
     }
 
@@ -72,9 +72,9 @@ export default class BotService extends Client<true> {
         const logger = LoggerFactory.getLogger("init");
 
         if (event.once) {
-            this.once(event.name, event.run.bind(null));
+            this.once(event.name, event.run.bind(event));
         } else {
-            this.on(event.name, event.run.bind(null));
+            this.on(event.name, event.run.bind(event));
         }
         logger.debug(`Registered event ${event.name} (once = ${event.once})`);
     }
