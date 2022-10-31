@@ -12,5 +12,6 @@ services:
             - .env
         links:
             - postgres
+        restart: always
 volumes:
     boolean-data: {}
